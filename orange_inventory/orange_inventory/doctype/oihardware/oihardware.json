@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "autoname": "UUID",
+ "creation": "2024-04-19 00:04:51.860421",
+ "default_view": "List",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "asset_tag",
+  "serial_number"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "TItle"
+  },
+  {
+   "fieldname": "asset_tag",
+   "fieldtype": "Data",
+   "label": "Asset Tag"
+  },
+  {
+   "fieldname": "serial_number",
+   "fieldtype": "Data",
+   "label": "Serial Number"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-04-19 00:18:47.208022",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiHardware",
+ "naming_rule": "UUID",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title"
+}
