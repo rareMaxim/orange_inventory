@@ -2,24 +2,24 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "prompt",
- "creation": "2024-04-29 13:38:47.321062",
+ "creation": "2024-04-30 11:30:31.330089",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_hn8n"
+  "section_break_uino"
  ],
  "fields": [
   {
-   "fieldname": "section_break_hn8n",
+   "fieldname": "section_break_uino",
    "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-01 17:48:13.597320",
+ "modified": "2024-04-30 13:02:39.558976",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
- "name": "oiHardware Status",
+ "name": "oiManufacturer",
  "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
@@ -39,6 +39,5 @@
  "quick_entry": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
- "translated_doctype": 1
+ "states": []
 }

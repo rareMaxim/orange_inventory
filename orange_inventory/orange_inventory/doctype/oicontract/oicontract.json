@@ -1,40 +1,55 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-04-26 21:31:13.331332",
+ "autoname": "UUID",
+ "creation": "2024-04-30 16:56:57.237168",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "picture"
+  "amount",
+  "column_break_yzhf",
+  "contract_number",
+  "contract_date"
  ],
  "fields": [
   {
-   "allow_in_quick_entry": 1,
+   "fieldname": "contract_number",
+   "fieldtype": "Data",
+   "label": "Contract Number"
+  },
+  {
+   "fieldname": "contract_date",
+   "fieldtype": "Date",
+   "label": "Contract Date"
+  },
+  {
    "fieldname": "title",
    "fieldtype": "Data",
    "label": "Title"
   },
   {
-   "allow_in_quick_entry": 1,
-   "fieldname": "picture",
-   "fieldtype": "Attach Image",
-   "label": "Picture"
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "column_break_yzhf",
+   "fieldtype": "Column Break"
   }
  ],
- "image_field": "picture",
  "index_web_pages_for_search": 1,
  "links": [
   {
    "link_doctype": "oiHardware",
-   "link_fieldname": "model"
+   "link_fieldname": "contract"
   }
  ],
- "make_attachments_public": 1,
- "modified": "2024-05-02 21:38:33.810097",
+ "modified": "2024-05-01 11:37:25.408061",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
- "name": "oiHardware Model",
+ "name": "oiContract",
+ "naming_rule": "UUID",
  "owner": "Administrator",
  "permissions": [
   {
@@ -50,7 +65,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",

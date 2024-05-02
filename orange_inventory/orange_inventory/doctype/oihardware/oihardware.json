@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_events_in_timeline": 1,
  "autoname": "UUID",
  "creation": "2024-04-19 00:04:51.860421",
  "default_view": "List",
@@ -8,28 +9,132 @@
  "field_order": [
   "title",
   "asset_tag",
-  "serial_number"
+  "serial_number",
+  "user",
+  "financially_responsible_person",
+  "column_break_ynjs",
+  "status",
+  "type",
+  "manufacturer",
+  "model",
+  "section_break_oohx",
+  "contract",
+  "managment_tab",
+  "purchase_date",
+  "column_break_jhms",
+  "purchase_cost",
+  "develop_tab",
+  "picture"
  ],
  "fields": [
   {
    "fieldname": "title",
    "fieldtype": "Data",
-   "label": "TItle"
+   "label": "Title"
   },
   {
    "fieldname": "asset_tag",
    "fieldtype": "Data",
-   "label": "Asset Tag"
+   "in_standard_filter": 1,
+   "label": "Asset Tag",
+   "unique": 1
   },
   {
    "fieldname": "serial_number",
    "fieldtype": "Data",
-   "label": "Serial Number"
+   "in_standard_filter": 1,
+   "label": "Serial Number",
+   "unique": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "oiUser"
+  },
+  {
+   "fieldname": "financially_responsible_person",
+   "fieldtype": "Link",
+   "label": "Financially responsible person",
+   "options": "oiUser"
+  },
+  {
+   "fieldname": "column_break_ynjs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Link",
+   "label": "Status",
+   "options": "oiHardware Status"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "label": "Type",
+   "options": "oiHardware Type"
+  },
+  {
+   "fieldname": "manufacturer",
+   "fieldtype": "Link",
+   "label": "Manufacturer",
+   "options": "oiManufacturer"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "oiHardware Model"
+  },
+  {
+   "fieldname": "section_break_oohx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "contract",
+   "fieldtype": "Link",
+   "label": "Contract",
+   "options": "oiContract",
+   "search_index": 1
+  },
+  {
+   "fieldname": "develop_tab",
+   "fieldtype": "Tab Break",
+   "label": "Dev"
+  },
+  {
+   "fetch_from": "model.picture",
+   "fetch_if_empty": 1,
+   "fieldname": "picture",
+   "fieldtype": "Attach Image",
+   "label": "Picture"
+  },
+  {
+   "fieldname": "managment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Managment"
+  },
+  {
+   "fieldname": "purchase_cost",
+   "fieldtype": "Currency",
+   "label": "Purchase Cost",
+   "options": "UAH"
+  },
+  {
+   "fieldname": "purchase_date",
+   "fieldtype": "Date",
+   "label": "Purchase Date"
+  },
+  {
+   "fieldname": "column_break_jhms",
+   "fieldtype": "Column Break"
   }
  ],
+ "image_field": "picture",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-19 00:18:47.208022",
+ "make_attachments_public": 1,
+ "modified": "2024-05-02 15:57:13.564527",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware",
@@ -49,9 +154,28 @@
    "write": 1
   }
  ],
+ "show_name_in_global_search": 1,
+ "show_preview_popup": 1,
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "Ready for delivery"
+  },
+  {
+   "color": "Orange",
+   "title": "Pending"
+  },
+  {
+   "color": "Blue",
+   "title": "Deployed"
+  },
+  {
+   "color": "Red",
+   "title": "Undeployable"
+  }
+ ],
  "title_field": "title"
 }

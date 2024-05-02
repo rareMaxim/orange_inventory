@@ -1,0 +1,216 @@
+# Ukrainian translations for Orange Inventory.
+# Copyright (C) 2024 Maxim Sysoev
+# This file is distributed under the same license as the Orange Inventory project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Orange Inventory VERSION\n"
+"Report-Msgid-Bugs-To: maks4a@gmail.com\n"
+"POT-Creation-Date: 2024-05-01 17:49+0202\n"
+"PO-Revision-Date: 2024-05-01 14:12+0202\n"
+"Last-Translator: maks4a@gmail.com\n"
+"Language: uk\n"
+"Language-Team: maks4a@gmail.com\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.1\n"
+
+#. Label of a Currency field in DocType 'oiContract'
+#: orange_inventory/doctype/oicontract/oicontract.json
+msgctxt "oiContract"
+msgid "Amount"
+msgstr "Вартість"
+
+#. Label of a Data field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Asset Tag"
+msgstr "Інвентарний номер"
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Contract"
+msgstr "Договір"
+
+#. Label of a Date field in DocType 'oiContract'
+#: orange_inventory/doctype/oicontract/oicontract.json
+msgctxt "oiContract"
+msgid "Contract Date"
+msgstr "Дата договору"
+
+#. Label of a Data field in DocType 'oiContract'
+#: orange_inventory/doctype/oicontract/oicontract.json
+msgctxt "oiContract"
+msgid "Contract Number"
+msgstr "Номер договіру"
+
+#. Label of a Tab Break field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Dev"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Financially responsible person"
+msgstr "Матеріально-відповідальна особа"
+
+#. Label of a Tab Break field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Managment"
+msgstr "Керування"
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Manufacturer"
+msgstr "Виробник"
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Model"
+msgstr "Модель"
+
+#. Label of a shortcut in the Orange Inventory Workspace
+#: orange_inventory/workspace/orange_inventory/orange_inventory.json
+#, fuzzy
+msgctxt "oiHardware"
+msgid "Oihardware"
+msgstr "Обладнання"
+
+#. Name of a Workspace
+#: orange_inventory/workspace/orange_inventory/orange_inventory.json
+msgid "Orange Inventory"
+msgstr ""
+
+#. Label of a Attach Image field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Picture"
+msgstr "Зображення"
+
+#. Label of a Attach Image field in DocType 'oiHardware Model'
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgctxt "oiHardware Model"
+msgid "Picture"
+msgstr "Зображення"
+
+#. Label of a Currency field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Purchase Cost"
+msgstr "Вартість"
+
+#. Label of a Date field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Purchase Date"
+msgstr "Дата придбання"
+
+#. Label of a Data field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Serial Number"
+msgstr "Серійний номер"
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Status"
+msgstr "Статус"
+
+#. Name of a role
+#: orange_inventory/doctype/oiagent/oiagent.json
+#: orange_inventory/doctype/oicontract/oicontract.json
+#: orange_inventory/doctype/oihardware/oihardware.json
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+#: orange_inventory/doctype/oihardware_status/oihardware_status.json
+#: orange_inventory/doctype/oihardware_type/oihardware_type.json
+#: orange_inventory/doctype/oimanufacturer/oimanufacturer.json
+msgid "System Manager"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiAgent'
+#: orange_inventory/doctype/oiagent/oiagent.json
+msgctxt "oiAgent"
+msgid "Title"
+msgstr "Назва"
+
+#. Label of a Data field in DocType 'oiContract'
+#: orange_inventory/doctype/oicontract/oicontract.json
+msgctxt "oiContract"
+msgid "Title"
+msgstr "Назва"
+
+#. Label of a Data field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Title"
+msgstr "Назва"
+
+#. Label of a Data field in DocType 'oiHardware Model'
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgctxt "oiHardware Model"
+msgid "Title"
+msgstr "Назва"
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Type"
+msgstr "Тип"
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "User"
+msgstr "Користувач"
+
+#. Name of a DocType
+#: orange_inventory/doctype/oiagent/oiagent.json
+msgid "oiAgent"
+msgstr ""
+
+#. Name of a DocType
+#: orange_inventory/doctype/oicontract/oicontract.json
+msgid "oiContract"
+msgstr "Договір"
+
+#. Name of a DocType
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgid "oiHardware"
+msgstr "Обладнання"
+
+#. Linked DocType in oiContract's connections
+#: orange_inventory/doctype/oicontract/oicontract.json
+msgctxt "oiContract"
+msgid "oiHardware"
+msgstr "Обладнання"
+
+#. Name of a DocType
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgid "oiHardware Model"
+msgstr "Модель"
+
+#. Name of a DocType
+#: orange_inventory/doctype/oihardware_status/oihardware_status.json
+msgid "oiHardware Status"
+msgstr "Статус"
+
+#. Name of a DocType
+#: orange_inventory/doctype/oihardware_type/oihardware_type.json
+msgid "oiHardware Type"
+msgstr "Тип"
+
+#. Name of a DocType
+#: orange_inventory/doctype/oimanufacturer/oimanufacturer.json
+msgid "oiManufacturer"
+msgstr "Виробник"
+
