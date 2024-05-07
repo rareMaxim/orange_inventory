@@ -1,7 +1,10 @@
 {
  "cards": [
   {
-   "card": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c"
+   "card": "\u041d\u043e\u0443\u0442\u0431\u0443\u043a\u0438"
+  },
+  {
+   "card": "\u041f\u0440\u0438\u043d\u0442\u0435\u0440\u0438"
   }
  ],
  "charts": [
@@ -9,14 +12,14 @@
    "width": "Half"
   }
  ],
- "creation": "2024-05-02 16:20:13.263929",
+ "creation": "2024-05-07 17:15:57.945135",
  "dashboard_name": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
  "docstatus": 0,
  "doctype": "Dashboard",
  "idx": 0,
  "is_default": 1,
  "is_standard": 1,
- "modified": "2024-05-02 16:20:13.263929",
+ "modified": "2024-05-07 17:20:49.409131",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",

@@ -6,13 +6,17 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
+  "type",
+  "manufacturer",
+  "model",
+  "product",
   "picture"
  ],
  "fields": [
   {
-   "allow_in_quick_entry": 1,
    "fieldname": "title",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Title"
   },
   {
@@ -20,6 +24,32 @@
    "fieldname": "picture",
    "fieldtype": "Attach Image",
    "label": "Picture"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "manufacturer",
+   "fieldtype": "Link",
+   "label": "Manufacturer",
+   "options": "oiManufacturer"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "product",
+   "fieldtype": "Data",
+   "label": "Product"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "label": "Type",
+   "options": "oiHardware Type"
   }
  ],
  "image_field": "picture",
@@ -31,7 +61,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-05-02 21:38:33.810097",
+ "modified": "2024-05-06 15:42:52.976739",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware Model",
