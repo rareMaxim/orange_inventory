@@ -2,10 +2,10 @@
 # For license information, please see license.txt
 
 # import frappe
-from frappe.model.document import Document
+from frappe.utils.nestedset import NestedSet
 
 
-class oiUser(Document):
+class oiOrganisationStructure(NestedSet):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,11 +14,14 @@ class oiUser(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		birthday: DF.Data | None
-		full_name: DF.Data | None
-		organisation_structure: DF.Link | None
-		phone: DF.Data | None
-		tax_code: DF.Data | None
+		edrpou: DF.Data | None
+		full_name: DF.SmallText | None
+		is_group: DF.Check
+		lft: DF.Int
+		old_parent: DF.Link | None
+		parent_oiorganisation_structure: DF.Link | None
+		rgt: DF.Int
+		short_name: DF.Data | None
 	# end: auto-generated types
 
 	pass

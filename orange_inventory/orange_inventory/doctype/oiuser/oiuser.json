@@ -6,7 +6,12 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "full_name"
+  "full_name",
+  "organisation_structure",
+  "birthday",
+  "column_break_jlvg",
+  "phone",
+  "tax_code"
  ],
  "fields": [
   {
@@ -14,11 +19,37 @@
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Full Name"
+  },
+  {
+   "fieldname": "organisation_structure",
+   "fieldtype": "Link",
+   "label": "Organisation structure",
+   "options": "oiOrganisation Structure"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "tax_code",
+   "fieldtype": "Data",
+   "label": "Tax Code"
+  },
+  {
+   "fieldname": "birthday",
+   "fieldtype": "Data",
+   "label": "Birthday"
+  },
+  {
+   "fieldname": "column_break_jlvg",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 09:36:31.095847",
+ "modified": "2024-05-14 15:19:08.770011",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiUser",

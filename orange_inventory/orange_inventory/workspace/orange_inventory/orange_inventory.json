@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oihardware\",\"col\":3}},{\"id\":\"KYYl0KfP_7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oicontract\",\"col\":3}}]",
+ "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oihardware\",\"col\":3}},{\"id\":\"KYYl0KfP_7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oicontract\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"W6gixQs7kW\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2024-04-30 10:55:44.202833",
  "custom_blocks": [],
  "docstatus": 0,
@@ -12,8 +12,38 @@
  "indicator_color": "green",
  "is_hidden": 0,
  "label": "Orange Inventory",
- "links": [],
- "modified": "2024-05-02 21:32:28.760414",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Other",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "oiOrganisation Structure",
+   "link_count": 0,
+   "link_to": "oiOrganisation Structure",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "oiUser",
+   "link_count": 0,
+   "link_to": "oiUser",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-05-14 15:17:52.558609",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "Orange Inventory",

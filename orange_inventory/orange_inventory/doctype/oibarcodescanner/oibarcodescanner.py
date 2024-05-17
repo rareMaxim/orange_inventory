@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class oiUser(Document):
+class oiBarcodeScanner(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,11 +14,7 @@ class oiUser(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		birthday: DF.Data | None
-		full_name: DF.Data | None
-		organisation_structure: DF.Link | None
-		phone: DF.Data | None
-		tax_code: DF.Data | None
+		barcode: DF.Barcode | None
 	# end: auto-generated types
 
 	pass

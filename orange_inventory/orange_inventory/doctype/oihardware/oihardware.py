@@ -16,6 +16,7 @@ class oiHardware(Document):
 
 		asset_tag: DF.Data | None
 		contract: DF.Link | None
+		decommissioning_contract: DF.Link | None
 		financially_responsible_person: DF.Link | None
 		manufacturer: DF.Link | None
 		model: DF.Link | None
