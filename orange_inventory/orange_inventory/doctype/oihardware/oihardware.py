@@ -15,9 +15,11 @@ class oiHardware(Document):
 		from frappe.types import DF
 
 		asset_tag: DF.Data | None
+		company: DF.Link | None
 		contract: DF.Link | None
 		decommissioning_contract: DF.Link | None
 		financially_responsible_person: DF.Link | None
+		inventory_date: DF.Date | None
 		manufacturer: DF.Link | None
 		model: DF.Link | None
 		picture: DF.AttachImage | None

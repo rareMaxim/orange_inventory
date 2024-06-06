@@ -1,0 +1,145 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-05 11:00:16.170407",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_abxe",
+  "type",
+  "column_break_hsjf",
+  "doc_number",
+  "column_break_vwmi",
+  "doc_date",
+  "section_break_onyh",
+  "from_user",
+  "from_organization",
+  "column_break_hkhv",
+  "to_user",
+  "to_organization",
+  "section_break_rwpt",
+  "skip_transfer",
+  "items",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_user",
+   "fieldtype": "Link",
+   "label": "From User",
+   "options": "oiUser"
+  },
+  {
+   "fieldname": "to_user",
+   "fieldtype": "Link",
+   "label": "To User",
+   "options": "oiUser"
+  },
+  {
+   "fetch_from": "from_user.organisation_structure",
+   "fieldname": "from_organization",
+   "fieldtype": "Link",
+   "label": "From Organization",
+   "options": "oiOrganisation Structure"
+  },
+  {
+   "fieldname": "column_break_hkhv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "to_user.organisation_structure",
+   "fieldname": "to_organization",
+   "fieldtype": "Link",
+   "label": "To Organization",
+   "options": "oiOrganisation Structure"
+  },
+  {
+   "fieldname": "section_break_rwpt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "oiHardwareTransfer Table"
+  },
+  {
+   "fieldname": "section_break_abxe",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "doc_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Doc Number"
+  },
+  {
+   "fieldname": "doc_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Doc Date"
+  },
+  {
+   "fieldname": "column_break_vwmi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_onyh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "label": "Type",
+   "options": "oiContract Type"
+  },
+  {
+   "fieldname": "column_break_hsjf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "skip_transfer",
+   "fieldtype": "Check",
+   "label": "Skip transfer"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "oiHardwareTransfer",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-06-06 11:50:04.459997",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiHardwareTransfer",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "doc_number,doc_date",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "type"
+}

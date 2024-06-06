@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Orange Inventory VERSION\n"
 "Report-Msgid-Bugs-To: maks4a@gmail.com\n"
-"POT-Creation-Date: 2024-05-01 17:49+0202\n"
-"PO-Revision-Date: 2024-05-01 17:49+0202\n"
+"POT-Creation-Date: 2024-06-05 14:32+0202\n"
+"PO-Revision-Date: 2024-06-05 14:32+0202\n"
 "Last-Translator: maks4a@gmail.com\n"
 "Language-Team: maks4a@gmail.com\n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,24 @@ msgstr ""
 #: orange_inventory/doctype/oihardware/oihardware.json
 msgctxt "oiHardware"
 msgid "Asset Tag"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiHardwareTransfer Table'
+#: orange_inventory/doctype/oihardwaretransfer_table/oihardwaretransfer_table.json
+msgctxt "oiHardwareTransfer Table"
+msgid "Asset Tag"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiUser'
+#: orange_inventory/doctype/oiuser/oiuser.json
+msgctxt "oiUser"
+msgid "Birthday"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Company"
 msgstr ""
 
 #. Label of a Link field in DocType 'oiHardware'
@@ -46,16 +64,124 @@ msgctxt "oiContract"
 msgid "Contract Number"
 msgstr ""
 
+#. Label of a Currency field in DocType 'oiHardwareTransfer Table'
+#: orange_inventory/doctype/oihardwaretransfer_table/oihardwaretransfer_table.json
+msgctxt "oiHardwareTransfer Table"
+msgid "Cost"
+msgstr ""
+
+#. Label of a Date field in DocType 'oiDecommissioning'
+#: orange_inventory/doctype/oidecommissioning/oidecommissioning.json
+msgctxt "oiDecommissioning"
+msgid "Date"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Decommissioning contract"
+msgstr ""
+
+#. Label of a Tab Break field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Detail"
+msgstr ""
+
 #. Label of a Tab Break field in DocType 'oiHardware'
 #: orange_inventory/doctype/oihardware/oihardware.json
 msgctxt "oiHardware"
 msgid "Dev"
 msgstr ""
 
+#. Label of a Date field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "Doc Date"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiDecommissioning'
+#: orange_inventory/doctype/oidecommissioning/oidecommissioning.json
+msgctxt "oiDecommissioning"
+msgid "Doc Name"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "Doc Number"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Edrpou"
+msgstr ""
+
 #. Label of a Link field in DocType 'oiHardware'
 #: orange_inventory/doctype/oihardware/oihardware.json
 msgctxt "oiHardware"
 msgid "Financially responsible person"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "From Organization"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "From User"
+msgstr ""
+
+#. Label of a Small Text field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Full Name"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiUser'
+#: orange_inventory/doctype/oiuser/oiuser.json
+msgctxt "oiUser"
+msgid "Full Name"
+msgstr ""
+
+#. Label of a Check field in DocType 'oiContract Type'
+#: orange_inventory/doctype/oicontract_type/oicontract_type.json
+msgctxt "oiContract Type"
+msgid "In"
+msgstr ""
+
+#. Label of a Date field in DocType 'oiHardware'
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "Inventory Date"
+msgstr ""
+
+#. Label of a Check field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Is Group"
+msgstr ""
+
+#. Label of a Table field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "Items"
+msgstr ""
+
+#. Label of a Int field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Left"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiAccount'
+#: orange_inventory/doctype/oiaccount/oiaccount.json
+msgctxt "oiAccount"
+msgid "Login"
 msgstr ""
 
 #. Label of a Tab Break field in DocType 'oiHardware'
@@ -70,10 +196,34 @@ msgctxt "oiHardware"
 msgid "Manufacturer"
 msgstr ""
 
+#. Label of a Link field in DocType 'oiHardware Model'
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgctxt "oiHardware Model"
+msgid "Manufacturer"
+msgstr ""
+
 #. Label of a Link field in DocType 'oiHardware'
 #: orange_inventory/doctype/oihardware/oihardware.json
 msgctxt "oiHardware"
 msgid "Model"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiHardware Model'
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgctxt "oiHardware Model"
+msgid "Model"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiDecommissioning'
+#: orange_inventory/doctype/oidecommissioning/oidecommissioning.json
+msgctxt "oiDecommissioning"
+msgid "Number"
+msgstr ""
+
+#. Label of a shortcut in the Orange Inventory Workspace
+#: orange_inventory/workspace/orange_inventory/orange_inventory.json
+msgctxt "oiContract"
+msgid "Oicontract"
 msgstr ""
 
 #. Label of a shortcut in the Orange Inventory Workspace
@@ -82,9 +232,50 @@ msgctxt "oiHardware"
 msgid "Oihardware"
 msgstr ""
 
+#. Label of a Link field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Old Parent"
+msgstr ""
+
 #. Name of a Workspace
 #: orange_inventory/workspace/orange_inventory/orange_inventory.json
 msgid "Orange Inventory"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiUser'
+#: orange_inventory/doctype/oiuser/oiuser.json
+msgctxt "oiUser"
+msgid "Organisation structure"
+msgstr ""
+
+#. Label of a Card Break in the Orange Inventory Workspace
+#: orange_inventory/workspace/orange_inventory/orange_inventory.json
+msgid "Other"
+msgstr ""
+
+#. Label of a Check field in DocType 'oiContract Type'
+#: orange_inventory/doctype/oicontract_type/oicontract_type.json
+msgctxt "oiContract Type"
+msgid "Out"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Parent oiOrganisation Structure"
+msgstr ""
+
+#. Label of a Password field in DocType 'oiAccount'
+#: orange_inventory/doctype/oiaccount/oiaccount.json
+msgctxt "oiAccount"
+msgid "Password"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiUser'
+#: orange_inventory/doctype/oiuser/oiuser.json
+msgctxt "oiUser"
+msgid "Phone"
 msgstr ""
 
 #. Label of a Attach Image field in DocType 'oiHardware'
@@ -99,6 +290,12 @@ msgctxt "oiHardware Model"
 msgid "Picture"
 msgstr ""
 
+#. Label of a Data field in DocType 'oiHardware Model'
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgctxt "oiHardware Model"
+msgid "Product"
+msgstr ""
+
 #. Label of a Currency field in DocType 'oiHardware'
 #: orange_inventory/doctype/oihardware/oihardware.json
 msgctxt "oiHardware"
@@ -111,10 +308,34 @@ msgctxt "oiHardware"
 msgid "Purchase Date"
 msgstr ""
 
+#. Label of a Int field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Right"
+msgstr ""
+
+#. Label of a Button field in DocType 'oiBarcodeScanner'
+#: orange_inventory/doctype/oibarcodescanner/oibarcodescanner.json
+msgctxt "oiBarcodeScanner"
+msgid "Scan It!"
+msgstr ""
+
 #. Label of a Data field in DocType 'oiHardware'
 #: orange_inventory/doctype/oihardware/oihardware.json
 msgctxt "oiHardware"
 msgid "Serial Number"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Short Name"
+msgstr ""
+
+#. Label of a Check field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "Skip transfer"
 msgstr ""
 
 #. Label of a Link field in DocType 'oiHardware'
@@ -124,14 +345,39 @@ msgid "Status"
 msgstr ""
 
 #. Name of a role
+#: orange_inventory/doctype/oiaccount/oiaccount.json
 #: orange_inventory/doctype/oiagent/oiagent.json
+#: orange_inventory/doctype/oibarcodescanner/oibarcodescanner.json
 #: orange_inventory/doctype/oicontract/oicontract.json
+#: orange_inventory/doctype/oicontract_type/oicontract_type.json
+#: orange_inventory/doctype/oidecommissioning/oidecommissioning.json
 #: orange_inventory/doctype/oihardware/oihardware.json
 #: orange_inventory/doctype/oihardware_model/oihardware_model.json
 #: orange_inventory/doctype/oihardware_status/oihardware_status.json
 #: orange_inventory/doctype/oihardware_type/oihardware_type.json
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
 #: orange_inventory/doctype/oimanufacturer/oimanufacturer.json
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+#: orange_inventory/doctype/oiuser/oiuser.json
 msgid "System Manager"
+msgstr ""
+
+#. Label of a Tab Break field in DocType 'oiOrganisation Structure'
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgctxt "oiOrganisation Structure"
+msgid "Tab 3"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiUser'
+#: orange_inventory/doctype/oiuser/oiuser.json
+msgctxt "oiUser"
+msgid "Tax Code"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiAccount'
+#: orange_inventory/doctype/oiaccount/oiaccount.json
+msgctxt "oiAccount"
+msgid "Title"
 msgstr ""
 
 #. Label of a Data field in DocType 'oiAgent'
@@ -143,6 +389,12 @@ msgstr ""
 #. Label of a Data field in DocType 'oiContract'
 #: orange_inventory/doctype/oicontract/oicontract.json
 msgctxt "oiContract"
+msgid "Title"
+msgstr ""
+
+#. Label of a Data field in DocType 'oiDecommissioning'
+#: orange_inventory/doctype/oidecommissioning/oidecommissioning.json
+msgctxt "oiDecommissioning"
 msgid "Title"
 msgstr ""
 
@@ -158,9 +410,39 @@ msgctxt "oiHardware Model"
 msgid "Title"
 msgstr ""
 
+#. Label of a Link field in DocType 'oiHardwareTransfer Table'
+#: orange_inventory/doctype/oihardwaretransfer_table/oihardwaretransfer_table.json
+msgctxt "oiHardwareTransfer Table"
+msgid "Title"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "To Organization"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
+msgid "To User"
+msgstr ""
+
 #. Label of a Link field in DocType 'oiHardware'
 #: orange_inventory/doctype/oihardware/oihardware.json
 msgctxt "oiHardware"
+msgid "Type"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardware Model'
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgctxt "oiHardware Model"
+msgid "Type"
+msgstr ""
+
+#. Label of a Link field in DocType 'oiHardwareTransfer'
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgctxt "oiHardwareTransfer"
 msgid "Type"
 msgstr ""
 
@@ -170,14 +452,40 @@ msgctxt "oiHardware"
 msgid "User"
 msgstr ""
 
+#. Label of a Barcode field in DocType 'oiBarcodeScanner'
+#: orange_inventory/doctype/oibarcodescanner/oibarcodescanner.json
+msgctxt "oiBarcodeScanner"
+msgid "barcode"
+msgstr ""
+
+#. Name of a DocType
+#: orange_inventory/doctype/oiaccount/oiaccount.json
+msgid "oiAccount"
+msgstr ""
+
 #. Name of a DocType
 #: orange_inventory/doctype/oiagent/oiagent.json
 msgid "oiAgent"
 msgstr ""
 
 #. Name of a DocType
+#: orange_inventory/doctype/oibarcodescanner/oibarcodescanner.json
+msgid "oiBarcodeScanner"
+msgstr ""
+
+#. Name of a DocType
 #: orange_inventory/doctype/oicontract/oicontract.json
 msgid "oiContract"
+msgstr ""
+
+#. Name of a DocType
+#: orange_inventory/doctype/oicontract_type/oicontract_type.json
+msgid "oiContract Type"
+msgstr ""
+
+#. Name of a DocType
+#: orange_inventory/doctype/oidecommissioning/oidecommissioning.json
+msgid "oiDecommissioning"
 msgstr ""
 
 #. Name of a DocType
@@ -188,6 +496,18 @@ msgstr ""
 #. Linked DocType in oiContract's connections
 #: orange_inventory/doctype/oicontract/oicontract.json
 msgctxt "oiContract"
+msgid "oiHardware"
+msgstr ""
+
+#. Linked DocType in oiDecommissioning's connections
+#: orange_inventory/doctype/oidecommissioning/oidecommissioning.json
+msgctxt "oiDecommissioning"
+msgid "oiHardware"
+msgstr ""
+
+#. Linked DocType in oiHardware Model's connections
+#: orange_inventory/doctype/oihardware_model/oihardware_model.json
+msgctxt "oiHardware Model"
 msgid "oiHardware"
 msgstr ""
 
@@ -207,7 +527,50 @@ msgid "oiHardware Type"
 msgstr ""
 
 #. Name of a DocType
+#: orange_inventory/doctype/oihardwaretransfer/oihardwaretransfer.json
+msgid "oiHardwareTransfer"
+msgstr ""
+
+#. Linked DocType in oiHardware's connections
+#: orange_inventory/doctype/oihardware/oihardware.json
+msgctxt "oiHardware"
+msgid "oiHardwareTransfer"
+msgstr ""
+
+#. Name of a DocType
+#: orange_inventory/doctype/oihardwaretransfer_table/oihardwaretransfer_table.json
+msgid "oiHardwareTransfer Table"
+msgstr ""
+
+#. Name of a DocType
 #: orange_inventory/doctype/oimanufacturer/oimanufacturer.json
 msgid "oiManufacturer"
+msgstr ""
+
+#. Name of a DocType
+#: orange_inventory/doctype/oiorganisation_structure/oiorganisation_structure.json
+msgid "oiOrganisation Structure"
+msgstr ""
+
+#. Label of a Link in the Orange Inventory Workspace
+#: orange_inventory/workspace/orange_inventory/orange_inventory.json
+msgctxt "oiOrganisation Structure"
+msgid "oiOrganisation Structure"
+msgstr ""
+
+#. Name of a DocType
+#: orange_inventory/doctype/oiuser/oiuser.json
+msgid "oiUser"
+msgstr ""
+
+#. Label of a Link in the Orange Inventory Workspace
+#: orange_inventory/workspace/orange_inventory/orange_inventory.json
+msgctxt "oiUser"
+msgid "oiUser"
+msgstr ""
+
+#. Name of a report
+#: orange_inventory/report/обладнання_по_користувачу/обладнання_по_користувачу.json
+msgid "Обладнання по користувачу"
 msgstr ""
 

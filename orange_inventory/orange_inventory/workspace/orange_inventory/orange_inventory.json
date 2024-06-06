@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oihardware\",\"col\":3}},{\"id\":\"KYYl0KfP_7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oicontract\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"W6gixQs7kW\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
+ "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oihardware\",\"col\":3}},{\"id\":\"KYYl0KfP_7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oicontract\",\"col\":3}},{\"id\":\"MvBJUQPoxt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oihardwaretransfer\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"W6gixQs7kW\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2024-04-30 10:55:44.202833",
  "custom_blocks": [],
  "docstatus": 0,
@@ -43,7 +43,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-05-14 15:17:52.558609",
+ "modified": "2024-06-05 14:41:18.945152",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "Orange Inventory",
@@ -55,6 +55,14 @@
  "roles": [],
  "sequence_id": 31.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Oihardwaretransfer",
+   "link_to": "oiHardwareTransfer",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
   {
    "color": "Grey",
    "doc_view": "List",
