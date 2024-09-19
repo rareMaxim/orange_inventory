@@ -4,6 +4,8 @@ app_publisher = "Maxim Sysoev"
 app_description = "IT Inventory Tool"
 app_email = "maks4a@gmail.com"
 app_license = "mit"
+app_logo_url = "/assets/orange_inventory/images/oi-logo.webp"
+app_home = "/app/orange-inventory"
 # required_apps = []
 
 # Includes in <head>
