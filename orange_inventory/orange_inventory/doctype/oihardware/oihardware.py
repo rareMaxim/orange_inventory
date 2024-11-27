@@ -18,6 +18,9 @@ class oiHardware(Document):
 		company: DF.Link | None
 		contract: DF.Link | None
 		decommissioning_contract: DF.Link | None
+		fin_resp_company: DF.Link | None
+		fin_resp_deparnament: DF.Link | None
+		fin_resp_user_name: DF.Link | None
 		financially_responsible_person: DF.Link | None
 		inventory_date: DF.Date | None
 		manufacturer: DF.Link | None
@@ -30,6 +33,7 @@ class oiHardware(Document):
 		title: DF.Data | None
 		type: DF.Link | None
 		user: DF.Link | None
+		user_name: DF.Link | None
 	# end: auto-generated types
 
 	pass

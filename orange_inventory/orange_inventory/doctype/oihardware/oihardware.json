@@ -3,7 +3,7 @@
  "allow_events_in_timeline": 1,
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "UUID",
+ "autoname": "hash",
  "creation": "2024-04-19 00:04:51.860421",
  "default_view": "List",
  "doctype": "DocType",
@@ -12,15 +12,24 @@
   "asset_tag",
   "title",
   "serial_number",
-  "user",
-  "financially_responsible_person",
-  "company",
-  "column_break_ynjs",
   "status",
+  "column_break_ynjs",
   "type",
   "manufacturer",
   "model",
   "inventory_date",
+  "user_section",
+  "user_name",
+  "section_break_nwoa",
+  "fin_resp_user_name",
+  "fin_resp_deparnament",
+  "fin_resp_company",
+  "section_break_hhhn",
+  "user",
+  "column_break_ijrr",
+  "financially_responsible_person",
+  "column_break_tjku",
+  "company",
   "managment_tab",
   "purchase_date",
   "column_break_jhms",
@@ -160,6 +169,53 @@
   {
    "fieldname": "column_break_okdx",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user_section",
+   "fieldtype": "Section Break",
+   "label": "User"
+  },
+  {
+   "fieldname": "user_name",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "section_break_nwoa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "fin_resp_user_name",
+   "fieldtype": "Link",
+   "label": "Financially responsible person HR",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "fin_resp_user_name.department",
+   "fieldname": "fin_resp_deparnament",
+   "fieldtype": "Link",
+   "label": "Departament",
+   "options": "Department"
+  },
+  {
+   "fetch_from": "fin_resp_user_name.company",
+   "fieldname": "fin_resp_company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "section_break_hhhn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ijrr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_tjku",
+   "fieldtype": "Column Break"
   }
  ],
  "image_field": "picture",
@@ -172,11 +228,11 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-06-05 13:07:35.654757",
+ "modified": "2024-11-27 20:01:57.098678",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware",
- "naming_rule": "UUID",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
