@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:\u041f\u0440\u0434\u041c\u0426-{#####}",
  "creation": "2024-06-05 11:00:16.170407",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -27,31 +28,31 @@
    "fieldname": "from_user",
    "fieldtype": "Link",
    "label": "From User",
-   "options": "oiUser"
+   "options": "Employee"
   },
   {
    "fieldname": "to_user",
    "fieldtype": "Link",
    "label": "To User",
-   "options": "oiUser"
+   "options": "Employee"
   },
   {
-   "fetch_from": "from_user.organisation_structure",
+   "fetch_from": "from_user.company",
    "fieldname": "from_organization",
    "fieldtype": "Link",
    "label": "From Organization",
-   "options": "oiOrganisation Structure"
+   "options": "Company"
   },
   {
    "fieldname": "column_break_hkhv",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "to_user.organisation_structure",
+   "fetch_from": "to_user.company",
    "fieldname": "to_organization",
    "fieldtype": "Link",
    "label": "To Organization",
-   "options": "oiOrganisation Structure"
+   "options": "Company"
   },
   {
    "fieldname": "section_break_rwpt",
@@ -117,10 +118,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-06-06 11:50:04.459997",
+ "modified": "2024-11-28 00:24:40.958805",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardwareTransfer",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

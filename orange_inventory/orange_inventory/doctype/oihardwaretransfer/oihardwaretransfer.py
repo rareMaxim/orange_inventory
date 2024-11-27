@@ -13,9 +13,7 @@ class oiHardwareTransfer(Document):
 
     if TYPE_CHECKING:
         from frappe.types import DF
-        from orange_inventory.orange_inventory.doctype.oihardwaretransfer_table.oihardwaretransfer_table import (
-            oiHardwareTransferTable,
-        )
+        from orange_inventory.orange_inventory.doctype.oihardwaretransfer_table.oihardwaretransfer_table import oiHardwareTransferTable
 
         amended_from: DF.Link | None
         doc_date: DF.Date | None
