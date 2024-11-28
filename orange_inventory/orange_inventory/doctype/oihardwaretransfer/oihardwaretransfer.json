@@ -14,10 +14,14 @@
   "doc_date",
   "section_break_onyh",
   "from_user",
+  "from_designation",
   "from_organization",
+  "from_sign",
   "column_break_hkhv",
   "to_user",
+  "to_designation",
   "to_organization",
+  "to_sign",
   "section_break_rwpt",
   "skip_transfer",
   "items",
@@ -113,12 +117,36 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fetch_from": "from_user.designation",
+   "fieldname": "from_designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fetch_from": "to_user.designation",
+   "fieldname": "to_designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "from_sign",
+   "fieldtype": "Signature",
+   "label": "From Sign"
+  },
+  {
+   "fieldname": "to_sign",
+   "fieldtype": "Signature",
+   "label": "To Sign"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-28 00:24:40.958805",
+ "modified": "2024-11-28 11:28:43.768273",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardwareTransfer",

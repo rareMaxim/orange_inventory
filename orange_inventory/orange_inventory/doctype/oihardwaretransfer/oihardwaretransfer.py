@@ -18,10 +18,12 @@ class oiHardwareTransfer(Document):
         amended_from: DF.Link | None
         doc_date: DF.Date | None
         doc_number: DF.Data | None
+        from_designation: DF.Link | None
         from_organization: DF.Link | None
         from_user: DF.Link | None
         items: DF.Table[oiHardwareTransferTable]
         skip_transfer: DF.Check
+        to_designation: DF.Link | None
         to_organization: DF.Link | None
         to_user: DF.Link | None
         type: DF.Link | None
