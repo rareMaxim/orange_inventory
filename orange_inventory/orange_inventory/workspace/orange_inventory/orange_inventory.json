@@ -1,6 +1,7 @@
 {
+ "app": "orange_inventory",
  "charts": [],
- "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oihardware\",\"col\":3}},{\"id\":\"KYYl0KfP_7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oicontract\",\"col\":3}},{\"id\":\"MvBJUQPoxt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Oihardwaretransfer\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"W6gixQs7kW\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
+ "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hardware\",\"col\":3}},{\"id\":\"KYYl0KfP_7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Contract\",\"col\":3}},{\"id\":\"MvBJUQPoxt\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hardware Transfer\",\"col\":3}},{\"id\":\"KMs0yY-RfQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cartridge Service\",\"col\":3}},{\"id\":\"1RInIpTlxo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0429\u043e\u0434\u0435\u043d\u043d\u0430 \u0440\u043e\u0431\u043e\u0442\u0430\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"W6gixQs7kW\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2024-04-30 10:55:44.202833",
  "custom_blocks": [],
  "docstatus": 0,
@@ -43,7 +44,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-06-05 14:41:18.945152",
+ "modified": "2025-03-14 10:55:43.541754",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "Orange Inventory",
@@ -52,21 +53,41 @@
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
- "roles": [],
+ "roles": [
+  {
+   "role": "Orange Inventory Manager"
+  }
+ ],
  "sequence_id": 31.0,
  "shortcuts": [
   {
-   "color": "Grey",
+   "color": "Green",
    "doc_view": "List",
-   "label": "Oihardwaretransfer",
-   "link_to": "oiHardwareTransfer",
+   "label": "Cartridge Service",
+   "link_to": "oiCartridgeService",
    "stats_filter": "[]",
    "type": "DocType"
   },
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Oicontract",
+   "label": "\u0429\u043e\u0434\u0435\u043d\u043d\u0430 \u0440\u043e\u0431\u043e\u0442\u0430",
+   "link_to": "oiWorkDaily",
+   "stats_filter": "[[\"oiWorkDaily\",\"date\",\"Timespan\",\"last 7 days\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Hardware",
+   "link_to": "oiHardware",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Contract",
    "link_to": "oiContract",
    "stats_filter": "[]",
    "type": "DocType"
@@ -74,11 +95,12 @@
   {
    "color": "Grey",
    "doc_view": "List",
-   "label": "Oihardware",
-   "link_to": "oiHardware",
+   "label": "Hardware Transfer",
+   "link_to": "oiHardwareTransfer",
    "stats_filter": "[]",
    "type": "DocType"
   }
  ],
- "title": "Orange Inventory"
+ "title": "Orange Inventory",
+ "type": "Workspace"
 }

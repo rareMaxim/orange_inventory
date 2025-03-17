@@ -1,0 +1,126 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2025-03-14 08:42:31.981422",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_section",
+  "\u0432\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c_column",
+  "date",
+  "assigned_to",
+  "status",
+  "column_break_mzok",
+  "task",
+  "company",
+  "employee",
+  "section_break_kdww",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "column_break_mzok",
+   "fieldtype": "Column Break",
+   "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assigned To",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "task",
+   "fieldtype": "Data",
+   "label": "Task"
+  },
+  {
+   "fieldname": "section_break_kdww",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\u0421\u0442\u0432\u043e\u0440\u0435\u043d\u043e\n\u0412 \u0440\u043e\u0431\u043e\u0442\u0456\n\u0412\u0438\u043a\u043e\u043d\u0430\u043d\u043e"
+  },
+  {
+   "fieldname": "\u0432\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c_column",
+   "fieldtype": "Column Break",
+   "label": "\u0412\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c"
+  },
+  {
+   "fieldname": "general_section",
+   "fieldtype": "Section Break",
+   "label": "General"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-03-14 13:16:28.694176",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiWorkDaily",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Pink",
+   "title": "\u0421\u0442\u0432\u043e\u0440\u0435\u043d\u043e"
+  },
+  {
+   "color": "Yellow",
+   "title": "\u0412 \u0440\u043e\u0431\u043e\u0442\u0456"
+  },
+  {
+   "color": "Green",
+   "title": "\u0412\u0438\u043a\u043e\u043d\u0430\u043d\u043e"
+  }
+ ],
+ "title_field": "task"
+}
