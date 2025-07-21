@@ -1,0 +1,64 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-21 11:33:47.698895",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "hardware",
+  "cost",
+  "inventory_number",
+  "serial_number"
+ ],
+ "fields": [
+  {
+   "fieldname": "hardware",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+   "options": "oiHardware",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "hardware.purchase_cost",
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "\u0412\u0430\u0440\u0442\u0456\u0441\u0442\u044c",
+   "options": "UAH",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "hardware.asset_tag",
+   "fieldname": "inventory_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0406\u043d\u0432. \u043d\u043e\u043c\u0435\u0440",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "hardware.serial_number",
+   "fieldname": "serial_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0421\u0435\u0440.\u043d\u043e\u043c\u0435\u0440",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-07-21 12:39:42.160829",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiHardware Transfer Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
