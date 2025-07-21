@@ -26,49 +26,39 @@ class oiHardwareTransfer(Document):
     # end: auto-generated types
 
     def on_submit(self):
-        """
-        Спрацьовує при проведенні (Submit) документа.
-        Обробляє кожну позицію в списку обладнання.
-        """
         for item in self.hardware_list:
-            # Завантажуємо документ обладнання, що передається
-            hardware_doc = frappe.get_doc("oiHardware", item.hardware)
+            # Завантажуємо документ конкретної одиниці активу
+            asset_item_doc = frappe.get_doc("Asset Item", item.asset_item)
 
-            # --- Логіка для обробки кількості ---
-            if hardware_doc.is_batched_asset:
-                # Це партійний актив. Перевіряємо залишок і зменшуємо його.
-                if hardware_doc.quantity < item.quantity:
-                    frappe.throw(f"Недостатньо залишків для '{hardware_doc.name}'. "
-                                 f"На складі: {hardware_doc.quantity}, "
-                                 f"Спроба передати: {item.quantity}")
+            if asset_item_doc.status != 'На складі':
+                frappe.throw(
+                    f"Актив {asset_item_doc.serial_no} не знаходиться на складі.")
 
-                hardware_doc.quantity -= item.quantity
+            # Оновлюємо статус та власника-контрагента
+            asset_item_doc.status = 'В експлуатації'
+            asset_item_doc.current_owner = self.to_counterparty
 
-            # Додаємо запис в історію переміщень для всіх типів активів
-            self._add_movement_log(hardware_doc, item.quantity)
+            # --- НОВА ЛОГІКА ---
+            # Оновлюємо МВО та Користувача, ЯКЩО вони вказані в акті
+            if item.new_responsible_person:
+                asset_item_doc.responsible_person = item.new_responsible_person
+            if item.new_asset_user:
+                asset_item_doc.asset_user = item.new_asset_user
 
-            # Зберігаємо оновлений документ обладнання
-            hardware_doc.save(ignore_permissions=True)
+            asset_item_doc.save(ignore_permissions=True)
 
-        # Оновлюємо статус самого документа StockTransfer
         self.db_set("status", "Завершено")
 
     def on_cancel(self):
-        """
-        Спрацьовує при скасуванні (Cancel) документа.
-        Відкочує всі зміни, зроблені при проведенні.
-        """
         for item in self.hardware_list:
-            hardware_doc = frappe.get_doc("oiHardware", item.hardware)
+            asset_item_doc = frappe.get_doc("Asset Item", item.asset_item)
 
-            if hardware_doc.is_batched_asset:
-                # Повертаємо кількість для партійних активів
-                hardware_doc.quantity += item.quantity
+            asset_item_doc.status = 'На складі'
+            asset_item_doc.current_owner = self.from_counterparty
+            # При скасуванні МВО та користувач залишаються ті, що були призначені,
+            # оскільки система не знає, хто був до цього.
 
-            # Примітка: тут можна додати логіку видалення запису з історії
-            # або додати новий запис "Повернення" для повноти аудиту.
-
-            hardware_doc.save(ignore_permissions=True)
+            asset_item_doc.save(ignore_permissions=True)
 
         self.db_set("status", "Скасовано")
 
@@ -85,3 +75,24 @@ class oiHardwareTransfer(Document):
             "reference_doctype": self.doctype,
             "reference_name": self.name
         })
+
+
+@frappe.whitelist()
+def update_hardware_category(hardware_name, new_category):
+    """
+    Дозволяє оновити категорію для вказаного обладнання.
+    Цей метод можна викликати з клієнтського скрипту.
+
+    :param hardware_name: ID (назва) документа oiHardware, який потрібно оновити.
+    :param new_category: Нова категорія, яку потрібно встановити.
+    """
+    try:
+        # Оновлюємо поле 'asset_category' в документі 'oiHardware'
+        frappe.db.set_value("oiHardware", hardware_name,
+                            "asset_category", new_category)
+        return {"status": "success", "message": f"Category for {hardware_name} updated."}
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(),
+                         "Update Hardware Category Failed")
+        # Повертаємо помилку на клієнт
+        frappe.throw(f"Не вдалося оновити категорію: {e}")

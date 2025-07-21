@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "UUID",
  "creation": "2024-05-02 09:31:23.409094",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -47,13 +46,13 @@
    "fieldtype": "Column Break"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-14 15:19:08.770011",
+ "modified": "2025-07-21 20:41:08.083247",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiUser",
- "naming_rule": "UUID",
  "owner": "Administrator",
  "permissions": [
   {
@@ -70,6 +69,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",

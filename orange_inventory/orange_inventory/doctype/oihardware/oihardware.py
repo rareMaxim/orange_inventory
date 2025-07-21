@@ -13,12 +13,13 @@ class oiHardware(Document):
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
-		from orange_inventory.orange_inventory.doctype.oihardware_movement_log.oihardware_movement_log import oiHardwareMovementLog
+		from orange_inventory.orange_inventory.doctype.oiasset_item.oiasset_item import oiAssetItem
 
 		acquired_from: DF.Link | None
 		acquisition_date: DF.Date | None
 		acquisition_type: DF.Literal["\u041f\u043e\u043a\u0443\u043f\u043a\u0430", "\u041f\u043e\u0436\u0435\u0440\u0442\u0432\u0430", "\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0430"]
 		asset_category: DF.Link
+		asset_items: DF.Table[oiAssetItem]
 		asset_tag: DF.Data | None
 		company: DF.Link | None
 		fin_resp_company: DF.Link | None
@@ -29,7 +30,6 @@ class oiHardware(Document):
 		is_batched_asset: DF.Check
 		manufacturer: DF.Link | None
 		model: DF.Link | None
-		movement_history: DF.Table[oiHardwareMovementLog]
 		picture: DF.AttachImage | None
 		purchase_cost: DF.Currency
 		purchase_date: DF.Date | None

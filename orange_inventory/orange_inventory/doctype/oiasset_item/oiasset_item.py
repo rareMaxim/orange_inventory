@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class oiHardwareTransferItem(Document):
+class oiAssetItem(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,19 +14,14 @@ class oiHardwareTransferItem(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		amount: DF.Currency
-		asset_category: DF.Link | None
-		asset_item: DF.Link | None
-		cost: DF.Currency
-		hardware: DF.Link
-		inventory_number: DF.Data | None
-		new_asset_user: DF.Link | None
-		new_responsible_person: DF.Link | None
+		asset_user: DF.Link | None
+		current_owner: DF.Link
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		quantity: DF.Float
-		serial_number: DF.Data | None
+		responsible_person: DF.Link | None
+		serial_no: DF.Data | None
+		status: DF.Literal["\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456", "\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457", "\u0412 \u0440\u0435\u043c\u043e\u043d\u0442\u0456", "\u0421\u043f\u0438\u0441\u0430\u043d\u043e"]
 	# end: auto-generated types
 
 	pass

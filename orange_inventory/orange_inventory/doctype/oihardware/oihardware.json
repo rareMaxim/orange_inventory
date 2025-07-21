@@ -22,8 +22,16 @@
   "manufacturer",
   "model",
   "inventory_date",
-  "user_section",
-  "user_name",
+  "section_break_grks",
+  "asset_items",
+  "managment_tab",
+  "acquisition_section",
+  "acquired_from",
+  "purchase_date",
+  "acquisition_date",
+  "acquisition_type",
+  "purchase_cost",
+  "source_document",
   "section_break_nwoa",
   "fin_resp_user_name",
   "fin_resp_deparnament",
@@ -34,16 +42,8 @@
   "financially_responsible_person",
   "column_break_tjku",
   "company",
-  "managment_tab",
-  "acquisition_section",
-  "acquired_from",
-  "purchase_date",
-  "acquisition_date",
-  "acquisition_type",
-  "purchase_cost",
-  "source_document",
-  "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
-  "movement_history",
+  "user_section",
+  "user_name",
   "develop_tab",
   "picture"
  ],
@@ -235,16 +235,6 @@
    "label": "\u041f\u0435\u0440\u0432\u0438\u043d\u043d\u0438\u0439 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442"
   },
   {
-   "fieldname": "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
-   "fieldtype": "Section Break",
-   "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f \u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c"
-  },
-  {
-   "fieldname": "movement_history",
-   "fieldtype": "Table",
-   "options": "oiHardware Movement Log"
-  },
-  {
    "default": "0",
    "fieldname": "is_batched_asset",
    "fieldtype": "Check",
@@ -272,13 +262,23 @@
    "label": "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0456\u044f",
    "options": "oiAsset Category",
    "reqd": 1
+  },
+  {
+   "fieldname": "asset_items",
+   "fieldtype": "Table",
+   "label": "\u041f\u043e\u0448\u0442\u0443\u0447\u043d\u0438\u0439 \u043e\u0431\u043b\u0456\u043a",
+   "options": "oiAsset Item"
+  },
+  {
+   "fieldname": "section_break_grks",
+   "fieldtype": "Section Break"
   }
  ],
  "image_field": "picture",
  "index_web_pages_for_search": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2025-07-21 17:30:34.137747",
+ "modified": "2025-07-21 20:45:19.360833",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware",
