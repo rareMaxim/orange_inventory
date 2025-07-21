@@ -26,32 +26,77 @@ class oiHardwareTransfer(Document):
 
     def on_submit(self):
         """
-        This function is triggered when the Hardware Transfer document is submitted.
-        It iterates through each piece of hardware in the transfer list and
-        appends a new record to its movement history.
+        Спрацьовує при проведенні (Submit) документа.
+        Обробляє кожну позицію в списку обладнання:
+        - Для партійних активів: зменшує кількість на складі.
+        - Для унікальних активів: змінює відповідального/власника.
+        - Для всіх: додає запис в історію переміщень.
         """
         for item in self.hardware_list:
-            # Load the hardware document that is being transferred
-            # <-- ВАЖЛИВО: замініть "oiHardware" на назву вашого DocType обладнання
+            # Завантажуємо документ обладнання, що передається
             hardware_doc = frappe.get_doc("oiHardware", item.hardware)
 
-            # Create a new row in the "movement_history" table
-            new_log_entry = hardware_doc.append("movement_history", {})
+            # --- Нова логіка для обробки кількості ---
+            if hardware_doc.is_batched_asset:
+                # Це партійний актив. Перевіряємо залишок і зменшуємо його.
+                if hardware_doc.quantity < item.quantity:
+                    frappe.throw(f"Недостатньо залишків для {hardware_doc.name}. "
+                                 f"На складі: {hardware_doc.quantity}, "
+                                 f"Спроба передати: {item.quantity}")
 
-            # Populate the fields of the new history record
-            new_log_entry.movement_date = self.transfer_date
-            new_log_entry.from_counterparty = self.from_counterparty
-            new_log_entry.to_counterparty = self.to_counterparty
-            # You can add more complex logic for the status later
-            new_log_entry.status = "Передано"
+                hardware_doc.quantity -= item.quantity
+            else:
+                # Це унікальний, серіалізований актив.
+                # Можна додати логіку зміни власника або статусу, якщо потрібно.
+                # Наприклад, можна змінити поле 'current_owner', якщо ви його додали.
+                # hardware_doc.current_owner = self.to_partner
+                pass  # Наразі просто фіксуємо рух
 
-            # Add a reference back to this Hardware Transfer document
-            new_log_entry.reference_document = self.name
-            new_log_entry.reference_doctype = self.doctype
-            new_log_entry.reference_name = self.name
+            # Додаємо запис в історію переміщень для всіх типів активів
+            self.add_movement_log(hardware_doc, item.quantity)
 
-            # Save the updated hardware document
-            hardware_doc.save()
+            # Зберігаємо оновлений документ обладнання
+            hardware_doc.save(ignore_permissions=True)
 
-        # Update the status of the Hardware Transfer document itself
+        # Оновлюємо статус самого документа StockTransfer
         self.db_set("status", "Завершено")
+
+    def add_movement_log(self, hardware_doc, quantity):
+        """
+        Допоміжна функція для додавання запису в історію переміщень.
+        """
+        new_log_entry = hardware_doc.append("movement_history", {})
+
+        # Заповнюємо поля нового запису в історії
+        new_log_entry.movement_date = self.transfer_date
+        new_log_entry.from_counterparty = self.from_partner
+        new_log_entry.to_counterparty = self.to_partner
+
+        # Створюємо інформативний статус
+        status_text = f"Передано ({quantity} од.)"
+        new_log_entry.status = status_text
+
+        # Додаємо посилання на цей документ StockTransfer
+        new_log_entry.reference_document = self.name
+        new_log_entry.reference_doctype = self.doctype
+        new_log_entry.reference_name = self.name
+
+    def before_cancel(self):
+        """
+        Спрацьовує при скасуванні (Cancel) документа.
+        Відкочує всі зміни, зроблені при проведенні.
+        """
+        for item in self.hardware_list:
+            hardware_doc = frappe.get_doc("oiHardware", item.hardware)
+
+            if hardware_doc.is_batched_asset:
+                # Повертаємо кількість для партійних активів
+                hardware_doc.quantity += item.quantity
+
+            # Видаляємо відповідний запис з історії переміщень
+            # Це більш складна логіка, яку можна додати пізніше,
+            # щоб уникнути помилок при скасуванні кількох документів
+
+            hardware_doc.save(ignore_permissions=True)
+
+        self.db_set("status", "Скасовано")

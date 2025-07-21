@@ -20,6 +20,7 @@ class oiHardwareTransferItem(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		quantity: DF.Float
 		serial_number: DF.Data | None
 	# end: auto-generated types
 

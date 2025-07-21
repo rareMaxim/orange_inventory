@@ -9,7 +9,8 @@
   "hardware",
   "cost",
   "inventory_number",
-  "serial_number"
+  "serial_number",
+  "quantity"
  ],
  "fields": [
   {
@@ -45,13 +46,21 @@
    "in_list_view": 1,
    "label": "\u0421\u0435\u0440.\u043d\u043e\u043c\u0435\u0440",
    "read_only": 1
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:frappe.meta.get_docfield(\"oiHardware\", \"is_batched_asset\", doc.hardware)",
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
+   "precision": "2"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-07-21 12:39:42.160829",
+ "modified": "2025-07-21 13:37:29.716498",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware Transfer Item",

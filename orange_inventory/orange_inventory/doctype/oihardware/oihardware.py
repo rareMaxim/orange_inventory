@@ -25,12 +25,14 @@ class oiHardware(Document):
 		fin_resp_user_name: DF.Link | None
 		financially_responsible_person: DF.Link | None
 		inventory_date: DF.Date | None
+		is_batched_asset: DF.Check
 		manufacturer: DF.Link | None
 		model: DF.Link | None
 		movement_history: DF.Table[oiHardwareMovementLog]
 		picture: DF.AttachImage | None
 		purchase_cost: DF.Currency
 		purchase_date: DF.Date | None
+		quantity: DF.Float
 		serial_number: DF.Data | None
 		source_document: DF.Attach | None
 		status: DF.Link | None
