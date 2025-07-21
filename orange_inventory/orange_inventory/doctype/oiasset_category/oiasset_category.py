@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class oiHardwareTransferItem(Document):
+class oiAssetCategory(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,15 +14,7 @@ class oiHardwareTransferItem(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		amount: DF.Currency
-		cost: DF.Currency
-		hardware: DF.Link
-		inventory_number: DF.Data | None
-		parent: DF.Data
-		parentfield: DF.Data
-		parenttype: DF.Data
-		quantity: DF.Float
-		serial_number: DF.Data | None
+
 	# end: auto-generated types
 
 	pass

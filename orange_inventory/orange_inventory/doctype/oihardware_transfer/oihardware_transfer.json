@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "hash",
  "creation": "2025-07-21 11:28:27.853523",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,9 +11,10 @@
   "to_counterparty",
   "transfer_date",
   "basis_document",
+  "total_amount",
   "status",
   "\u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f_\u0434\u043e_\u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0456_section",
-  "\u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+  "hardware_list",
   "section_break_vwij",
   "amended_from"
  ],
@@ -77,7 +79,13 @@
    "label": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f \u0434\u043e \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0456"
   },
   {
-   "fieldname": "\u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "\u0417\u0430\u0433\u0430\u043b\u044c\u043d\u0430 \u0432\u0430\u0440\u0442\u0456\u0441\u0442\u044c",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hardware_list",
    "fieldtype": "Table",
    "label": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
    "options": "oiHardware Transfer Item"
@@ -87,10 +95,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-21 11:37:14.555277",
+ "modified": "2025-07-21 15:15:50.138716",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware Transfer",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
@@ -109,5 +118,6 @@
  "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "basis_document"
 }
