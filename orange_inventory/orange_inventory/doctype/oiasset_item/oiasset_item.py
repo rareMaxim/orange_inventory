@@ -15,11 +15,13 @@ class oiAssetItem(Document):
 		from frappe.types import DF
 
 		asset_user: DF.Link | None
+		asset_user_display: DF.Data | None
 		current_owner: DF.Link
-		parent: DF.Data
-		parentfield: DF.Data
-		parenttype: DF.Data
+		current_owner_display: DF.Data
+		hardware_type: DF.Link | None
+		notes: DF.TextEditor | None
 		responsible_person: DF.Link | None
+		responsible_person_display: DF.Data | None
 		serial_no: DF.Data | None
 		status: DF.Literal["\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456", "\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457", "\u0412 \u0440\u0435\u043c\u043e\u043d\u0442\u0456", "\u0421\u043f\u0438\u0441\u0430\u043d\u043e"]
 	# end: auto-generated types

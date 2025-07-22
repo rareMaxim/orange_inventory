@@ -15,18 +15,13 @@ class oiHardwareTransferItem(Document):
 		from frappe.types import DF
 
 		amount: DF.Currency
-		asset_category: DF.Link | None
 		asset_item: DF.Link | None
-		cost: DF.Currency
-		hardware: DF.Link
-		inventory_number: DF.Data | None
-		new_asset_user: DF.Link | None
-		new_responsible_person: DF.Link | None
+		current_mvo_display: DF.Data | None
+		current_owner: DF.Data | None
+		hardware_type: DF.Link | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		quantity: DF.Float
-		serial_number: DF.Data | None
 	# end: auto-generated types
 
 	pass

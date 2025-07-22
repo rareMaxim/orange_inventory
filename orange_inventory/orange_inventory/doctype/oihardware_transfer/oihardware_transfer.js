@@ -5,7 +5,9 @@ frappe.ui.form.on('oiHardware Transfer', {
      */
     calculate_total_amount: function (frm) {
         let total = 0;
-        (frm.doc.hardware_list || []).forEach(item => { total += item.amount || 0; });
+        (frm.doc.hardware_list || []).forEach(item => {
+            total += item.amount || 0;
+        });
         frm.set_value('total_amount', total);
     },
     refresh: function (frm) {
@@ -16,26 +18,36 @@ frappe.ui.form.on('oiHardware Transfer', {
 frappe.ui.form.on('oiHardware Transfer Item', {
     hardware_type: function (frm, cdt, cdn) {
         let item = locals[cdt][cdn];
-        // Скидаємо попередній вибір серійного номера, якщо він був
-        frappe.model.set_value(cdt, cdn, 'asset_item', '');
 
-        // Отримуємо доступ до поля 'asset_item' у поточному рядку таблиці
+        // Скидаємо попередній вибір серійного номера, оскільки тип змінився
+        frappe.model.set_value(cdt, cdn, 'asset_item', '');
+        frappe.model.set_value(cdt, cdn, 'amount', 0);
+
+        // Отримуємо доступ до поля 'asset_item' у поточному рядку
         let grid_row = frm.get_field('hardware_list').grid.get_row(cdn);
 
         // Встановлюємо динамічний фільтр для цього поля
         grid_row.get_field('asset_item').get_query = function () {
-            return {
-                filters: {
-                    // Показувати тільки ті елементи, які належать до обраного типу
-                    parent: item.hardware_type,
-                    // І тільки ті, що є на складі
-                    status: 'На складі'
-                }
-            };
+            // Перевіряємо, чи вибрано тип обладнання
+            if (item.hardware_type) {
+                return {
+                    filters: {
+                        // Показувати тільки ті елементи, які належать до обраного типу
+                        parent: item.hardware_type,
+
+                    }
+                };
+            }
+            // Якщо тип не вибрано, повертаємо порожній фільтр
+            return {};
         };
+
+        frm.events.calculate_total_amount(frm);
     },
     asset_item: function (frm, cdt, cdn) {
         let item = locals[cdt][cdn];
+
+        // Якщо поле очищено, обнуляємо суму
         if (!item.asset_item) {
             frappe.model.set_value(cdt, cdn, 'amount', 0);
             frm.events.calculate_total_amount(frm);
@@ -43,6 +55,7 @@ frappe.ui.form.on('oiHardware Transfer Item', {
         }
 
         // Отримуємо вартість з головного документа 'oiHardware'
+        // для обраного типу, щоб розрахувати суму
         frappe.db.get_value('oiHardware', item.hardware_type, 'unit_cost')
             .then(r => {
                 let cost = r.message.unit_cost || 0;
