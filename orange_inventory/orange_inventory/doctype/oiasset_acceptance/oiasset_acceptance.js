@@ -3,76 +3,79 @@
 
 frappe.ui.form.on('oiAsset Acceptance', {
     /**
-     * Спрацьовує при завантаженні або оновленні основної форми.
-     */
-    refresh: function (frm) {
-        // Запускаємо перерахунок тільки один раз при завантаженні
-        frm.trigger('calculate_aggregate_totals');
-    },
-
-    /**
-     * Ця функція тепер відповідає ТІЛЬКИ за підрахунок загальних сум,
-     * читаючи вже готові дані з таблиці.
-     */
-    calculate_aggregate_totals: function (frm) {
+      * Головна функція для перерахунку всіх підсумків.
+      * Вона тепер робить всю роботу сама, без зайвих викликів.
+      */
+    recalculate_totals: function (frm) {
         let total_amount = 0;
         let category_totals = {};
 
+        // Проходимо по кожному рядку в таблиці
         (frm.doc.items || []).forEach(item => {
-            // Просто читаємо суму з рядка
-            let amount = item.amount || 0;
+            // Розраховуємо суму для рядка прямо тут
+            let amount = (item.unit_cost || 0) * (item.quantity || 0);
+            // Встановлюємо значення суми для рядка (тихо, без виклику подій)
+            frappe.model.set_value(item.doctype, item.name, 'amount', amount);
+
+            // Додаємо до загальної суми
             total_amount += amount;
 
+            // Групуємо суми за категоріями
             if (item.asset_category) {
                 category_totals[item.asset_category] = (category_totals[item.asset_category] || 0) + amount;
             }
         });
 
-        // Форматуємо та встановлюємо суми
+        // Форматуємо та встановлюємо суми за категоріями
         let category_summary = [];
         for (const [category, sum] of Object.entries(category_totals)) {
             category_summary.push(`${category}: ${frappe.format(sum, { fieldtype: 'Currency' })}`);
         }
 
-        // Використовуємо frm.set_value, але оскільки це відбувається в кінці ланцюжка,
-        // це не буде викликати зайвих оновлень.
+        // Встановлюємо фінальні значення в "шапці" документа
         frm.set_value('total_amount', total_amount);
         frm.set_value('category_totals', category_summary.join('\n'));
+    },
+
+    // Викликаємо перерахунок при першому завантаженні форми
+    refresh: function (frm) {
+        // frm.trigger('recalculate_totals');
+
     }
 });
 
 
 frappe.ui.form.on('oiAsset Acceptance Item', {
     /**
-     * Ця функція тепер відповідає ТІЛЬКИ за розрахунок суми
-     * всередині свого власного рядка.
+     * НОВА ФУНКЦІЯ: Спрацьовує при додаванні нового рядка в таблицю.
      */
-    calculate_row_amount: function (frm, cdt, cdn) {
-        let row = locals[cdt][cdn];
-        let amount = (row.unit_cost || 0) * (row.quantity || 0);
-        // Встановлюємо значення тільки для цього рядка.
-        // Це робить форму "брудною", що правильно, бо дані змінилися.
-        frappe.model.set_value(cdt, cdn, 'amount', amount);
+    items_add: function (frm, cdt, cdn) {
+        // Отримуємо всі рядки
+        const items = frm.doc.items;
+        // Перевіряємо, чи це не перший рядок
+        if (items.length > 1) {
+            // Отримуємо дані з попереднього рядка
+            const prev_row = items[items.length - 2];
+            // Отримуємо поточний, щойно створений рядок
+            let current_row = locals[cdt][cdn];
+            // Встановлюємо категорію з попереднього рядка
+            current_row.asset_category = prev_row.asset_category;
+            // Оновлюємо відображення поля
+            frm.refresh_field('items');
+        }
     },
-
-    // Обробники подій для полів у рядку
+    // При зміні будь-якого з цих полів, просто запускаємо
+    // ОДНУ головну функцію перерахунку на батьківській формі.
     unit_cost: function (frm, cdt, cdn) {
-        frm.get_field('items').grid.get_row(cdn).trigger('calculate_row_amount');
+        frm.trigger('recalculate_totals');
     },
     quantity: function (frm, cdt, cdn) {
-        frm.get_field('items').grid.get_row(cdn).trigger('calculate_row_amount');
+        frm.trigger('recalculate_totals');
     },
-
-    /**
-     * Коли сума в рядку змінилася, ми викликаємо перерахунок
-     * загальних сум у "шапці".
-     */
-    amount: function (frm, cdt, cdn) {
-        frm.trigger('calculate_aggregate_totals');
+    asset_category: function (frm, cdt, cdn) {
+        frm.trigger('recalculate_totals');
     },
-
-    // Перераховуємо загальну суму, якщо рядок видалено
     items_remove: function (frm) {
-        frm.trigger('calculate_aggregate_totals');
+        frm.trigger('recalculate_totals');
     }
 });
