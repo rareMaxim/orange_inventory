@@ -16,8 +16,8 @@ class oiAssetItem(Document):
 
 		asset_user: DF.Link | None
 		asset_user_display: DF.Data | None
-		current_owner: DF.Link
-		current_owner_display: DF.Data
+		current_owner: DF.Link | None
+		current_owner_display: DF.Data | None
 		hardware_type: DF.Link | None
 		notes: DF.TextEditor | None
 		responsible_person: DF.Link | None

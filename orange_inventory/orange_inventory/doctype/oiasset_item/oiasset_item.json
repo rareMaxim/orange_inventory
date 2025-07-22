@@ -33,16 +33,14 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
-   "options": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u0412 \u0440\u0435\u043c\u043e\u043d\u0442\u0456\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e",
-   "reqd": 1
+   "options": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u0412 \u0440\u0435\u043c\u043e\u043d\u0442\u0456\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
   },
   {
    "fieldname": "current_owner",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
-   "options": "oiCounterparty",
-   "reqd": 1
+   "options": "oiCounterparty"
   },
   {
    "fieldname": "responsible_person",
@@ -82,30 +80,25 @@
    "fetch_from": "current_owner.counterparty_name",
    "fieldname": "current_owner_display",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a display",
-   "read_only": 1,
-   "reqd": 1
+   "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a display"
   },
   {
    "fetch_from": "responsible_person.full_name",
    "fieldname": "responsible_person_display",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "\u041c\u0412\u041e display"
   },
   {
    "fetch_from": "asset_user.full_name",
    "fieldname": "asset_user_display",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447 display"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-07-22 08:50:55.070077",
+ "modified": "2025-07-22 13:43:53.636511",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset Item",
