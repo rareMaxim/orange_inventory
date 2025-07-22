@@ -11,7 +11,8 @@
   "asset_category",
   "unit_cost",
   "quantity",
-  "serial_numbers"
+  "serial_numbers",
+  "amount"
  ],
  "fields": [
   {
@@ -51,13 +52,21 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "\u041f\u0430\u0440\u0442\u0456\u043e\u043d\u043d\u0438\u0439 \u0430\u043a\u0442\u0438\u0432"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "\u0421\u0443\u043c\u0430",
+   "options": "UAH",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-07-22 17:22:17.072900",
+ "modified": "2025-07-22 18:25:51.140137",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset Acceptance Item",

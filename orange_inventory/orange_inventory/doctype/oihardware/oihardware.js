@@ -2,8 +2,22 @@ frappe.ui.form.on('oiHardware', {
     refresh: function (frm) {
         frm.trigger('toggle_fields');
         frm.trigger('calculate_total_cost');
+        frm.remove_custom_button(__('Історія переміщень'));
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('Історія переміщень'), () => {
+                frm.trigger('show_transfer_history');
+            });
+        }
     },
-
+    show_transfer_history: function (frm) {
+        frappe.call({
+            method: "orange_inventory.orange_inventory.doctype.oiasset_transfer.oiasset_transfer.get_history_for_asset",
+            args: { asset_name: frm.doc.name },
+            callback: function (r) {
+                // ... (код для створення діалогового вікна з таблицею, як у попередній відповіді) ...
+            }
+        });
+    },
     is_batched: function (frm) {
         frm.trigger('toggle_fields');
         frm.trigger('calculate_total_cost');

@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class oiAssetAcceptanceItem(Document):
+class oiAssetTransferItem(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,16 +14,11 @@ class oiAssetAcceptanceItem(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		amount: DF.Currency
-		asset_category: DF.Link | None
-		is_batched: DF.Check
-		item_name: DF.Data | None
+		hardware: DF.Link
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		quantity: DF.Int
-		serial_numbers: DF.SmallText | None
-		unit_cost: DF.Currency
+		quantity: DF.Float
 	# end: auto-generated types
 
 	pass

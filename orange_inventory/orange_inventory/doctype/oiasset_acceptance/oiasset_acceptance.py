@@ -17,9 +17,11 @@ class oiAssetAcceptance(Document):
 
         amended_from: DF.Link | None
         basis_doc_no: DF.Data | None
+        category_totals: DF.TextEditor | None
         counterparty: DF.Link | None
         items: DF.Table[oiAssetAcceptanceItem]
         posting_date: DF.Date | None
+        total_amount: DF.Currency
     # end: auto-generated types
 
     def on_submit(self):
@@ -30,7 +32,7 @@ class oiAssetAcceptance(Document):
                 # Створюємо ОДНУ картку oiHardware
                 new_hardware = frappe.get_doc({
                     "doctype": "oiHardware",
-                    "item_name": item.item_name,
+                    "title": item.item_name,
                     "is_batched": 1,
                     "quantity": item.quantity,
                     "unit_cost": item.unit_cost,
