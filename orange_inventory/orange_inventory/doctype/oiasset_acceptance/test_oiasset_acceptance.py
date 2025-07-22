@@ -13,9 +13,9 @@ IGNORE_TEST_RECORD_DEPENDENCIES = []  # eg. ["User"]
 
 
 
-class IntegrationTestoiAssetItem(IntegrationTestCase):
+class IntegrationTestoiAssetAcceptance(IntegrationTestCase):
 	"""
-	Integration tests for oiAssetItem.
+	Integration tests for oiAssetAcceptance.
 	Use this class for testing interactions between multiple components.
 	"""
 

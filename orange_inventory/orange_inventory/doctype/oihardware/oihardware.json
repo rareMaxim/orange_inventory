@@ -9,15 +9,33 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "item_name",
+  "user_section",
+  "user_name",
+  "section_break_hhhn",
+  "user",
+  "column_break_ijrr",
+  "financially_responsible_person",
+  "column_break_tjku",
+  "company",
+  "section_break_nwoa",
+  "fin_resp_user_name",
+  "fin_resp_deparnament",
+  "fin_resp_company",
+  "acquisition_section",
+  "acquired_from",
+  "purchase_date",
+  "acquisition_date",
+  "acquisition_type",
+  "purchase_cost",
+  "source_document",
+  "section_break_vkmz",
+  "is_batched",
   "asset_category",
   "unit_cost",
-  "total_quantity",
-  "section_break_grks",
-  "assets",
+  "quantity",
+  "total_cost",
   "section_break_icix",
   "asset_tag",
-  "quantity",
   "title",
   "serial_number",
   "status",
@@ -26,26 +44,6 @@
   "manufacturer",
   "model",
   "inventory_date",
-  "managment_tab",
-  "acquisition_section",
-  "acquired_from",
-  "purchase_date",
-  "acquisition_date",
-  "acquisition_type",
-  "purchase_cost",
-  "source_document",
-  "section_break_nwoa",
-  "fin_resp_user_name",
-  "fin_resp_deparnament",
-  "fin_resp_company",
-  "section_break_hhhn",
-  "user",
-  "column_break_ijrr",
-  "financially_responsible_person",
-  "column_break_tjku",
-  "company",
-  "user_section",
-  "user_name",
   "develop_tab",
   "picture"
  ],
@@ -62,10 +60,10 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Asset Tag",
-   "unique": 1
+   "label": "Asset Tag"
   },
   {
+   "depends_on": "eval:!doc.is_batched",
    "fieldname": "serial_number",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -120,11 +118,6 @@
    "fieldname": "picture",
    "fieldtype": "Attach Image",
    "label": "Picture"
-  },
-  {
-   "fieldname": "managment_tab",
-   "fieldtype": "Tab Break",
-   "label": "Managment"
   },
   {
    "fieldname": "purchase_cost",
@@ -217,7 +210,7 @@
    "fieldname": "acquired_from",
    "fieldtype": "Link",
    "label": "\u041e\u0442\u0440\u0438\u043c\u0430\u043d\u043e \u0432\u0456\u0434",
-   "options": "oiCounterparty"
+   "options": "oiOrganisation Structure"
   },
   {
    "fieldname": "acquisition_date",
@@ -237,6 +230,7 @@
   },
   {
    "default": "1",
+   "depends_on": "eval:doc.is_batched",
    "fieldname": "quantity",
    "fieldtype": "Float",
    "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
@@ -258,35 +252,31 @@
    "reqd": 1
   },
   {
-   "fieldname": "section_break_grks",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "assets",
-   "fieldtype": "Table",
-   "label": "\u0410\u043a\u0442\u0438\u0432\u0438",
-   "options": "oiAsset Table"
-  },
-  {
-   "fieldname": "item_name",
-   "fieldtype": "Data",
-   "label": "\u041d\u0430\u0437\u0432\u0430 \u0430\u043a\u0442\u0438\u0432\u0443"
-  },
-  {
    "fieldname": "section_break_icix",
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "total_quantity",
-   "fieldtype": "Data",
-   "label": "total_quantity"
+   "fieldname": "total_cost",
+   "fieldtype": "Currency",
+   "label": "\u0417\u0430\u0433\u0430\u043b\u044c\u043d\u0430 \u0432\u0430\u0440\u0442\u0456\u0441\u0442\u044c",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_batched",
+   "fieldtype": "Check",
+   "label": "\u041f\u0430\u0440\u0442\u0456\u043e\u043d\u043d\u0438\u0439 \u0430\u043a\u0442\u0438\u0432"
+  },
+  {
+   "fieldname": "section_break_vkmz",
+   "fieldtype": "Section Break"
   }
  ],
  "image_field": "picture",
  "index_web_pages_for_search": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2025-07-22 15:12:33.993644",
+ "modified": "2025-07-22 17:34:41.382014",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware",

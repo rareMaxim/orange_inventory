@@ -13,21 +13,19 @@ class oiHardware(Document):
 
     if TYPE_CHECKING:
         from frappe.types import DF
-        from orange_inventory.orange_inventory.doctype.oiasset_table.oiasset_table import oiAssetTable
 
         acquired_from: DF.Link | None
         acquisition_date: DF.Date | None
         acquisition_type: DF.Literal["\u041f\u043e\u043a\u0443\u043f\u043a\u0430", "\u041f\u043e\u0436\u0435\u0440\u0442\u0432\u0430", "\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0430"]
         asset_category: DF.Link
         asset_tag: DF.Data | None
-        assets: DF.Table[oiAssetTable]
         company: DF.Link | None
         fin_resp_company: DF.Link | None
         fin_resp_deparnament: DF.Link | None
         fin_resp_user_name: DF.Link | None
         financially_responsible_person: DF.Link | None
         inventory_date: DF.Date | None
-        item_name: DF.Data | None
+        is_batched: DF.Check
         manufacturer: DF.Link | None
         model: DF.Link | None
         picture: DF.AttachImage | None
@@ -38,7 +36,7 @@ class oiHardware(Document):
         source_document: DF.Attach | None
         status: DF.Link | None
         title: DF.Data | None
-        total_quantity: DF.Data | None
+        total_cost: DF.Currency
         type: DF.Link | None
         unit_cost: DF.Currency
         user: DF.Link | None
@@ -69,7 +67,7 @@ def create_batch_assets(hardware_doc_name, qty, start_no):
     hardware_doc.set("assets", [])
 
     for i in range(p_qty):
-        serial_number = f"{hardware_doc.item_name}-{str(p_start_no + i).zfill(5)}"
+        serial_number = f"{hardware_doc.asset_tag}-{str(p_start_no + i).zfill(5)}"
 
         if frappe.db.exists("oiAsset Item", {"serial_no": serial_number}):
             continue
@@ -93,3 +91,75 @@ def create_batch_assets(hardware_doc_name, qty, start_no):
 
     # Повертаємо повідомлення про успіх (не обов'язково, але корисно для відладки)
     return f"Успішно створено {p_qty} активів."
+
+
+@frappe.whitelist()
+def update_asset_item_fields(asset_item_name, field_data):
+    """
+    Універсальний метод для оновлення полів в документі oiAsset Item.
+    Приймає назву документа та словник з полями для оновлення.
+
+    :param asset_item_name: Назва (ID) документа oiAsset Item.
+    :param field_data: JSON-рядок словника, наприклад: '{"status": "В ремонті"}'
+    """
+    import json
+
+    if not asset_item_name or not field_data:
+        return
+
+    try:
+        data_to_update = json.loads(field_data)
+        # Оновлюємо значення вказаних полів
+        frappe.db.set_value("oiAsset Item", asset_item_name, data_to_update)
+        # Повертаємо успішний статус для відладки
+        return {"status": "success"}
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Asset Item Update Failed")
+        frappe.throw(f"Не вдалося оновити актив: {e}")
+
+
+@frappe.whitelist()
+def update_asset_item_fields(asset_item_name, field_data):
+    """
+    Універсальний метод для оновлення полів в документі oiAsset Item.
+    Приймає назву документа та словник з полями для оновлення.
+
+    :param asset_item_name: Назва (ID) документа oiAsset Item.
+    :param field_data: JSON-рядок словника, наприклад: '{"status": "В ремонті"}'
+    """
+    import json
+
+    if not asset_item_name or not field_data:
+        return
+
+    try:
+        data_to_update = json.loads(field_data)
+        # Оновлюємо значення вказаних полів
+        frappe.db.set_value("oiAsset Item", asset_item_name, data_to_update)
+        # Повертаємо успішний статус для відладки
+        return {"status": "success"}
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Asset Item Update Failed")
+        frappe.throw(f"Не вдалося оновити актив: {e}")
+
+
+@frappe.whitelist()
+def link_assets(parent_doc_name, asset_item_list):
+    """
+    Прив'язує список обраних oiAsset Item до інвентарної картки oiHardware.
+    """
+    if isinstance(asset_item_list, str):
+        import json
+        asset_item_list = json.loads(asset_item_list)
+
+    for asset_name in asset_item_list:
+        # Оновлюємо поле 'inventory_card' в кожному обраному активі
+        frappe.db.set_value("oiAsset Item", asset_name,
+                            "inventory_card", parent_doc_name)
+
+        # Додаємо посилання в таблицю 'assets' всередині oiHardware
+        parent_doc = frappe.get_doc("oiHardware", parent_doc_name)
+        parent_doc.append("assets", {
+            "asset_item": asset_name
+        })
+        parent_doc.save(ignore_permissions=True)

@@ -1,61 +1,36 @@
 frappe.ui.form.on('oiHardware', {
     refresh: function (frm) {
-        frm.trigger('setup_buttons');
-        frm.trigger('recalculate_totals');
+        frm.trigger('toggle_fields');
+        frm.trigger('calculate_total_cost');
     },
 
-    setup_buttons: function (frm) {
-        frm.remove_custom_button(__('Створити активи'));
+    is_batched: function (frm) {
+        frm.trigger('toggle_fields');
+        frm.trigger('calculate_total_cost');
+    },
 
-        if (!frm.is_new()) {
-            frm.add_custom_button(__('Створити активи'), () => {
-                frm.trigger('create_asset_items_dialog');
-            });
+    toggle_fields: function (frm) {
+        // Показуємо або ховаємо поля в залежності від прапорця
+        frm.toggle_display('serial_no', !frm.doc.is_batched);
+        frm.toggle_display('quantity', frm.doc.is_batched);
+
+        // Встановлюємо значення за замовчуванням при перемиканні
+        if (frm.doc.is_batched) {
+            frm.set_df_property('serial_number', 'reqd', 0);
+            frm.set_df_property('quantity', 'reqd', 1);
+        } else {
+            frm.set_value('quantity', 1);
+            frm.set_df_property('quantity', 'reqd', 0);
+            frm.set_df_property('serial_number', 'reqd', 1);
         }
     },
 
-    create_asset_items_dialog: function (frm) {
-        if (!frm.doc.item_name) {
-            frappe.msgprint(__('Будь ласка, введіть та збережіть "Назву активу".'));
-            return;
-        }
-
-        let d = new frappe.ui.Dialog({
-            title: __('Створення партії активів'),
-            fields: [
-                { label: 'Кількість', fieldname: 'qty', fieldtype: 'Int', reqd: 1 },
-                { label: 'Початковий номер', fieldname: 'start_no', fieldtype: 'Int', default: 1 }
-            ],
-            primary_action_label: __('Створити'),
-            primary_action(values) {
-                // Викликаємо нашу нову, правильну серверу функцію
-                frappe.call({
-                    method: 'orange_inventory.orange_inventory.doctype.oihardware.oihardware.create_batch_assets',
-                    args: {
-                        hardware_doc_name: frm.doc.name,
-                        qty: values.qty,
-                        start_no: values.start_no
-                    },
-                    callback: function () {
-                        // Просто оновлюємо форму, щоб побачити зміни
-                        frm.reload_doc();
-                        frappe.msgprint(__('Активи успішно створено'));
-                    }
-                });
-                d.hide();
-            }
-        });
-        d.show();
+    calculate_total_cost: function (frm) {
+        let qty = frm.doc.is_batched ? (frm.doc.quantity || 0) : 1;
+        let total = (frm.doc.unit_cost || 0) * qty;
+        frm.set_value('total_cost', total);
     },
 
-    recalculate_totals: function (frm) {
-        let total_qty = (frm.doc.assets || []).length;
-        let total_cost = (frm.doc.unit_cost || 0) * total_qty;
-        frm.set_value('total_quantity', total_qty);
-        frm.set_value('total_cost', total_cost);
-    },
-
-    unit_cost: function (frm) {
-        frm.trigger('recalculate_totals');
-    }
+    unit_cost: function (frm) { frm.trigger('calculate_total_cost'); },
+    quantity: function (frm) { frm.trigger('calculate_total_cost'); }
 });
