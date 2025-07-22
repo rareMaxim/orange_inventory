@@ -10,7 +10,7 @@ frappe.ui.form.on('oiHardware Transfer', {
         frm.set_query("asset_item", "hardware_list", function () {
             return {
                 filters: {
-                    status: "На складі"
+                    // status: "На складі"
                 }
             };
         });

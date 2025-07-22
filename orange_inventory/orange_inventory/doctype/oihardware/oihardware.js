@@ -1,96 +1,61 @@
-// Copyright (c) 2024, Maxim Sysoev and contributors
-// For license information, please see license.txt
-
 frappe.ui.form.on('oiHardware', {
-    /**
-     * Головна функція, що спрацьовує при оновленні форми.
-     */
     refresh: function (frm) {
-        // Запускаємо налаштування кнопок та перерахунок підсумків
         frm.trigger('setup_buttons');
         frm.trigger('recalculate_totals');
     },
 
-    /**
-     * Налаштовує видимість кастомних кнопок.
-     */
     setup_buttons: function (frm) {
-        frm.remove_custom_button(__('Додати партію'));
-        frm.remove_custom_button(__('Історія переміщень'));
-
-
-        frm.add_custom_button(__('Додати партію'), () => {
-            // Викликаємо кастомну подію "add_batch_items"
-            frm.trigger('add_batch_items');
-        });
-
+        frm.remove_custom_button(__('Створити активи'));
 
         if (!frm.is_new()) {
-            frm.add_custom_button(__('Історія переміщень'), () => {
-                // Викликаємо кастомну подію "show_movement_history"
-                frm.trigger('show_movement_history');
+            frm.add_custom_button(__('Створити активи'), () => {
+                frm.trigger('create_asset_items_dialog');
             });
         }
     },
 
-    /**
-     * Показує історію переміщень.
-     */
-    show_movement_history: function (frm) {
-        frappe.route_options = {
-            "hardware_list.hardware_type": frm.doc.name
-        };
-        frappe.set_route("List", "oiHardware Transfer");
-    },
-
-    /**
-     * Відкриває діалог для масового створення елементів.
-     */
-    add_batch_items: function (frm) {
-        if (!frm.doc.title) {
-            frappe.msgprint(__('Будь ласка, спочатку введіть "Назву активу".'));
+    create_asset_items_dialog: function (frm) {
+        if (!frm.doc.item_name) {
+            frappe.msgprint(__('Будь ласка, введіть та збережіть "Назву активу".'));
             return;
         }
 
         let d = new frappe.ui.Dialog({
-            title: __('Введіть кількість для створення'),
-            fields: [{ label: __('Кількість'), fieldname: 'qty', fieldtype: 'Int', reqd: 1 }],
+            title: __('Створення партії активів'),
+            fields: [
+                { label: 'Кількість', fieldname: 'qty', fieldtype: 'Int', reqd: 1 },
+                { label: 'Початковий номер', fieldname: 'start_no', fieldtype: 'Int', default: 1 }
+            ],
             primary_action_label: __('Створити'),
             primary_action(values) {
-                if (values.qty <= 0) return;
-
-                frm.clear_table('asset_items');
-
-                for (let i = 0; i < values.qty; i++) {
-                    let item = frm.add_child('asset_items', {
-                        hardware_type: frm.doc.name,
-                        status: 'На складі'
-                    });
-                    let padded_index = String(i + 1).padStart(5, '0');
-                    item.serial_no = `${frm.doc.item_name}-${padded_index}`;
-                }
-
-                frm.refresh_field('asset_items');
-                frm.trigger('recalculate_totals'); // Використовуємо trigger
+                // Викликаємо нашу нову, правильну серверу функцію
+                frappe.call({
+                    method: 'orange_inventory.orange_inventory.doctype.oihardware.oihardware.create_batch_assets',
+                    args: {
+                        hardware_doc_name: frm.doc.name,
+                        qty: values.qty,
+                        start_no: values.start_no
+                    },
+                    callback: function () {
+                        // Просто оновлюємо форму, щоб побачити зміни
+                        frm.reload_doc();
+                        frappe.msgprint(__('Активи успішно створено'));
+                    }
+                });
                 d.hide();
             }
         });
         d.show();
     },
 
-    /**
-     * Перераховує підсумкові значення.
-     */
     recalculate_totals: function (frm) {
-        let total_qty = (frm.doc.asset_items || []).length;
+        let total_qty = (frm.doc.assets || []).length;
         let total_cost = (frm.doc.unit_cost || 0) * total_qty;
-        frm.set_value('quantity', total_qty);
-        frm.set_value('purchase_cost', total_cost);
+        frm.set_value('total_quantity', total_qty);
+        frm.set_value('total_cost', total_cost);
     },
 
-    unit_cost: function (frm) { frm.trigger('recalculate_totals'); },
-
-    asset_items_on_form_rendered: function (frm) {
+    unit_cost: function (frm) {
         frm.trigger('recalculate_totals');
     }
 });

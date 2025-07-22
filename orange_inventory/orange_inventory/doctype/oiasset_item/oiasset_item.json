@@ -1,11 +1,13 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "hash",
  "creation": "2025-07-21 19:53:26.055502",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "hardware_type",
   "serial_no",
   "status",
   "asset_user",
@@ -24,22 +26,23 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
+   "reqd": 1,
    "unique": 1
   },
   {
-   "default": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456",
+   "default": "\u041d\u0435\u0432\u0456\u0434\u043e\u043c\u043e",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
-   "options": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u0412 \u0440\u0435\u043c\u043e\u043d\u0442\u0456\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
+   "options": "\u041d\u0435\u0432\u0456\u0434\u043e\u043c\u043e\n\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u0412 \u0440\u0435\u043c\u043e\u043d\u0442\u0456\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
   },
   {
    "fetch_from": "responsible_person.organisation_structure",
    "fieldname": "current_owner",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
+   "label": "\u0412\u043b\u0430\u0441\u043d\u0438\u043a",
    "options": "oiOrganisation Structure"
   },
   {
@@ -86,19 +89,40 @@
    "fieldname": "asset_user_display",
    "fieldtype": "Data",
    "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447 display"
+  },
+  {
+   "fieldname": "hardware_type",
+   "fieldtype": "Link",
+   "label": "\u0422\u0438\u043f \u0430\u043a\u0442\u0438\u0432\u0443",
+   "options": "oiHardware",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "istable": 1,
  "links": [],
- "modified": "2025-07-22 14:17:30.145092",
+ "modified": "2025-07-22 14:59:54.717290",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset Item",
+ "naming_rule": "Random",
  "owner": "Administrator",
- "permissions": [],
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
  "row_format": "Dynamic",
+ "search_fields": "serial_no",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
