@@ -17,8 +17,7 @@ class oiHardwareTransferItem(Document):
 		amount: DF.Currency
 		asset_item: DF.Link | None
 		current_mvo_display: DF.Data | None
-		current_owner: DF.Data | None
-		hardware_type: DF.Link | None
+		hardware_type: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data

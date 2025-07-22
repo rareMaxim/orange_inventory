@@ -18,8 +18,10 @@ class oiAssetItem(Document):
 		asset_user_display: DF.Data | None
 		current_owner: DF.Link | None
 		current_owner_display: DF.Data | None
-		hardware_type: DF.Link | None
 		notes: DF.TextEditor | None
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
 		responsible_person: DF.Link | None
 		responsible_person_display: DF.Data | None
 		serial_no: DF.Data | None

@@ -27,7 +27,6 @@ class oiHardware(Document):
 		fin_resp_user_name: DF.Link | None
 		financially_responsible_person: DF.Link | None
 		inventory_date: DF.Date | None
-		is_batched_asset: DF.Check
 		manufacturer: DF.Link | None
 		model: DF.Link | None
 		picture: DF.AttachImage | None

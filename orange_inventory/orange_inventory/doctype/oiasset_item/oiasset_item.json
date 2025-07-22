@@ -6,12 +6,11 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "hardware_type",
   "serial_no",
   "status",
-  "current_owner",
-  "responsible_person",
   "asset_user",
+  "responsible_person",
+  "current_owner",
   "column_break_qxlz",
   "notes",
   "section_break_axru",
@@ -36,11 +35,12 @@
    "options": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u0412 \u0440\u0435\u043c\u043e\u043d\u0442\u0456\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
   },
   {
+   "fetch_from": "responsible_person.organisation_structure",
    "fieldname": "current_owner",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
-   "options": "oiCounterparty"
+   "options": "oiOrganisation Structure"
   },
   {
    "fieldname": "responsible_person",
@@ -57,13 +57,6 @@
    "options": "oiUser"
   },
   {
-   "fieldname": "hardware_type",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "\u0422\u0438\u043f \u0430\u043a\u0442\u0438\u0432\u0443",
-   "options": "oiHardware"
-  },
-  {
    "fieldname": "notes",
    "fieldtype": "Text Editor",
    "label": "\u041f\u0440\u0438\u043c\u0456\u0442\u043a\u0438"
@@ -77,7 +70,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "fetch_from": "current_owner.counterparty_name",
+   "fetch_from": "current_owner.full_name",
    "fieldname": "current_owner_display",
    "fieldtype": "Data",
    "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a display"
@@ -97,28 +90,15 @@
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "istable": 1,
  "links": [],
- "modified": "2025-07-22 13:43:53.636511",
+ "modified": "2025-07-22 14:17:30.145092",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset Item",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
  "row_format": "Dynamic",
- "search_fields": "serial_no, hardware_type, status, current_owner",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",

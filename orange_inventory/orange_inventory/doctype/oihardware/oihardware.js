@@ -3,34 +3,38 @@
 
 frappe.ui.form.on('oiHardware', {
     /**
-     * Ця функція спрацьовує щоразу при відкритті або оновленні форми.
-     * Це ідеальне місце для керування кнопками.
+     * Головна функція, що спрацьовує при оновленні форми.
      */
     refresh: function (frm) {
-        // Спочатку очищаємо старі кнопки, щоб уникнути дублювання
-        frm.remove_custom_button('Додати партію');
-        frm.remove_custom_button('Історія переміщень');
-
-        // Додаємо кнопку "Додати партію" ТІЛЬКИ якщо це новий документ
-        if (frm.is_new()) {
-            frm.add_custom_button(__('Додати партію'), function () {
-                frm.cscript.add_batch_items(frm);
-            }, __('Дії'));
-        }
-
-        // Додаємо кнопку "Історія переміщень" ТІЛЬКИ якщо документ вже збережено
-        if (!frm.is_new()) {
-            frm.add_custom_button(__('Історія переміщень'), function () {
-                frm.cscript.show_movement_history(frm);
-            }, __('Дії'));
-        }
-
-        // Перераховуємо підсумки при кожному оновленні
+        // Запускаємо налаштування кнопок та перерахунок підсумків
+        frm.trigger('setup_buttons');
         frm.trigger('recalculate_totals');
     },
 
     /**
-     * Показує відфільтрований список документів переміщення.
+     * Налаштовує видимість кастомних кнопок.
+     */
+    setup_buttons: function (frm) {
+        frm.remove_custom_button(__('Додати партію'));
+        frm.remove_custom_button(__('Історія переміщень'));
+
+
+        frm.add_custom_button(__('Додати партію'), () => {
+            // Викликаємо кастомну подію "add_batch_items"
+            frm.trigger('add_batch_items');
+        });
+
+
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('Історія переміщень'), () => {
+                // Викликаємо кастомну подію "show_movement_history"
+                frm.trigger('show_movement_history');
+            });
+        }
+    },
+
+    /**
+     * Показує історію переміщень.
      */
     show_movement_history: function (frm) {
         frappe.route_options = {
@@ -40,16 +44,23 @@ frappe.ui.form.on('oiHardware', {
     },
 
     /**
-     * Викликає діалогове вікно для додавання партії елементів.
+     * Відкриває діалог для масового створення елементів.
      */
     add_batch_items: function (frm) {
+        if (!frm.doc.title) {
+            frappe.msgprint(__('Будь ласка, спочатку введіть "Назву активу".'));
+            return;
+        }
+
         let d = new frappe.ui.Dialog({
-            title: __('Введіть кількість'),
+            title: __('Введіть кількість для створення'),
             fields: [{ label: __('Кількість'), fieldname: 'qty', fieldtype: 'Int', reqd: 1 }],
             primary_action_label: __('Створити'),
             primary_action(values) {
                 if (values.qty <= 0) return;
+
                 frm.clear_table('asset_items');
+
                 for (let i = 0; i < values.qty; i++) {
                     let item = frm.add_child('asset_items', {
                         hardware_type: frm.doc.name,
@@ -58,8 +69,9 @@ frappe.ui.form.on('oiHardware', {
                     let padded_index = String(i + 1).padStart(5, '0');
                     item.serial_no = `${frm.doc.item_name}-${padded_index}`;
                 }
+
                 frm.refresh_field('asset_items');
-                frm.trigger('recalculate_totals');
+                frm.trigger('recalculate_totals'); // Використовуємо trigger
                 d.hide();
             }
         });
@@ -67,7 +79,7 @@ frappe.ui.form.on('oiHardware', {
     },
 
     /**
-     * Перераховує загальну кількість та вартість.
+     * Перераховує підсумкові значення.
      */
     recalculate_totals: function (frm) {
         let total_qty = (frm.doc.asset_items || []).length;
@@ -76,7 +88,9 @@ frappe.ui.form.on('oiHardware', {
         frm.set_value('purchase_cost', total_cost);
     },
 
-    // Обробники для перерахунку при зміні даних
     unit_cost: function (frm) { frm.trigger('recalculate_totals'); },
-    asset_items_on_form_rendered: function (frm) { frm.trigger('recalculate_totals'); }
+
+    asset_items_on_form_rendered: function (frm) {
+        frm.trigger('recalculate_totals');
+    }
 });
