@@ -16,54 +16,57 @@ class oiAssetAcceptance(Document):
         from orange_inventory.orange_inventory.doctype.oiasset_acceptance_item.oiasset_acceptance_item import oiAssetAcceptanceItem
 
         amended_from: DF.Link | None
-        basis_doc_no: DF.Data | None
+        asset_owner: DF.Link
+        basis_doc_no: DF.Data
         category_totals: DF.TextEditor | None
-        counterparty: DF.Link | None
+        counterparty: DF.Link
         items: DF.Table[oiAssetAcceptanceItem]
-        posting_date: DF.Date | None
+        posting_date: DF.Date
         total_amount: DF.Currency
     # end: auto-generated types
 
     def on_submit(self):
-        # Проходимо по кожному рядку в "Акті Прийому"
         for item in self.items:
+            # Обробка товарів, що обліковуються партіями
             if item.is_batched:
-                # --- ЛОГІКА ДЛЯ ПАРТІОННИХ АКТИВІВ ---
-                # Створюємо ОДНУ картку oiHardware
-                new_hardware = frappe.get_doc({
-                    "doctype": "oiHardware",
-                    "title": item.item_name,
-                    "is_batched": 1,
-                    "quantity": item.quantity,
-                    "unit_cost": item.unit_cost,
-                    "asset_category": item.asset_category,
-                    "owner": self.counterparty  # Встановлюємо початкового власника
-                })
-                new_hardware.insert(ignore_permissions=True)
+                hw = frappe.new_doc('oiHardware')
+                hw.item_name = item.item_name
+                hw.is_batched = 1
+                hw.asset_category = item.asset_category
+                hw.unit_cost = item.unit_cost
+                hw.quantity = item.quantity
+                hw.owner = self.asset_owner
+                hw.posting_date = self.posting_date
+                hw.acceptance_doc = self.name
+                hw.insert()
             else:
-                # --- ЛОГІКА ДЛЯ ПОШТУЧНИХ (СЕРІЙНИХ) АКТИВІВ ---
-                # Отримуємо список серійних номерів з текстового поля
-                serial_no_list = [
-                    s.strip() for s in item.serial_numbers.split('\n') if s.strip()]
+                # Обробка серіалізованих товарів
+                serial_no_list = []
+                if item.serial_numbers:
+                    serial_no_list = [
+                        s.strip() for s in item.serial_numbers.split('\n') if s.strip()
+                    ]
 
-                # Перевіряємо, чи кількість співпадає
+                if not serial_no_list:
+                    frappe.throw(
+                        f"Для товару '{item.item_name}' не вказано серійні номери.")
+
                 if len(serial_no_list) != item.quantity:
-                    frappe.throw(f"Для '{item.item_name}' кількість ({item.quantity}) "
-                                 f"не співпадає з кількістю серійних номерів ({len(serial_no_list)}).")
+                    frappe.throw(
+                        f"Кількість серійних номерів ({len(serial_no_list)}) "
+                        f"не відповідає кількості товару ({item.quantity}) "
+                        f"для '{item.item_name}'."
+                    )
 
-                # Створюємо ОКРЕМУ картку oiHardware для КОЖНОГО серійного номера
-                for serial in serial_no_list:
-                    if frappe.db.exists("oiHardware", {"serial_no": serial}):
-                        continue  # Пропускаємо, якщо такий серійник вже є
-
-                    new_hardware = frappe.get_doc({
-                        "doctype": "oiHardware",
-                        "title": item.item_name,
-                        "is_batched": 0,
-                        "quantity": 1,
-                        "serial_no": serial,
-                        "unit_cost": item.unit_cost,
-                        "asset_category": item.asset_category,
-                        "owner": self.counterparty
-                    })
-                    new_hardware.insert(ignore_permissions=True)
+                for serial_no in serial_no_list:
+                    hw = frappe.new_doc('oiHardware')
+                    hw.item_name = item.item_name
+                    hw.is_batched = 0
+                    hw.asset_category = item.asset_category
+                    hw.unit_cost = item.unit_cost
+                    hw.quantity = 1
+                    hw.serial_no = serial_no
+                    hw.owner = self.asset_owner
+                    hw.posting_date = self.posting_date
+                    hw.acceptance_doc = self.name
+                    hw.insert()

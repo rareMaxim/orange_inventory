@@ -49,14 +49,3 @@ class oiAssetTransfer(Document):
                     source_doc.save(ignore_permissions=True)
 
         self.db_set("status", "Завершено")
-
-
-@frappe.whitelist()
-def get_history_for_asset(asset_name):
-    history = frappe.get_all(
-        "oiAsset Transfer Item",
-        filters={"hardware": asset_name},
-        fields=["parent", "parent.transfer_date",
-                "parent.from_counterparty", "parent.to_counterparty", "quantity"]
-    )
-    return history

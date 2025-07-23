@@ -4,6 +4,22 @@ frappe.ui.form.on('oiHardware', {
         frm.trigger('calculate_total_cost');
         frm.remove_custom_button(__('Історія переміщень'));
         if (!frm.is_new()) {
+            frm.add_custom_button(__('Оновити історію'), () => {
+                frm.call({
+                    doc: frm.doc,
+                    method: 'refresh_movement_history',
+                    callback: function (r) {
+                        // Оновлюємо поле після успішного виконання
+                        frm.refresh_field('movement_history');
+                        frappe.show_alert({
+                            message: __('Історія переміщень оновлена'),
+                            indicator: 'green'
+                        });
+                    }
+                });
+            });
+        }
+        if (!frm.is_new()) {
             frm.add_custom_button(__('Історія переміщень'), () => {
                 frm.trigger('show_transfer_history');
             });

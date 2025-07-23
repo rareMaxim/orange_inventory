@@ -1,6 +1,7 @@
 # Copyright (c) 2024, Maxim Sysoev and contributors
 # For license information, please see license.txt
 
+import datetime
 import frappe
 from frappe.model.document import Document
 
@@ -13,10 +14,12 @@ class oiHardware(Document):
 
     if TYPE_CHECKING:
         from frappe.types import DF
+        from orange_inventory.orange_inventory.doctype.oihardware_movement_history.oihardware_movement_history import oiHardwareMovementHistory
 
         acquired_from: DF.Link | None
         acquisition_date: DF.Date | None
-        acquisition_type: DF.Literal["\u041f\u043e\u043a\u0443\u043f\u043a\u0430", "\u041f\u043e\u0436\u0435\u0440\u0442\u0432\u0430", "\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0430"]
+        acquisition_type: DF.Literal["\u041f\u043e\u043a\u0443\u043f\u043a\u0430",
+                                     "\u041f\u043e\u0436\u0435\u0440\u0442\u0432\u0430", "\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0430"]
         asset_category: DF.Link
         asset_tag: DF.Data | None
         company: DF.Link | None
@@ -28,6 +31,7 @@ class oiHardware(Document):
         is_batched: DF.Check
         manufacturer: DF.Link | None
         model: DF.Link | None
+        movement_history: DF.Table[oiHardwareMovementHistory]
         picture: DF.AttachImage | None
         purchase_cost: DF.Currency
         purchase_date: DF.Date | None
@@ -42,6 +46,65 @@ class oiHardware(Document):
         user: DF.Link | None
         user_name: DF.Link | None
     # end: auto-generated types
+
+    @frappe.whitelist()
+    def refresh_movement_history(self):
+        """
+        Очищує та заново заповнює дочірню таблицю `movement_history`,
+        використовуючи коректний синтаксис фільтрації для дочірніх таблиць.
+        """
+
+        self.set("movement_history", [])
+
+        # --- Крок 1: Акти Прийому ---
+        # Використовуємо синтаксис [Child_DocType, field, operator, value]
+        acceptance_docs = frappe.get_all(
+            "oiAsset Acceptance",
+            filters=[
+                ["oiAsset Acceptance Item", "item_name", "=", self.title],
+                ["docstatus", "=", 1]  # Враховуємо тільки підтверджені документи
+            ],
+            fields=["name", "posting_date", "counterparty"]
+        )
+        for item in acceptance_docs:
+            self.append("movement_history", {
+                "date": item.posting_date,
+                "document_type": "oiAsset Acceptance",
+                "document_name": item.name,
+                "to_party": item.counterparty
+            })
+
+        # --- Крок 2: Акти Переміщення ---
+        transfer_docs = frappe.get_all(
+            "oiAsset Transfer",
+            filters=[
+                ["oiAsset Transfer Item", "hardware", "=", self.name],
+                ["docstatus", "=", 1]  # Враховуємо тільки підтверджені документи
+            ],
+            fields=["name", "transfer_date",
+                    "from_counterparty", "to_counterparty"]
+        )
+        for item in transfer_docs:
+            self.append("movement_history", {
+                "date": item.transfer_date,
+                "document_type": "oiAsset Transfer",
+                "document_name": item.name,
+                "from_party": item.from_counterparty,
+                "to_party": item.to_counterparty
+            })
+
+        # --- Крок 3: Сортування історії за датою ---
+        # Переконуємося, що дати існують, щоб уникнути помилок при сортуванні
+        self.movement_history = sorted(
+            self.movement_history,
+            key=lambda row: row.get("date") or datetime.date(1970, 1, 1)
+        )
+
+        # --- Крок 4: Збереження документа ---
+        self.save()
+
+        return "Історія переміщень успішно оновлена."
+
 
 @frappe.whitelist()
 def create_batch_assets(hardware_doc_name, qty, start_no):
