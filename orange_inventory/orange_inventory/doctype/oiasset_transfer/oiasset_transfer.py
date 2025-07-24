@@ -16,6 +16,7 @@ class oiAssetTransfer(Document):
         from orange_inventory.orange_inventory.doctype.oiasset_transfer_item.oiasset_transfer_item import oiAssetTransferItem
 
         amended_from: DF.Link | None
+        basis_document: DF.Link | None
         from_counterparty: DF.Link
         hardware_list: DF.Table[oiAssetTransferItem]
         to_counterparty: DF.Link

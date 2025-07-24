@@ -1,7 +1,7 @@
 {
  "app": "orange_inventory",
  "charts": [],
- "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hardware\",\"col\":3}},{\"id\":\"KMs0yY-RfQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cartridge Service\",\"col\":3}},{\"id\":\"1RInIpTlxo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0429\u043e\u0434\u0435\u043d\u043d\u0430 \u0440\u043e\u0431\u043e\u0442\u0430\",\"col\":3}},{\"id\":\"p37_zJJsmw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041d\u0430 \u0431\u0430\u043b\u0430\u043d\u0441\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"W6gixQs7kW\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
+ "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Orange Inventory</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Hardware\",\"col\":3}},{\"id\":\"KMs0yY-RfQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Cartridge Service\",\"col\":3}},{\"id\":\"1RInIpTlxo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0429\u043e\u0434\u0435\u043d\u043d\u0430 \u0440\u043e\u0431\u043e\u0442\u0430\",\"col\":3}},{\"id\":\"p37_zJJsmw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041d\u0430 \u0431\u0430\u043b\u0430\u043d\u0441\",\"col\":3}},{\"id\":\"MzhtkBCVnH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0430\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"W6gixQs7kW\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2024-04-30 10:55:44.202833",
  "custom_blocks": [],
  "docstatus": 0,
@@ -44,7 +44,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-07-23 08:01:30.294219",
+ "modified": "2025-07-24 13:46:33.951604",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "Orange Inventory",
@@ -53,13 +53,17 @@
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
- "roles": [
-  {
-   "role": "Orange Inventory Manager"
-  }
- ],
+ "roles": [],
  "sequence_id": 31.0,
  "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0430",
+   "link_to": "oiBasis Document",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
   {
    "color": "Green",
    "doc_view": "List",
