@@ -22,9 +22,6 @@ class oiHardware(Document):
         asset_category: DF.Link
         asset_tag: DF.Data | None
         company: DF.Link | None
-        fin_resp_company: DF.Link | None
-        fin_resp_deparnament: DF.Link | None
-        fin_resp_user_name: DF.Link | None
         financially_responsible_person: DF.Link | None
         inventory_date: DF.Date | None
         is_batched: DF.Check
@@ -43,7 +40,6 @@ class oiHardware(Document):
         type: DF.Link | None
         unit_cost: DF.Currency
         user: DF.Link | None
-        user_name: DF.Link | None
     # end: auto-generated types
 
     @frappe.whitelist()
