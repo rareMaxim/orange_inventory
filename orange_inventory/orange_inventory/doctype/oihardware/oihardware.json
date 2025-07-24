@@ -235,6 +235,7 @@
    "depends_on": "eval:doc.is_batched",
    "fieldname": "quantity",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
    "non_negative": 1,
    "precision": "2"
@@ -242,6 +243,7 @@
   {
    "fieldname": "unit_cost",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "\u0412\u0430\u0440\u0442\u0456\u0441\u0442\u044c \u0437\u0430 \u043e\u0434.",
    "options": "UAH",
    "precision": "2"
@@ -260,6 +262,7 @@
   {
    "fieldname": "total_cost",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "\u0417\u0430\u0433\u0430\u043b\u044c\u043d\u0430 \u0432\u0430\u0440\u0442\u0456\u0441\u0442\u044c",
    "read_only": 1
   },
@@ -290,7 +293,7 @@
  "index_web_pages_for_search": 1,
  "links": [],
  "make_attachments_public": 1,
- "modified": "2025-07-23 08:44:33.078610",
+ "modified": "2025-07-24 12:50:50.557965",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardware",

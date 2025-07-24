@@ -11,28 +11,15 @@
   "basis_doc_no",
   "asset_owner",
   "column_break_cxbw",
-  "category_totals",
   "total_amount",
+  "total_quantity",
+  "section_break_otjo",
+  "category_totals",
   "section_break_wyti",
   "items",
-  "section_break_baxq",
   "amended_from"
  ],
  "fields": [
-  {
-   "fieldname": "section_break_baxq",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "oiAsset Acceptance",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
   {
    "fieldname": "counterparty",
    "fieldtype": "Link",
@@ -90,13 +77,32 @@
    "label": "\u0412\u043b\u0430\u0441\u043d\u0438\u043a \u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
    "options": "oiOrganisation Structure",
    "reqd": 1
+  },
+  {
+   "fieldname": "total_quantity",
+   "fieldtype": "Int",
+   "label": "total_quantity"
+  },
+  {
+   "fieldname": "section_break_otjo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "oiAsset Acceptance",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-22 19:24:49.543928",
+ "modified": "2025-07-24 12:37:30.866895",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset Acceptance",
@@ -113,7 +119,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],
