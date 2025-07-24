@@ -30,6 +30,7 @@ class oiAssetAcceptance(Document):
             # Обробка товарів, що обліковуються партіями
             if item.is_batched:
                 hw = frappe.new_doc('oiHardware')
+                hw.title = item.item_name
                 hw.item_name = item.item_name
                 hw.is_batched = 1
                 hw.asset_category = item.asset_category
@@ -60,12 +61,13 @@ class oiAssetAcceptance(Document):
 
                 for serial_no in serial_no_list:
                     hw = frappe.new_doc('oiHardware')
+                    hw.title = item.item_name
                     hw.item_name = item.item_name
                     hw.is_batched = 0
                     hw.asset_category = item.asset_category
                     hw.unit_cost = item.unit_cost
                     hw.quantity = 1
-                    hw.serial_no = serial_no
+                    hw.serial_number = serial_no
                     hw.owner = self.asset_owner
                     hw.posting_date = self.posting_date
                     hw.acceptance_doc = self.name
