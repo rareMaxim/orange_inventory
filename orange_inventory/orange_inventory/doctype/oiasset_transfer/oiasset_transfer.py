@@ -16,10 +16,12 @@ class oiAssetTransfer(Document):
         from orange_inventory.orange_inventory.doctype.oiasset_transfer_item.oiasset_transfer_item import oiAssetTransferItem
 
         amended_from: DF.Link | None
-        basis_document: DF.Link | None
-        from_counterparty: DF.Link
+        document_date: DF.Date
+        document_number: DF.Data
+        document_type: DF.Literal["\u0420\u0456\u0448\u0435\u043d\u043d\u044f", "\u041d\u0430\u043a\u0430\u0437", "\u0414\u043e\u0433\u043e\u0432\u0456\u0440"]
         hardware_list: DF.Table[oiAssetTransferItem]
-        to_counterparty: DF.Link
+        scan: DF.Attach | None
+        title: DF.SmallText
         transfer_date: DF.Date | None
     # end: auto-generated types
 

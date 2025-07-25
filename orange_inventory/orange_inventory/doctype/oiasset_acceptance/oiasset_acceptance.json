@@ -6,11 +6,13 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "counterparty",
+  "title",
   "posting_date",
+  "document_type",
   "basis_doc_no",
-  "asset_owner",
   "column_break_cxbw",
+  "counterparty",
+  "asset_owner",
   "total_amount",
   "total_quantity",
   "section_break_otjo",
@@ -96,13 +98,27 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "title",
+   "fieldtype": "Small Text",
+   "label": "\u041d\u0430\u0437\u0432\u0430",
+   "reqd": 1
+  },
+  {
+   "default": "\u0420\u0456\u0448\u0435\u043d\u043d\u044f",
+   "fieldname": "document_type",
+   "fieldtype": "Select",
+   "label": "\u0422\u0438\u043f \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430",
+   "options": "\u0420\u0456\u0448\u0435\u043d\u043d\u044f\n\u041d\u0430\u043a\u0430\u0437\n\u0414\u043e\u0433\u043e\u0432\u0456\u0440"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-24 12:37:30.866895",
+ "modified": "2025-07-25 09:28:58.277112",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset Acceptance",
@@ -123,7 +139,9 @@
   }
  ],
  "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "title"
 }

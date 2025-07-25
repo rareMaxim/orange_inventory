@@ -6,8 +6,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "to_counterparty",
   "hardware",
-  "quantity"
+  "quantity",
+  "serial_no"
  ],
  "fields": [
   {
@@ -24,13 +26,29 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c"
+  },
+  {
+   "fetch_from": "hardware.serial_number",
+   "fieldname": "serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_counterparty",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u041e\u0442\u0440\u0438\u043c\u0443\u0432\u0430\u0447",
+   "options": "oiOrganisation Structure",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-07-22 17:51:02.029874",
+ "modified": "2025-07-25 09:43:01.918643",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset Transfer Item",

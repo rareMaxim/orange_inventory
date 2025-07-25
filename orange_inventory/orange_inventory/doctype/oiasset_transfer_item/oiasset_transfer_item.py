@@ -19,6 +19,8 @@ class oiAssetTransferItem(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		quantity: DF.Float
+		serial_no: DF.Data | None
+		to_counterparty: DF.Link
 	# end: auto-generated types
 
 	pass
