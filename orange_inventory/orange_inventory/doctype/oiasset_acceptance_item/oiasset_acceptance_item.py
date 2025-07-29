@@ -17,7 +17,7 @@ class oiAssetAcceptanceItem(Document):
 		amount: DF.Currency
 		asset_category: DF.Link | None
 		is_batched: DF.Check
-		item_name: DF.Data | None
+		item_name: DF.SmallText | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data

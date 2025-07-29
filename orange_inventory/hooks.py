@@ -179,7 +179,9 @@ app_home = "/app/orange-inventory"
 # Ignore links to specified DocTypes when deleting documents
 # -----------------------------------------------------------
 
-# ignore_links_on_delete = ["Communication", "ToDo"]
+ignore_links_on_delete = ["oiHardware",
+                          "oiAsset Acceptance",
+                          "oiAsset Transfer"]
 
 # Request Events
 # ----------------
@@ -228,4 +230,3 @@ export_python_type_annotations = True
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
