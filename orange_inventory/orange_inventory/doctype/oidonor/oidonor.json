@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2025-08-04 10:37:11.213808",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "donor_name",
+  "country",
+  "donor_type",
+  "contacts"
+ ],
+ "fields": [
+  {
+   "description": "\u041d\u0430\u043f\u0440\u0438\u043a\u043b\u0430\u0434, \"USAID\" \u0430\u0431\u043e \"\u0417\u0430\u043a\u0443\u043f\u0456\u0432\u043b\u044f \u0437\u0430 \u043a\u043e\u0448\u0442\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0443\".",
+   "fieldname": "donor_name",
+   "fieldtype": "Data",
+   "label": "\u041d\u0430\u0437\u0432\u0430 \u0414\u043e\u043d\u043e\u0440\u0443"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u041a\u0440\u0430\u0457\u043d\u0430",
+   "options": "Country"
+  },
+  {
+   "fieldname": "donor_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u0422\u0438\u043f \u0414\u043e\u043d\u043e\u0440\u0443",
+   "options": "\u0411\u043b\u0430\u0433\u043e\u0434\u0456\u0439\u043d\u0438\u0439 \u0444\u043e\u043d\u0434\n\u0413\u041e\n\u041f\u0440\u0438\u0432\u0430\u0442\u043d\u0430 \u043e\u0441\u043e\u0431\u0430\n\u041a\u043e\u043c\u0435\u0440\u0446\u0456\u0439\u043d\u0430 \u043e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u044f\n\u0406\u043d\u043e\u0437\u0435\u043c\u043d\u0438\u0439 \u0443\u0440\u044f\u0434\n\u0417\u0430\u043a\u0443\u043f\u0456\u0432\u043b\u044f\n\u041f\u0435\u0440\u0435\u0434\u0430\u0447\u0430 \u0432\u0456\u0434 \u0456\u043d\u0448\u043e\u0457 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\n\u0406\u043d\u0448\u0435"
+  },
+  {
+   "fieldname": "contacts",
+   "fieldtype": "Text Editor",
+   "in_list_view": 1,
+   "label": "\u041a\u043e\u043d\u0442\u0430\u043a\u0442\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiDonorProject",
+   "link_fieldname": "primary_donor"
+  }
+ ],
+ "modified": "2025-08-04 17:35:05.277488",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiDonor",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "donor_name"
+}

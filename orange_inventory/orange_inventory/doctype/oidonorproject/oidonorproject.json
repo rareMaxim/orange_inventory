@@ -1,0 +1,150 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-04 15:24:20.008696",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+  "project_name",
+  "column_break_cphw",
+  "project_number",
+  "column_break_fxgd",
+  "\u0441\u0442\u0430\u0442\u0443\u0441_\u043f\u0440\u043e\u0454\u043a\u0442\u0443",
+  "\u0434\u043e\u043d\u043e\u0440\u0438_\u0442\u0430_\u0431\u044e\u0434\u0436\u0435\u0442_section",
+  "primary_donor",
+  "column_break_ajxb",
+  "project_budget",
+  "column_break_zaof",
+  "currency",
+  "\u0442\u0435\u0440\u043c\u0456\u043d\u0438_\u0442\u0430_\u043e\u043f\u0438\u0441_section",
+  "start_date",
+  "column_break_yvqp",
+  "end_date",
+  "section_break_pssj",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+   "fieldtype": "Section Break",
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "label": "\u041d\u0430\u0437\u0432\u0430 \u041f\u0440\u043e\u0454\u043a\u0442\u0443"
+  },
+  {
+   "fieldname": "project_number",
+   "fieldtype": "Data",
+   "label": "\u041d\u043e\u043c\u0435\u0440 \u041f\u0440\u043e\u0454\u043a\u0442\u0443"
+  },
+  {
+   "fieldname": "\u0441\u0442\u0430\u0442\u0443\u0441_\u043f\u0440\u043e\u0454\u043a\u0442\u0443",
+   "fieldtype": "Select",
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u041f\u0440\u043e\u0454\u043a\u0442\u0443",
+   "options": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u0439\n\u0417\u0430\u043f\u043b\u0430\u043d\u043e\u0432\u0430\u043d\u0438\u0439"
+  },
+  {
+   "fieldname": "column_break_cphw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_fxgd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "\u0434\u043e\u043d\u043e\u0440\u0438_\u0442\u0430_\u0431\u044e\u0434\u0436\u0435\u0442_section",
+   "fieldtype": "Section Break",
+   "label": "\u0414\u043e\u043d\u043e\u0440\u0438 \u0442\u0430 \u0411\u044e\u0434\u0436\u0435\u0442"
+  },
+  {
+   "fieldname": "primary_donor",
+   "fieldtype": "Link",
+   "label": "\u0413\u043e\u043b\u043e\u0432\u043d\u0438\u0439 \u0414\u043e\u043d\u043e\u0440",
+   "options": "oiDonor"
+  },
+  {
+   "fieldname": "project_budget",
+   "fieldtype": "Currency",
+   "label": "\u0411\u044e\u0434\u0436\u0435\u0442 \u041f\u0440\u043e\u0454\u043a\u0442\u0443"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "\u0412\u0430\u043b\u044e\u0442\u0430",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "column_break_ajxb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_zaof",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "\u0442\u0435\u0440\u043c\u0456\u043d\u0438_\u0442\u0430_\u043e\u043f\u0438\u0441_section",
+   "fieldtype": "Section Break",
+   "hide_border": 1,
+   "label": "\u0422\u0435\u0440\u043c\u0456\u043d\u0438 \u0442\u0430 \u041e\u043f\u0438\u0441"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u043f\u043e\u0447\u0430\u0442\u043a\u0443"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "\u041e\u043f\u0438\u0441 \u0442\u0430 \u0446\u0456\u043b\u0456 \u043f\u0440\u043e\u0454\u043a\u0442\u0443"
+  },
+  {
+   "fieldname": "column_break_yvqp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_pssj",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "source_project"
+  }
+ ],
+ "modified": "2025-08-04 17:33:52.777843",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiDonorProject",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "project_name"
+}

@@ -1,0 +1,100 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2025-08-04 11:23:10.173096",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "basis_doc_type",
+  "column_break_nsdd",
+  "decision_number",
+  "column_break_mnka",
+  "decision_date",
+  "section_break_nlan",
+  "title",
+  "scan"
+ ],
+ "fields": [
+  {
+   "fieldname": "decision_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u041d\u043e\u043c\u0435\u0440",
+   "reqd": 1
+  },
+  {
+   "fieldname": "decision_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u0414\u0430\u0442\u0430",
+   "reqd": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "\u0417\u0430\u0433\u043e\u043b\u043e\u0432\u043e\u043a",
+   "reqd": 1
+  },
+  {
+   "fieldname": "scan",
+   "fieldtype": "Attach",
+   "label": "\u0421\u043a\u0430\u043d-\u043a\u043e\u043f\u0456\u044f"
+  },
+  {
+   "default": "\u0420\u0456\u0448\u0435\u043d\u043d\u044f",
+   "fieldname": "basis_doc_type",
+   "fieldtype": "Select",
+   "label": "\u0422\u0438\u043f",
+   "options": "\u0420\u0456\u0448\u0435\u043d\u043d\u044f",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_nsdd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_mnka",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_nlan",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiDecisionAppendix",
+   "link_fieldname": "decision"
+  }
+ ],
+ "modified": "2025-08-04 14:49:51.855332",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiBasisDoc",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title"
+}
