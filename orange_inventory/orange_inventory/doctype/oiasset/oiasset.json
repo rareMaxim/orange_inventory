@@ -20,8 +20,8 @@
   "column_break_ivjv",
   "location",
   "acquisition_details_sb",
-  "original_donor",
   "asset_type",
+  "original_donor",
   "source_project",
   "column_break_cgpf",
   "acquisition_date",
@@ -81,6 +81,7 @@
    "fieldname": "serial_no",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
    "unique": 1
   },
@@ -91,8 +92,9 @@
   },
   {
    "fieldname": "asset_type",
-   "fieldtype": "Select",
-   "label": "\u0422\u0438\u043f \u0410\u043a\u0442\u0438\u0432\u0443"
+   "fieldtype": "Link",
+   "label": "\u0422\u0438\u043f \u0410\u043a\u0442\u0438\u0432\u0443",
+   "options": "oiAssetType"
   },
   {
    "fieldname": "image",
@@ -132,7 +134,8 @@
    "fieldname": "original_donor",
    "fieldtype": "Link",
    "label": "\u041f\u0435\u0440\u0432\u0438\u043d\u043d\u0438\u0439 \u0414\u043e\u043d\u043e\u0440",
-   "options": "oiDonor"
+   "options": "oiDonor",
+   "search_index": 1
   },
   {
    "fieldname": "source_project",
@@ -155,8 +158,10 @@
   {
    "fieldname": "total",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "\u0421\u0443\u043c\u0430",
-   "options": "UAH"
+   "options": "UAH",
+   "read_only": 1
   },
   {
    "fieldname": "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
@@ -178,7 +183,7 @@
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-06 09:28:51.727851",
+ "modified": "2025-08-07 01:14:46.697942",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset",
@@ -199,9 +204,31 @@
   }
  ],
  "row_format": "Dynamic",
+ "search_fields": "serial_no",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Orange",
+   "title": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f"
+  },
+  {
+   "color": "Green",
+   "title": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456"
+  },
+  {
+   "color": "Blue",
+   "title": "\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457"
+  },
+  {
+   "color": "Yellow",
+   "title": "\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e"
+  },
+  {
+   "color": "Pink",
+   "title": "\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
+  }
+ ],
  "title_field": "asset_name"
 }

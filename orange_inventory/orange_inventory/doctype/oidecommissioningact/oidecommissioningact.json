@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:DA-{YYYY}-{#####}",
+ "creation": "2025-08-06 12:50:11.613841",
+ "description": "\u0426\u0435\u0439 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442 \u0434\u043e\u0437\u0432\u043e\u043b\u0438\u0442\u044c \u043d\u0430\u043c \u043e\u0444\u0456\u0446\u0456\u0439\u043d\u043e \u0440\u0435\u0454\u0441\u0442\u0440\u0443\u0432\u0430\u0442\u0438 \u0432\u0438\u0432\u0435\u0434\u0435\u043d\u043d\u044f \u0430\u043a\u0442\u0438\u0432\u0456\u0432 \u0437 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+  "decommission_date",
+  "decision",
+  "\u043f\u0435\u0440\u0435\u043b\u0456\u043a_\u0430\u043a\u0442\u0438\u0432\u0456\u0432_\u0434\u043e_\u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f_section",
+  "items"
+ ],
+ "fields": [
+  {
+   "fieldname": "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+   "fieldtype": "Section Break",
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "default": "Today",
+   "fieldname": "decommission_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u0414\u0430\u0442\u0430 \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f",
+   "reqd": 1
+  },
+  {
+   "fieldname": "decision",
+   "fieldtype": "Link",
+   "label": "\u0420\u0456\u0448\u0435\u043d\u043d\u044f-\u043f\u0456\u0434\u0441\u0442\u0430\u0432\u0430",
+   "options": "oiBasisDoc"
+  },
+  {
+   "fieldname": "\u043f\u0435\u0440\u0435\u043b\u0456\u043a_\u0430\u043a\u0442\u0438\u0432\u0456\u0432_\u0434\u043e_\u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f_section",
+   "fieldtype": "Section Break",
+   "label": "\u041f\u0435\u0440\u0435\u043b\u0456\u043a \u0430\u043a\u0442\u0438\u0432\u0456\u0432 \u0434\u043e \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "\u0410\u043a\u0442\u0438\u0432\u0438",
+   "options": "oiDecommissioningItem"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-06 12:57:40.240809",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiDecommissioningAct",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

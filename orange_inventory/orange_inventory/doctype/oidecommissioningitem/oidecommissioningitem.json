@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-06 12:51:15.751995",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "asset",
+  "inventory_no",
+  "reason"
+ ],
+ "fields": [
+  {
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u0410\u043a\u0442\u0438\u0432",
+   "options": "oiAsset",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "asset.inventory_no",
+   "fieldname": "inventory_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0406\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "\u041f\u0440\u0438\u0447\u0438\u043d\u0430 \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-08-06 12:53:36.740579",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiDecommissioningItem",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

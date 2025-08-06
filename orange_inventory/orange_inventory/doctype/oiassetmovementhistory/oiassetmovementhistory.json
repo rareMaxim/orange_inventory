@@ -8,7 +8,8 @@
  "field_order": [
   "date",
   "movement_type",
-  "from_organization",
+  "from_source_type",
+  "from_source_name",
   "to_organization",
   "reference_appendix"
  ],
@@ -28,14 +29,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "from_organization",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "\u0417\u0432\u0456\u0434\u043a\u0438",
-   "options": "oiOrganization",
-   "read_only": 1
-  },
-  {
    "fieldname": "to_organization",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -50,13 +43,26 @@
    "label": "\u041f\u0456\u0434\u0441\u0442\u0430\u0432\u0430",
    "options": "oiBasisDoc",
    "read_only": 1
+  },
+  {
+   "fieldname": "from_source_type",
+   "fieldtype": "Select",
+   "label": "\u0422\u0438\u043f \u0434\u0436\u0435\u0440\u0435\u043b\u0430 (\u0417\u0432\u0456\u0434\u043a\u0438)",
+   "options": "oiOrganization\noiDonor"
+  },
+  {
+   "fieldname": "from_source_name",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "\u0417\u0432\u0456\u0434\u043a\u0438",
+   "options": "from_source_type"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-06 10:24:43.979976",
+ "modified": "2025-08-06 18:38:41.161506",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAssetMovementHistory",

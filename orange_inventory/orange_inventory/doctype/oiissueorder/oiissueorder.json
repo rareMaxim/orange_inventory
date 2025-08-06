@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:\u0412\u041e-{YYYY}-{#####}",
+ "creation": "2025-08-06 11:06:42.743941",
+ "description": "\u0412\u0438\u0434\u0430\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440. \u0426\u0435\u0439 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442 \u0431\u0443\u0434\u0435 \u0432\u0438\u043a\u043e\u0440\u0438\u0441\u0442\u043e\u0432\u0443\u0432\u0430\u0442\u0438\u0441\u044f \u0434\u043b\u044f \u043e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u043d\u044f \u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u043d\u044f \u0430\u043a\u0442\u0438\u0432\u0456\u0432, \u044f\u043a\u0456 \u0432\u0436\u0435 \u0441\u0442\u043e\u044f\u0442\u044c \u0443 \u043d\u0430\u0441 \u043d\u0430 \u043e\u0431\u043b\u0456\u043a\u0443.",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+  "issue_date",
+  "decision",
+  "\u0441\u0442\u043e\u0440\u043e\u043d\u0438_section",
+  "from_organization",
+  "column_break_klwl",
+  "to_organization",
+  "to_employee",
+  "\u043f\u0435\u0440\u0435\u043b\u0456\u043a_\u0430\u043a\u0442\u0438\u0432\u0456\u0432_\u0434\u043e_\u0432\u0438\u0434\u0430\u0447\u0456_section",
+  "items",
+  "amended_from",
+  "section_break_wnul",
+  "dashboard"
+ ],
+ "fields": [
+  {
+   "fieldname": "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+   "fieldtype": "Section Break",
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "issue_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u0414\u0430\u0442\u0430 \u0432\u0438\u0434\u0430\u0447\u0456",
+   "reqd": 1
+  },
+  {
+   "fieldname": "decision",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u0420\u0456\u0448\u0435\u043d\u043d\u044f-\u043f\u0456\u0434\u0441\u0442\u0430\u0432\u0430",
+   "options": "oiBasisDoc",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "\u0441\u0442\u043e\u0440\u043e\u043d\u0438_section",
+   "fieldtype": "Section Break",
+   "label": "\u0421\u0442\u043e\u0440\u043e\u043d\u0438"
+  },
+  {
+   "fieldname": "from_organization",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u0417\u0432\u0456\u0434\u043a\u0438 (\u041e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u044f)",
+   "options": "oiOrganization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_organization",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "\u041a\u0443\u0434\u0438 (\u041e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u044f)",
+   "options": "oiOrganization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_klwl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_employee",
+   "fieldtype": "Link",
+   "label": "\u041a\u043e\u043c\u0443 (\u041c\u0412\u041e)",
+   "options": "oiEmployee"
+  },
+  {
+   "fieldname": "\u043f\u0435\u0440\u0435\u043b\u0456\u043a_\u0430\u043a\u0442\u0438\u0432\u0456\u0432_\u0434\u043e_\u0432\u0438\u0434\u0430\u0447\u0456_section",
+   "fieldtype": "Section Break",
+   "label": "\u041f\u0435\u0440\u0435\u043b\u0456\u043a \u0430\u043a\u0442\u0438\u0432\u0456\u0432 \u0434\u043e \u0432\u0438\u0434\u0430\u0447\u0456"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "\u0410\u043a\u0442\u0438\u0432\u0438",
+   "options": "oiIssueOrderItem"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "oiIssueOrder",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_wnul",
+   "fieldtype": "Section Break",
+   "label": "\u041f\u0456\u0434\u0441\u0443\u043c\u043a\u043e\u0432\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "dashboard",
+   "fieldtype": "HTML",
+   "label": "\u0406\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0456\u043a\u0430"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-08-06 19:08:21.799351",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiIssueOrder",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

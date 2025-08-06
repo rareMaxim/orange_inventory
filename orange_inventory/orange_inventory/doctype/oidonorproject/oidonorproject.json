@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "hash",
  "creation": "2025-08-04 15:24:20.008696",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -33,11 +34,13 @@
   {
    "fieldname": "project_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "\u041d\u0430\u0437\u0432\u0430 \u041f\u0440\u043e\u0454\u043a\u0442\u0443"
   },
   {
    "fieldname": "project_number",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "\u041d\u043e\u043c\u0435\u0440 \u041f\u0440\u043e\u0454\u043a\u0442\u0443"
   },
   {
@@ -62,13 +65,17 @@
   {
    "fieldname": "primary_donor",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "\u0413\u043e\u043b\u043e\u0432\u043d\u0438\u0439 \u0414\u043e\u043d\u043e\u0440",
-   "options": "oiDonor"
+   "options": "oiDonor",
+   "search_index": 1
   },
   {
    "fieldname": "project_budget",
    "fieldtype": "Currency",
-   "label": "\u0411\u044e\u0434\u0436\u0435\u0442 \u041f\u0440\u043e\u0454\u043a\u0442\u0443"
+   "in_list_view": 1,
+   "label": "\u0411\u044e\u0434\u0436\u0435\u0442 \u041f\u0440\u043e\u0454\u043a\u0442\u0443",
+   "options": "currency"
   },
   {
    "fieldname": "currency",
@@ -122,10 +129,11 @@
    "link_fieldname": "source_project"
   }
  ],
- "modified": "2025-08-04 17:33:52.777843",
+ "modified": "2025-08-06 16:51:38.426017",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiDonorProject",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {

@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class oiAssetMovementHistory(Document):
+class oiDecommissioningItem(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,15 +14,12 @@ class oiAssetMovementHistory(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		date: DF.Date | None
-		from_source_name: DF.DynamicLink | None
-		from_source_type: DF.Literal["oiOrganization", "oiDonor"]
-		movement_type: DF.Data | None
+		asset: DF.Link
+		inventory_no: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		reference_appendix: DF.Link | None
-		to_organization: DF.Link | None
+		reason: DF.SmallText | None
 	# end: auto-generated types
 
 	pass

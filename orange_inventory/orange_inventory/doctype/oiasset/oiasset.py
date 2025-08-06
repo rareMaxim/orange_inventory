@@ -18,7 +18,7 @@ class oiAsset(Document):
 		acquisition_date: DF.Date | None
 		asset_model: DF.Data | None
 		asset_name: DF.SmallText
-		asset_type: DF.Literal[None]
+		asset_type: DF.Link | None
 		cost: DF.Currency
 		current_owner: DF.Link | None
 		image: DF.AttachImage | None
@@ -34,4 +34,5 @@ class oiAsset(Document):
 		total: DF.Currency
 	# end: auto-generated types
 
-	pass
+	def before_save(self):
+		self.total = self.cost * self.quantity

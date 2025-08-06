@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "donor_name",
+  "donor_short_name",
   "country",
   "donor_type",
   "contacts"
@@ -16,6 +17,7 @@
    "description": "\u041d\u0430\u043f\u0440\u0438\u043a\u043b\u0430\u0434, \"USAID\" \u0430\u0431\u043e \"\u0417\u0430\u043a\u0443\u043f\u0456\u0432\u043b\u044f \u0437\u0430 \u043a\u043e\u0448\u0442\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0443\".",
    "fieldname": "donor_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "\u041d\u0430\u0437\u0432\u0430 \u0414\u043e\u043d\u043e\u0440\u0443"
   },
   {
@@ -37,6 +39,12 @@
    "fieldtype": "Text Editor",
    "in_list_view": 1,
    "label": "\u041a\u043e\u043d\u0442\u0430\u043a\u0442\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "description": "\u041d\u0430\u043f\u0440\u0438\u043a\u043b\u0430\u0434, \"USAID\" \u0430\u0431\u043e \"\u0417\u0430\u043a\u0443\u043f\u0456\u0432\u043b\u044f \u0437\u0430 \u043a\u043e\u0448\u0442\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0443\".",
+   "fieldname": "donor_short_name",
+   "fieldtype": "Data",
+   "label": "\u041a\u043e\u0440\u043e\u0442\u043a\u0430 \u043d\u0430\u0437\u0432\u0430 \u0414\u043e\u043d\u043e\u0440\u0443"
   }
  ],
  "grid_page_length": 50,
@@ -45,9 +53,13 @@
   {
    "link_doctype": "oiDonorProject",
    "link_fieldname": "primary_donor"
+  },
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "original_donor"
   }
  ],
- "modified": "2025-08-04 17:35:05.277488",
+ "modified": "2025-08-06 21:35:48.305171",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiDonor",
@@ -72,5 +84,5 @@
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
- "title_field": "donor_name"
+ "title_field": "donor_short_name"
 }
