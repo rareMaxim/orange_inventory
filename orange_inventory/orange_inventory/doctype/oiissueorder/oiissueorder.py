@@ -6,6 +6,24 @@ from frappe.model.document import Document
 
 
 class oiIssueOrder(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+        from orange_inventory.orange_inventory.doctype.oiissueorderitem.oiissueorderitem import oiIssueOrderItem
+
+        amended_from: DF.Link | None
+        decision: DF.Link
+        from_organization: DF.Link
+        issue_date: DF.Date | None
+        items: DF.Table[oiIssueOrderItem]
+        to_employee: DF.Link | None
+        to_organization: DF.Link
+    # end: auto-generated types
+
     def on_validate(self):
         """
         Перевіряє ключові умови перед збереженням 'Видаткового ордера'.
@@ -90,6 +108,8 @@ class oiIssueOrder(Document):
                 source_asset.append("movement_history", {
                     "date": self.issue_date,
                     "movement_type": f"Передача частини ({item.qty} од.)",
+                    "from_source_type": "oiOrganization",
+                    "from_source_name": self.from_organization,
                     "to_organization": self.to_organization,
                     "reference_appendix": self.decision
                 })

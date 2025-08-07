@@ -15,7 +15,6 @@
   "manufacturer",
   "hardware_model",
   "image",
-  "asset_model",
   "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
   "current_owner",
   "location",
@@ -89,12 +88,6 @@
    "unique": 1
   },
   {
-   "fieldname": "asset_model",
-   "fieldtype": "Data",
-   "label": "\u041c\u043e\u0434\u0435\u043b\u044c",
-   "read_only": 1
-  },
-  {
    "fieldname": "asset_type",
    "fieldtype": "Link",
    "label": "\u0422\u0438\u043f \u0410\u043a\u0442\u0438\u0432\u0443",
@@ -119,7 +112,8 @@
    "fieldname": "current_owner",
    "fieldtype": "Link",
    "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
-   "options": "oiOrganization"
+   "options": "oiOrganization",
+   "search_index": 1
   },
   {
    "fieldname": "location",
@@ -182,7 +176,8 @@
    "fieldname": "movement_history",
    "fieldtype": "Table",
    "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f",
-   "options": "oiAssetMovementHistory"
+   "options": "oiAssetMovementHistory",
+   "read_only": 1
   },
   {
    "fetch_from": "hardware_model.manufacturer",
@@ -209,7 +204,7 @@
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-07 02:14:18.656327",
+ "modified": "2025-08-07 09:38:34.050954",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset",

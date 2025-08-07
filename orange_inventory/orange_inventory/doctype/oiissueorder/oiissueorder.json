@@ -8,8 +8,9 @@
  "engine": "InnoDB",
  "field_order": [
   "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
-  "issue_date",
   "decision",
+  "column_break_czpf",
+  "issue_date",
   "\u0441\u0442\u043e\u0440\u043e\u043d\u0438_section",
   "from_organization",
   "column_break_klwl",
@@ -28,11 +29,12 @@
    "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
   },
   {
+   "fetch_from": "decision.decision_date",
+   "fetch_if_empty": 1,
    "fieldname": "issue_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "\u0414\u0430\u0442\u0430 \u0432\u0438\u0434\u0430\u0447\u0456",
-   "reqd": 1
+   "label": "\u0414\u0430\u0442\u0430 \u0432\u0438\u0434\u0430\u0447\u0456"
   },
   {
    "fieldname": "decision",
@@ -105,13 +107,17 @@
    "fieldname": "dashboard",
    "fieldtype": "HTML",
    "label": "\u0406\u043d\u0444\u043e\u0433\u0440\u0430\u0444\u0456\u043a\u0430"
+  },
+  {
+   "fieldname": "column_break_czpf",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-06 19:08:21.799351",
+ "modified": "2025-08-07 09:41:58.406675",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiIssueOrder",

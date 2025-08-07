@@ -22,6 +22,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "\u041d\u0430\u0437\u0432\u0430 \u041e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u0457",
+   "length": 320,
    "reqd": 1,
    "unique": 1
   },
@@ -69,8 +70,13 @@
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-08-04 17:42:31.672978",
+ "links": [
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "current_owner"
+  }
+ ],
+ "modified": "2025-08-07 09:18:14.997278",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiOrganization",

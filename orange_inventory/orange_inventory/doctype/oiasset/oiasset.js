@@ -30,7 +30,8 @@ frappe.ui.form.on("oiAsset", {
     },
     manufacturer: function (frm) {
         // Коли змінюється виробник, очищаємо поле моделі
-        frm.set_value("hardware_model", "");
+        // не очищаємо, дані беруться з моделі
+        // frm.set_value("hardware_model", "");
         // І налаштовуємо фільтр для поля "Модель"
         frm.set_query("hardware_model", function () {
             return {

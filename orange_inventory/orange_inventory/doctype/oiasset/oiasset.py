@@ -18,7 +18,6 @@ class oiAsset(Document):
         from orange_inventory.orange_inventory.doctype.oiassetmovementhistory.oiassetmovementhistory import oiAssetMovementHistory
 
         acquisition_date: DF.Date | None
-        asset_model: DF.Data | None
         asset_name: DF.SmallText
         asset_type: DF.Link | None
         asset_user: DF.Link | None
