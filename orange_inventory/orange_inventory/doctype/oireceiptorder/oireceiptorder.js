@@ -9,11 +9,11 @@ frappe.ui.form.on('oiReceiptOrder', {
 
 frappe.ui.form.on('oiReceiptOrderItem', {
     qty(frm, cdt, cdn) {
-        calculate_total_amount(frm, cdt, cdn);
+        calculate_row_total(frm, cdt, cdn); // Використовуємо глобальну функцію
         update_dashboard(frm);
     },
     rate(frm, cdt, cdn) {
-        calculate_total_amount(frm, cdt, cdn);
+        calculate_row_total(frm, cdt, cdn); // Використовуємо глобальну функцію
         update_dashboard(frm);
     },
     asset_type(frm) {
@@ -124,14 +124,4 @@ let update_dashboard = function (frm) {
     `;
 
     frm.fields_dict.dashboard.html(html);
-};
-
-let format_number = (num) => {
-    if (num === undefined || num === null) return '';
-    return new Intl.NumberFormat('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
-};
-
-let format_currency = (num) => {
-    if (num === undefined || num === null) return '';
-    return new Intl.NumberFormat('uk-UA', { style: 'currency', currency: 'UAH' }).format(num);
 };

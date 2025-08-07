@@ -104,16 +104,3 @@ function update_all_rows(frm) {
         frm.refresh_field('items');
     });
 }
-
-
-
-let format_number = (num, fractions = true) => {
-    if (num === undefined || num === null) return '';
-    const options = fractions ? { minimumFractionDigits: 2, maximumFractionDigits: 2 } : {};
-    return new Intl.NumberFormat('uk-UA', options).format(num);
-};
-
-let format_currency = (num) => {
-    if (num === undefined || num === null) return '';
-    return new Intl.NumberFormat('uk-UA', { style: 'currency', currency: 'UAH' }).format(num);
-};
