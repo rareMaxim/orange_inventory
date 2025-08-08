@@ -11,7 +11,8 @@
   "rate",
   "qty",
   "total_amount",
-  "serial_numbers"
+  "serial_numbers",
+  "serials_feedback"
  ],
  "fields": [
   {
@@ -62,13 +63,18 @@
    "label": "\u0422\u0438\u043f \u0430\u043a\u0442\u0438\u0432\u0443",
    "options": "oiAssetType",
    "reqd": 1
+  },
+  {
+   "fieldname": "serials_feedback",
+   "fieldtype": "HTML",
+   "label": "Serials Feedback"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-07 00:57:57.241257",
+ "modified": "2025-08-07 19:33:17.693318",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiReceiptOrderItem",

@@ -204,7 +204,7 @@
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-07 09:38:34.050954",
+ "modified": "2025-08-08 11:32:53.925764",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset",
@@ -251,5 +251,6 @@
    "title": "\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
   }
  ],
- "title_field": "asset_name"
+ "title_field": "asset_name",
+ "track_changes": 1
 }
