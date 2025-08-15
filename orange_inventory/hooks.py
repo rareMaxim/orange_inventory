@@ -104,12 +104,12 @@ app_include_js = "/assets/orange_inventory/js/utils.js"
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
+permission_query_conditions = {
+	"oiAsset": "orange_inventory.orange_inventory.doctype.oiasset.oiasset.get_permission_query_conditions",
+}
 #
 # has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
+#     "oiAsset": "orange_inventory.orange_inventory.doctype.oiasset.oiasset.has_permission",
 # }
 
 # DocType Class

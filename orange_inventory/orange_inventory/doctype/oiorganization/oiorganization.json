@@ -74,9 +74,13 @@
   {
    "link_doctype": "oiAsset",
    "link_fieldname": "current_owner"
+  },
+  {
+   "link_doctype": "oiEmployee",
+   "link_fieldname": "organization"
   }
  ],
- "modified": "2025-08-07 09:18:14.997278",
+ "modified": "2025-08-14 11:23:04.498871",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiOrganization",

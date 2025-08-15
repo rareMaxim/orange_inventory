@@ -14,7 +14,7 @@ class oiHardwareType(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		type_name: DF.Data | None
+		type_name: DF.Data
 	# end: auto-generated types
 
 	pass
