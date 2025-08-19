@@ -9,7 +9,10 @@
   "model_name",
   "manufacturer",
   "hardware_type",
-  "model_image"
+  "model_image",
+  "section_break_arez",
+  "is_network_device",
+  "port_templates"
  ],
  "fields": [
   {
@@ -41,13 +44,30 @@
    "fieldname": "model_image",
    "fieldtype": "Attach Image",
    "label": "\u0424\u043e\u0442\u043e \u043c\u043e\u0434\u0435\u043b\u0456"
+  },
+  {
+   "fieldname": "section_break_arez",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_network_device",
+   "fieldtype": "Check",
+   "label": "\u0404 \u043c\u0435\u0440\u0435\u0436\u0435\u0432\u0438\u043c \u043f\u0440\u0438\u0441\u0442\u0440\u043e\u0454\u043c"
+  },
+  {
+   "depends_on": "eval:doc.is_network_device==1",
+   "fieldname": "port_templates",
+   "fieldtype": "Table",
+   "label": "\u0428\u0430\u0431\u043b\u043e\u043d\u0438 \u043f\u043e\u0440\u0442\u0456\u0432",
+   "options": "oiNetworkPortTemplate"
   }
  ],
  "grid_page_length": 50,
  "image_field": "model_image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-14 13:57:28.793595",
+ "modified": "2025-08-19 16:57:17.989531",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardwareModel",

@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class oiHardwareModel(Document):
+class oiNetworkPortTemplate(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,16 +14,11 @@ class oiHardwareModel(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from orange_inventory.orange_inventory.doctype.oinetworkporttemplate.oinetworkporttemplate import (
-			oiNetworkPortTemplate,
-		)
-
-		hardware_type: DF.Link | None
-		is_network_device: DF.Check
-		manufacturer: DF.Link
-		model_image: DF.AttachImage | None
-		model_name: DF.Data
-		port_templates: DF.Table[oiNetworkPortTemplate]
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
+		port_name: DF.Data
+		port_type: DF.Literal["RJ45", "SFP", "SFP+", "QSFP", "Fiber", "WAN"]
 	# end: auto-generated types
 
 	pass

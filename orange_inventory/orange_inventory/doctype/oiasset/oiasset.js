@@ -45,6 +45,19 @@ frappe.ui.form.on("oiAsset", {
 				open_split_asset_dialog(frm);
 			}).addClass("btn-primary");
 		}
+		// Якщо це мережевий пристрій, показуємо вкладку "Мережа" та завантажуємо порти
+		if (frm.doc.hardware_model) {
+			frappe.db
+				.get_value("oiHardwareModel", frm.doc.hardware_model, "is_network_device")
+				.then((r) => {
+					if (r.message && r.message.is_network_device) {
+						frm.toggle_display("network_ports_dashboard", true);
+						render_network_ports(frm);
+					} else {
+						frm.toggle_display("network_ports_dashboard", false);
+					}
+				});
+		}
 	},
 	cost(frm) {
 		calculate_total_amount(frm);
@@ -115,3 +128,55 @@ let open_split_asset_dialog = function (frm) {
 	});
 	d.show();
 };
+
+function render_network_ports(frm) {
+	frappe.call({
+		method: "frappe.client.get_list",
+		args: {
+			doctype: "oiNetworkPort",
+			fields: ["name", "port_name", "port_type", "connection", "is_wan_connection"],
+			filters: {
+				asset: frm.doc.name,
+			},
+			order_by: "port_name asc",
+		},
+		callback: function (r) {
+			if (r.message) {
+				let html = `
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Порт</th>
+                                <th>Тип</th>
+                                <th>З'єднано з</th>
+                                <th>Дії</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+				r.message.forEach((port) => {
+					let connection_status_html = "";
+					if (port.is_wan_connection) {
+						connection_status_html = `<span class="badge badge-primary">🌐 Підключення до Інтернету</span>`;
+					} else if (port.connection) {
+						connection_status_html = `<a href="/app/oinetworkport/${port.connection}">${port.connection}</a>`;
+					} else {
+						connection_status_html = `<span class="text-muted">Не підключено</span>`;
+					}
+					html += `
+                        <tr>
+                            <td>${port.port_name}</td>
+                            <td>${port.port_type}</td>
+                            <td>${connection_status_html}</td>
+                            <td>
+                                <a href="/app/oinetworkport/${port.name}" class="btn btn-sm btn-default">Редагувати</a>
+                            </td>
+                        </tr>
+                    `;
+				});
+				html += `</tbody></table>`;
+				frm.fields_dict.network_ports_dashboard.html(html);
+			}
+		},
+	});
+}

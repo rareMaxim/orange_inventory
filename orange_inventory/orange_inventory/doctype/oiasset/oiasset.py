@@ -30,6 +30,7 @@ class oiAsset(Document):
 		hardware_model: DF.Link | None
 		image: DF.AttachImage | None
 		inventory_no: DF.Data | None
+		is_network_device: DF.Check
 		location: DF.Data | None
 		manufacturer: DF.Link | None
 		movement_history: DF.Table[oiAssetMovementHistory]
@@ -50,6 +51,55 @@ class oiAsset(Document):
 
 	def before_save(self):
 		self.total = self.cost * self.quantity
+
+	def on_update(self):
+		self.create_network_ports_from_model()
+
+	def create_network_ports_from_model(self):
+		if not self.hardware_model:
+			return
+
+		hardware_model = frappe.get_doc("oiHardwareModel", self.hardware_model)
+		if not hardware_model.is_network_device:
+			return
+
+		# Перевіряємо, чи порти вже створені, щоб уникнути дублікатів
+		if frappe.db.exists("oiNetworkPort", {"asset": self.name}):
+			return
+
+		# Перевіряємо, чи існує шаблон портів у моделі
+		if not hardware_model.port_templates:
+			return
+
+		for port_template in hardware_model.port_templates:
+			# Створюємо унікальний ідентифікатор для перевірки
+			port_doc_name = f"{self.name}-{port_template.port_name.replace(' ', '_')}"
+
+			# 1. (ВИПРАВЛЕНО) Перевіряємо, чи порт вже існує
+			if frappe.db.exists("oiNetworkPort", port_doc_name):
+				continue  # Якщо існує, пропускаємо ітерацію
+
+			try:
+				new_port = frappe.new_doc("oiNetworkPort")
+
+				# 2. (РЕКОМЕНДАЦІЯ) Дозволяємо Frappe самому встановити name,
+				#    але заповнюємо ключові поля для іменування, якщо воно налаштоване.
+				new_port.asset = self.name
+				new_port.port_name = port_template.port_name
+				new_port.port_type = port_template.port_type
+
+				# Якщо правило іменування - "Set by user", то цей рядок спрацює
+				# Якщо інше - Frappe його проігнорує і згенерує своє, що теж є прийнятним.
+				# Головне, щоб у доктайпі oiNetworkPort було правило, яке гарантує унікальність.
+				# Найкраще встановити Naming Rule -> "Expression" і використати:
+				# {asset}-{port_name}
+
+				new_port.insert(ignore_permissions=True)
+
+			except frappe.exceptions.DuplicateEntryError:
+				# Якщо раптом виникне дублікат (наприклад, при паралельних запитах),
+				# ми його просто проігноруємо.
+				pass
 
 
 @frappe.whitelist()
