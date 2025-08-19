@@ -15,6 +15,17 @@ let manufacturer_filter = function (frm) {
 		};
 	});
 };
+let responsible_employee_filter = function (frm) {
+	// Фільтр для поля "Відповідальний співробітник" на основі підприємства
+	frm.set_query("responsible_employee", function () {
+		return {
+			filters: {
+				organization: frm.doc.current_owner,
+			},
+		};
+	});
+};
+
 let calculate_total_amount = function (frm) {
 	let cost = flt(frm.doc.cost);
 	let qty = flt(frm.doc.quantity);
@@ -26,6 +37,7 @@ let calculate_total_amount = function (frm) {
 frappe.ui.form.on("oiAsset", {
 	refresh(frm) {
 		manufacturer_filter(frm);
+		responsible_employee_filter(frm);
 		calculate_total_amount(frm);
 		// Показуємо кнопку тільки якщо актив "груповий" і знаходиться на складі
 		if (frm.doc.quantity > 1 && !frm.is_new()) {
@@ -42,6 +54,9 @@ frappe.ui.form.on("oiAsset", {
 	},
 	manufacturer: function (frm) {
 		manufacturer_filter(frm);
+	},
+	current_owner: function (frm) {
+		responsible_employee_filter(frm);
 	},
 });
 
