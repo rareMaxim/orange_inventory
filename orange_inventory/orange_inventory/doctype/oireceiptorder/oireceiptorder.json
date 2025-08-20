@@ -29,7 +29,8 @@
    "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
   },
   {
-   "default": "Today",
+   "fetch_from": "decision.decision_date",
+   "fetch_if_empty": 1,
    "fieldname": "receipt_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -120,7 +121,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-06 18:16:58.282848",
+ "modified": "2025-08-20 09:05:10.094149",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiReceiptOrder",
