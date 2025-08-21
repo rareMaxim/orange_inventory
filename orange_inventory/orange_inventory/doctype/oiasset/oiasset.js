@@ -131,50 +131,60 @@ let open_split_asset_dialog = function (frm) {
 
 function render_network_ports(frm) {
 	frappe.call({
-		method: "frappe.client.get_list",
+		method: "orange_inventory.orange_inventory.doctype.oiasset.oiasset.get_network_ports_with_details",
 		args: {
-			doctype: "oiNetworkPort",
-			fields: ["name", "port_name", "port_type", "connection", "is_wan_connection"],
-			filters: {
-				asset: frm.doc.name,
-			},
-			order_by: "port_name asc",
+			asset_name: frm.doc.name,
 		},
 		callback: function (r) {
 			if (r.message) {
 				let html = `
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Порт</th>
-                                <th>Тип</th>
-                                <th>З'єднано з</th>
-                                <th>Дії</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width: 20%;">Порт</th>
+                                    <th style="width: 20%;">Тип</th>
+                                    <th>З'єднано з</th>
+                                    <th style="width: 15%;" class="text-right">Дії</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                 `;
-				r.message.forEach((port) => {
-					let connection_status_html = "";
-					if (port.is_wan_connection) {
-						connection_status_html = `<span class="badge badge-primary">🌐 Підключення до Інтернету</span>`;
-					} else if (port.connection) {
-						connection_status_html = `<a href="/app/oinetworkport/${port.connection}">${port.connection}</a>`;
-					} else {
-						connection_status_html = `<span class="text-muted">Не підключено</span>`;
-					}
-					html += `
+				if (r.message.length === 0) {
+					html += `<tr><td colspan="4" class="text-center text-muted">Для цієї моделі не створено мережевих портів.</td></tr>`;
+				} else {
+					r.message.forEach((port) => {
+						let connection_status_html = "";
+						if (port.is_wan_connection) {
+							connection_status_html = `<span class="badge badge-primary" style="font-size: 14px;">🌐 Підключення до Інтернету</span>`;
+						} else if (port.connection && port.connected_asset_name) {
+							// ВИКОРИСТОВУЄМО НОВІ ПОЛЯ: connected_asset_name та connected_port_name
+							connection_status_html = `
+                                <div>
+									<a href="/app/oiasset/${port.connected_asset}">${port.connected_asset_name}</a>
+								</div>
+                                <small class="text-muted">Порт:
+									<a href="/app/oinetworkport/${port.connection}">${port.connected_port_name || port.connection}</a>
+								</small>
+                            `;
+						} else {
+							connection_status_html = `<span class="text-muted">Не підключено</span>`;
+						}
+						html += `
                         <tr>
-                            <td>${port.port_name}</td>
+                            <td><strong>${port.port_name}</strong></td>
                             <td>${port.port_type}</td>
                             <td>${connection_status_html}</td>
-                            <td>
-                                <a href="/app/oinetworkport/${port.name}" class="btn btn-sm btn-default">Редагувати</a>
+                            <td class="text-right">
+                                <a href="/app/oinetworkport/${port.name}" class="btn btn-sm btn-default">
+                                    <i class="fa fa-edit"></i> Редагувати
+                                </a>
                             </td>
                         </tr>
                     `;
-				});
-				html += `</tbody></table>`;
+					});
+				}
+				html += `</tbody></table></div>`;
 				frm.fields_dict.network_ports_dashboard.html(html);
 			}
 		},

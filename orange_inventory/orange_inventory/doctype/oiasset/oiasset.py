@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import json
+import re
 
 import frappe
 from frappe.model.document import Document
@@ -183,3 +184,66 @@ def get_permission_query_conditions(user):
 		# Якщо у користувача немає організації, не показувати нічого
 		return "(`taboiAsset`.`current_owner` = 'N/A')"
 		# pass
+
+
+@frappe.whitelist()
+def get_network_ports_with_details(asset_name):
+	"""
+	Отримує мережеві порти для вказаного активу, включаючи деталі
+	про підключений актив та порт, з природним сортуванням.
+	"""
+	if not frappe.db.exists("oiAsset", asset_name):
+		return []
+
+	# 1. Отримуємо всі порти для поточного активу (без сортування в базі)
+	ports = frappe.get_all(
+		"oiNetworkPort",
+		fields=[
+			"name",
+			"port_name",
+			"port_type",
+			"connection",
+			"is_wan_connection",
+			"connected_asset",
+		],
+		filters={"asset": asset_name},
+	)
+
+	# 2. Збираємо ID підключених активів та портів
+	connected_asset_ids = {p.get("connected_asset") for p in ports if p.get("connected_asset")}
+	connected_port_ids = {p.get("connection") for p in ports if p.get("connection")}
+
+	# 3. Отримуємо назви активів одним запитом
+	asset_names = {}
+	if connected_asset_ids:
+		asset_docs = frappe.get_all(
+			"oiAsset", fields=["name", "asset_name"], filters={"name": ("in", list(connected_asset_ids))}
+		)
+		asset_names = {doc.name: doc.asset_name for doc in asset_docs}
+
+	# 4. Отримуємо назви портів одним запитом
+	port_names = {}
+	if connected_port_ids:
+		port_docs = frappe.get_all(
+			"oiNetworkPort", fields=["name", "port_name"], filters={"name": ("in", list(connected_port_ids))}
+		)
+		port_names = {doc.name: doc.port_name for doc in port_docs}
+
+	# 5. Додаємо отримані назви до списку портів
+	for port in ports:
+		if port.get("connected_asset"):
+			port["connected_asset_name"] = asset_names.get(port.get("connected_asset"))
+		if port.get("connection"):
+			port["connected_port_name"] = port_names.get(port.get("connection"))
+
+	# 6. ✨ СОРТУЄМО РЕЗУЛЬТАТ ПРИРОДНИМ ЧИНОМ ✨
+	def natural_sort_key(s):
+		# Ця функція розділяє назву порту на текст і числа (напр., "Eth 10" -> ['Eth ', 10])
+		return [
+			int(text) if text.isdigit() else text.lower()
+			for text in re.split("([0-9]+)", s.get("port_name", ""))
+		]
+
+	ports.sort(key=natural_sort_key)
+
+	return ports
