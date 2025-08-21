@@ -18,7 +18,7 @@ class oiNetworkPortTemplate(Document):
 		parentfield: DF.Data
 		parenttype: DF.Data
 		port_name: DF.Data
-		port_type: DF.Literal["RJ45", "SFP", "SFP+", "QSFP", "Fiber", "WAN"]
+		port_type: DF.Literal["RJ45", "WAN", "SFP", "SFP+", "QSFP", "Fiber", "WiFi"]
 	# end: auto-generated types
 
 	pass
