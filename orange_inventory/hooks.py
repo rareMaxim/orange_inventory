@@ -8,6 +8,22 @@ app_logo_url = "/assets/orange_inventory/images/oi-logo.webp"
 app_home = "/app/orange-inventory"
 # required_apps = []
 
+# Apps
+# ------------------
+
+# required_apps = []
+
+# Each item in the list will be shown as an app in the apps page
+add_to_apps_screen = [
+	{
+		"name": "orange_inventory",
+		"logo": "/assets/orange_inventory/images/oi-logo.webp",
+		"title": "Orange Inventory",
+		"route": "/app/orange-inventory",
+		# "has_permission": "orange_inventory.api.permission.has_app_permission"
+	}
+]
+
 # Includes in <head>
 # ------------------
 
