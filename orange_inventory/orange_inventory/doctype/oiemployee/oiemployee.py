@@ -14,11 +14,15 @@ class oiEmployee(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		birthday: DF.Date | None
 		department: DF.Data | None
 		full_name: DF.Data
-		is_active: DF.Check
 		organization: DF.Link | None
+		phone: DF.Data | None
 		position: DF.Data | None
+		status: DF.Literal[
+			"\u041f\u0440\u0430\u0446\u044e\u0454", "\u0417\u0432\u0456\u043b\u044c\u043d\u0435\u043d\u043e"
+		]
 		user: DF.Link | None
 	# end: auto-generated types
 

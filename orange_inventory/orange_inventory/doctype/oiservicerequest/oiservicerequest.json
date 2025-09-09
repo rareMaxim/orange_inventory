@@ -1,0 +1,300 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:naming_series",
+ "creation": "2025-09-09 08:27:03.270702",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+  "naming_series",
+  "title",
+  "request_type",
+  "priority",
+  "column_break_qxfj",
+  "status",
+  "creation_date",
+  "due_date",
+  "completion_date",
+  "\u0437\u0430\u044f\u0432\u043d\u0438\u043a_\u0456_\u0432\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c_section",
+  "requester",
+  "requester_organization",
+  "requester_contact",
+  "column_break_kksq",
+  "assigned_to",
+  "estimated_hours",
+  "actual_hours",
+  "\u043e\u043f\u0438\u0441_\u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438_section",
+  "description",
+  "column_break_hjfp",
+  "resolution",
+  "\u043f\u043e\u0432\u044f\u0437\u0430\u043d\u0438\u0439_\u0430\u043a\u0442\u0438\u0432_section",
+  "related_asset",
+  "asset_location",
+  "column_break_waxw",
+  "asset_serial_no",
+  "asset_inventory_no",
+  "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0456_section",
+  "activity_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+   "fieldtype": "Section Break",
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "\u0421\u0435\u0440\u0456\u044f",
+   "options": "SR-.YYYY.-.#####\nMNT-.YYYY.-.#####\nINC-.YYYY.-.#####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "\u041d\u0430\u0437\u0432\u0430 \u0437\u0430\u044f\u0432\u043a\u0438",
+   "reqd": 1
+  },
+  {
+   "fieldname": "request_type",
+   "fieldtype": "Autocomplete",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "\u0422\u0438\u043f \u0437\u0430\u044f\u0432\u043a\u0438",
+   "options": "\u0420\u0435\u043c\u043e\u043d\u0442 \u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f\n\u041f\u0440\u043e\u0444\u0456\u043b\u0430\u043a\u0442\u0438\u0447\u043d\u0435 \u043e\u0431\u0441\u043b\u0443\u0433\u043e\u0432\u0443\u0432\u0430\u043d\u043d\u044f\n\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043d\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043d\u043e\u0433\u043e \u0437\u0430\u0431\u0435\u0437\u043f\u0435\u0447\u0435\u043d\u043d\u044f\n\u041d\u0430\u043b\u0430\u0448\u0442\u0443\u0432\u0430\u043d\u043d\u044f \u043c\u0435\u0440\u0435\u0436\u0456\n\u0417\u0430\u043c\u0456\u043d\u0430 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0442\u0443\u044e\u0447\u0438\u0445\n\u0414\u0456\u0430\u0433\u043d\u043e\u0441\u0442\u0438\u043a\u0430\n\u041a\u043e\u043d\u0441\u0443\u043b\u044c\u0442\u0430\u0446\u0456\u044f\n\u0420\u043e\u0437\u0440\u043e\u0431\u043a\u0430\n\u0406\u043d\u0448\u0435",
+   "reqd": 1
+  },
+  {
+   "default": "\u0421\u0435\u0440\u0435\u0434\u043d\u0456\u0439",
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "\u041f\u0440\u0456\u043e\u0440\u0438\u0442\u0435\u0442",
+   "options": "\u041d\u0438\u0437\u044c\u043a\u0438\u0439\n\u0421\u0435\u0440\u0435\u0434\u043d\u0456\u0439\n\u0412\u0438\u0441\u043e\u043a\u0438\u0439\n\u041a\u0440\u0438\u0442\u0438\u0447\u043d\u0438\u0439"
+  },
+  {
+   "default": "\u041d\u043e\u0432\u0430",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
+   "options": "\u041d\u043e\u0432\u0430\n\u041f\u0440\u0438\u0439\u043d\u044f\u0442\u0430\n\u0412 \u0440\u043e\u0431\u043e\u0442\u0456\n\u041e\u0447\u0456\u043a\u0443\u0454 \u0437\u0430\u043f\u0447\u0430\u0441\u0442\u0438\u043d\u0438\n\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043d\u043d\u044f\n\u0412\u0438\u043a\u043e\u043d\u0430\u043d\u0430\n\u0412\u0456\u0434\u0445\u0438\u043b\u0435\u043d\u0430\n\u0417\u0430\u043a\u0440\u0438\u0442\u0430"
+  },
+  {
+   "fieldname": "column_break_qxfj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "creation_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u0441\u0442\u0432\u043e\u0440\u0435\u043d\u043d\u044f",
+   "read_only": 1
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "\u041f\u043b\u0430\u043d\u043e\u0432\u0430 \u0434\u0430\u0442\u0430 \u0432\u0438\u043a\u043e\u043d\u0430\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "completion_date",
+   "fieldtype": "Datetime",
+   "label": "\u0424\u0430\u043a\u0442\u0438\u0447\u043d\u0430 \u0434\u0430\u0442\u0430 \u0432\u0438\u043a\u043e\u043d\u0430\u043d\u043d\u044f",
+   "read_only": 1
+  },
+  {
+   "fieldname": "\u0437\u0430\u044f\u0432\u043d\u0438\u043a_\u0456_\u0432\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c_section",
+   "fieldtype": "Section Break",
+   "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a \u0456 \u0412\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c"
+  },
+  {
+   "fieldname": "requester",
+   "fieldtype": "Link",
+   "in_preview": 1,
+   "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a",
+   "options": "oiEmployee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "requester.organization",
+   "fieldname": "requester_organization",
+   "fieldtype": "Link",
+   "label": "\u041e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u044f \u0437\u0430\u044f\u0432\u043d\u0438\u043a\u0430",
+   "options": "oiOrganization",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "requester.phone",
+   "fieldname": "requester_contact",
+   "fieldtype": "Data",
+   "label": "\u041a\u043e\u043d\u0442\u0430\u043a\u0442 \u0437\u0430\u044f\u0432\u043d\u0438\u043a\u0430",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_kksq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "in_preview": 1,
+   "label": "\u041f\u0440\u0438\u0437\u043d\u0430\u0447\u0435\u043d\u043e",
+   "options": "oiEmployee"
+  },
+  {
+   "default": "0",
+   "fieldname": "estimated_hours",
+   "fieldtype": "Float",
+   "label": "\u041f\u043b\u0430\u043d\u043e\u0432\u0456 \u0433\u043e\u0434\u0438\u043d\u0438",
+   "precision": "2"
+  },
+  {
+   "default": "0",
+   "fieldname": "actual_hours",
+   "fieldtype": "Float",
+   "label": "\u0424\u0430\u043a\u0442\u0438\u0447\u043d\u0456 \u0433\u043e\u0434\u0438\u043d\u0438",
+   "precision": "2"
+  },
+  {
+   "fieldname": "\u043e\u043f\u0438\u0441_\u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438_section",
+   "fieldtype": "Section Break",
+   "label": "\u041e\u043f\u0438\u0441 \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "\u041e\u043f\u0438\u0441 \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438"
+  },
+  {
+   "fieldname": "column_break_hjfp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "resolution",
+   "fieldtype": "Text Editor",
+   "label": "\u041e\u043f\u0438\u0441 \u0440\u0456\u0448\u0435\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "\u043f\u043e\u0432\u044f\u0437\u0430\u043d\u0438\u0439_\u0430\u043a\u0442\u0438\u0432_section",
+   "fieldtype": "Section Break",
+   "label": "\u041f\u043e\u0432'\u044f\u0437\u0430\u043d\u0438\u0439 \u0410\u043a\u0442\u0438\u0432"
+  },
+  {
+   "fieldname": "related_asset",
+   "fieldtype": "Link",
+   "in_preview": 1,
+   "label": "\u0410\u043a\u0442\u0438\u0432",
+   "options": "oiAsset"
+  },
+  {
+   "fieldname": "column_break_waxw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "related_asset.location",
+   "fieldname": "asset_location",
+   "fieldtype": "Data",
+   "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f \u0430\u043a\u0442\u0438\u0432\u0443",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "related_asset.serial_no",
+   "fieldname": "asset_serial_no",
+   "fieldtype": "Data",
+   "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440 \u0430\u043a\u0442\u0438\u0432\u0443",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "related_asset.inventory_no",
+   "fieldname": "asset_inventory_no",
+   "fieldtype": "Data",
+   "label": "\u0406\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440 \u0430\u043a\u0442\u0438\u0432\u0443",
+   "read_only": 1
+  },
+  {
+   "fieldname": "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0456_section",
+   "fieldtype": "Section Break",
+   "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0456"
+  },
+  {
+   "fieldname": "activity_log",
+   "fieldtype": "Table",
+   "label": "\u0416\u0443\u0440\u043d\u0430\u043b \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0456",
+   "options": "oiServiceRequestActivity"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "name"
+  }
+ ],
+ "modified": "2025-09-09 11:21:20.073127",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiServiceRequest",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_preview_popup": 1,
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "\u041d\u043e\u0432\u0430"
+  },
+  {
+   "color": "Blue",
+   "title": "\u041f\u0440\u0438\u0439\u043d\u044f\u0442\u0430"
+  },
+  {
+   "color": "Purple",
+   "title": "\u0412 \u0440\u043e\u0431\u043e\u0442\u0456"
+  },
+  {
+   "color": "Yellow",
+   "title": "\u041e\u0447\u0456\u043a\u0443\u0454 \u0437\u0430\u043f\u0447\u0430\u0441\u0442\u0438\u043d\u0438"
+  },
+  {
+   "color": "Light Blue",
+   "title": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043d\u043d\u044f"
+  },
+  {
+   "color": "Green",
+   "title": "\u0412\u0438\u043a\u043e\u043d\u0430\u043d\u0430"
+  },
+  {
+   "color": "Red",
+   "title": "\u0412\u0456\u0434\u0445\u0438\u043b\u0435\u043d\u0430"
+  },
+  {
+   "color": "Green",
+   "title": "\u0417\u0430\u043a\u0440\u0438\u0442\u0430"
+  }
+ ],
+ "title_field": "title",
+ "track_changes": 1
+}

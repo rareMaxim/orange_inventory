@@ -1,0 +1,71 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-09-09 10:54:55.636909",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "activity_date",
+  "activity_type",
+  "description",
+  "user",
+  "previous_value",
+  "new_value"
+ ],
+ "fields": [
+  {
+   "default": "now",
+   "fieldname": "activity_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "\u0414\u0430\u0442\u0430",
+   "read_only": 1
+  },
+  {
+   "fieldname": "activity_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "\u0422\u0438\u043f \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0456",
+   "options": "\u0421\u0442\u0432\u043e\u0440\u0435\u043d\u043e\n\u041e\u043d\u043e\u0432\u043b\u0435\u043d\u043e\n\u041f\u0440\u0438\u0437\u043d\u0430\u0447\u0435\u043d\u043e\n\u041a\u043e\u043c\u0435\u043d\u0442\u0430\u0440\n\u0417\u043c\u0456\u043d\u0430 \u0441\u0442\u0430\u0442\u0443\u0441\u0443\n\u041f\u0440\u0438\u043a\u0440\u0456\u043f\u043b\u0435\u043d\u0438\u0439 \u0444\u0430\u0439\u043b\n\u0412\u0438\u043a\u043e\u043d\u0430\u043d\u043e",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "\u041e\u043f\u0438\u0441",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
+   "options": "User"
+  },
+  {
+   "fieldname": "previous_value",
+   "fieldtype": "Data",
+   "label": "\u041f\u043e\u043f\u0435\u0440\u0435\u0434\u043d\u0454 \u0437\u043d\u0430\u0447\u0435\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "new_value",
+   "fieldtype": "Data",
+   "label": "\u041d\u043e\u0432\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u043d\u044f"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-09-09 10:58:36.728818",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiServiceRequestActivity",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

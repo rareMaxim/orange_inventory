@@ -1,16 +1,20 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "EMPL-{####}",
  "creation": "2025-08-04 10:45:00.675963",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "status",
   "user",
   "full_name",
+  "phone",
+  "birthday",
+  "column_break_ibcg",
   "organization",
   "department",
-  "position",
-  "is_active"
+  "position"
  ],
  "fields": [
   {
@@ -31,7 +35,8 @@
    "fieldname": "organization",
    "fieldtype": "Link",
    "label": "\u041e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u044f",
-   "options": "oiOrganization"
+   "options": "oiOrganization",
+   "search_index": 1
   },
   {
    "fieldname": "department",
@@ -44,19 +49,36 @@
    "label": "\u041f\u043e\u0441\u0430\u0434\u0430"
   },
   {
-   "default": "1",
-   "fieldname": "is_active",
-   "fieldtype": "Check",
-   "label": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "\u0422\u0435\u043b\u0435\u0444\u043e\u043d",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "birthday",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0440\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "column_break_ibcg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "\u041f\u0440\u0430\u0446\u044e\u0454",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
+   "options": "\u041f\u0440\u0430\u0446\u044e\u0454\n\u0417\u0432\u0456\u043b\u044c\u043d\u0435\u043d\u043e"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-04 17:38:56.588160",
+ "modified": "2025-09-09 13:01:26.061905",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiEmployee",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -76,6 +98,15 @@
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "\u041f\u0440\u0430\u0446\u044e\u0454"
+  },
+  {
+   "color": "Gray",
+   "title": "\u0417\u0432\u0456\u043b\u044c\u043d\u0435\u043d\u043e"
+  }
+ ],
  "title_field": "full_name"
 }
