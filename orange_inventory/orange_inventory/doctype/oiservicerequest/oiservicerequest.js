@@ -19,18 +19,18 @@ frappe.ui.form.on("oiServiceRequest", {
 
 		// Автоматичне оновлення полів активу
 		if (frm.doc.related_asset) {
-			update_asset_fields(frm);
+			// update_asset_fields(frm);
 		}
 	},
 
 	related_asset(frm) {
 		if (frm.doc.related_asset) {
-			update_asset_fields(frm);
+			// update_asset_fields(frm);
 		} else {
-			// Очищуємо поля активу
-			frm.set_value("asset_location", "");
-			frm.set_value("asset_serial_no", "");
-			frm.set_value("asset_inventory_no", "");
+			// // Очищуємо поля активу
+			// frm.set_value("asset_location", "");
+			// frm.set_value("asset_serial_no", "");
+			// frm.set_value("asset_inventory_no", "");
 		}
 	},
 
@@ -145,39 +145,58 @@ function set_default_values(frm) {
 }
 
 function show_time_statistics(frm) {
-	if (!frm.doc.creation_date) return;
+	// Краще використовувати надійніший селектор через frm.get_field
+	const status_field_wrapper = frm.get_field("status").$wrapper.parent();
 
-	let creation_date = frappe.datetime.str_to_obj(frm.doc.creation_date);
-	let current_date = new Date();
-	let days_open = Math.ceil((current_date - creation_date) / (1000 * 60 * 60 * 24));
+	// 1. ВИРІШЕННЯ ПРОБЛЕМИ ДУБЛЮВАННЯ
+	// Видаляємо старий блок статистики, якщо він існує
+	status_field_wrapper.find(".time-statistics-block").remove();
 
-	let time_info = `<div class="alert alert-info">
-		<strong>Час з моменту створення:</strong> ${days_open} днів<br>`;
+	if (!frm.doc.creation) return; // У нових документах дати створення ще немає
+
+	// Використовуємо утиліти frappe.datetime для різниці в днях
+	let days_open = frappe.datetime.get_diff(
+		frappe.datetime.now_date(),
+		frm.doc.creation.substring(0, 10)
+	);
+
+	// Створюємо HTML-блок, додаючи унікальний клас `time-statistics-block`
+	let time_info = `<div class="alert alert-info time-statistics-block">
+        <strong>Час з моменту створення:</strong> ${days_open} днів<br>`;
 
 	if (frm.doc.due_date) {
-		let due_date = frappe.datetime.str_to_obj(frm.doc.due_date);
-		let days_until_due = Math.ceil((due_date - current_date) / (1000 * 60 * 60 * 24));
+		let days_until_due = frappe.datetime.get_diff(
+			frm.doc.due_date,
+			frappe.datetime.now_date()
+		);
 
 		if (days_until_due < 0) {
 			time_info += `<strong style="color: red;">Прострочено на:</strong> ${Math.abs(
 				days_until_due
 			)} днів<br>`;
 		} else {
-			time_info += `<strong>Залишилось днів:</strong> ${days_until_due}<br>`;
+			time_info += `<strong>Залишилось днів:</strong> ${days_until_due} днів<br>`;
 		}
 	}
 
+	// 2. ВИРІШЕННЯ ПРОБЛЕМИ З DURATION
 	if (frm.doc.estimated_hours > 0 && frm.doc.actual_hours > 0) {
-		let hours_diff = frm.doc.actual_hours - frm.doc.estimated_hours;
-		time_info += `<strong>Відхилення від плану:</strong> ${
-			hours_diff > 0 ? "+" : ""
-		}${hours_diff} годин`;
+		// Різниця буде в секундах
+		let diff_in_seconds = frm.doc.actual_hours - frm.doc.estimated_hours;
+
+		// Визначаємо знак відхилення
+		let deviation_prefix = diff_in_seconds >= 0 ? "+" : "-";
+
+		// Конвертуємо секунди (по модулю) в рядок "1г 30хв 15с"
+		let formatted_diff = format_duration_custom(diff_in_seconds);
+
+		time_info += `<strong>Відхилення від плану:</strong> ${deviation_prefix}${formatted_diff}`;
 	}
 
 	time_info += "</div>";
 
-	// Додаємо інформацію після поля статусу
-	$('.frappe-control[data-fieldname="status"]').after(time_info);
+	// Додаємо оновлену інформацію після поля статусу
+	status_field_wrapper.append(time_info);
 }
 
 function update_asset_fields(frm) {
@@ -334,4 +353,38 @@ function create_related_request(frm) {
 		requester: frm.doc.requester,
 	};
 	frappe.new_doc("oiServiceRequest");
+}
+
+/**
+ * Перетворює загальну кількість секунд у читабельний формат (дні, години, хвилини, секунди).
+ * @param {number} total_seconds - Загальна кількість секунд.
+ * @returns {string} - Відформатований рядок, наприклад "1год 30хв".
+ */
+function format_duration_custom(total_seconds) {
+	if (total_seconds === 0) {
+		return "0с";
+	}
+
+	const days = Math.floor(total_seconds / 86400);
+	total_seconds %= 86400;
+	const hours = Math.floor(total_seconds / 3600);
+	total_seconds %= 3600;
+	const minutes = Math.floor(total_seconds / 60);
+	const seconds = total_seconds % 60;
+
+	let parts = [];
+	if (days > 0) {
+		parts.push(days + "дн");
+	}
+	if (hours > 0) {
+		parts.push(hours + "год");
+	}
+	if (minutes > 0) {
+		parts.push(minutes + "хв");
+	}
+	if (seconds > 0) {
+		parts.push(seconds + "с");
+	}
+
+	return parts.join(" ");
 }

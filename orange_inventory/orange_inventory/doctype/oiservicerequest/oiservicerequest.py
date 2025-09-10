@@ -21,7 +21,7 @@ class oiServiceRequest(Document):
 		)
 
 		activity_log: DF.Table[oiServiceRequestActivity]
-		actual_hours: DF.Float
+		actual_hours: DF.Duration | None
 		asset_inventory_no: DF.Data | None
 		asset_location: DF.Data | None
 		asset_serial_no: DF.Data | None
@@ -30,7 +30,7 @@ class oiServiceRequest(Document):
 		creation_date: DF.Date | None
 		description: DF.TextEditor | None
 		due_date: DF.Date | None
-		estimated_hours: DF.Float
+		estimated_hours: DF.Duration | None
 		naming_series: DF.Literal["SR-.YYYY.-.#####", "MNT-.YYYY.-.#####", "INC-.YYYY.-.#####"]
 		priority: DF.Literal[
 			"\u041d\u0438\u0437\u044c\u043a\u0438\u0439",
