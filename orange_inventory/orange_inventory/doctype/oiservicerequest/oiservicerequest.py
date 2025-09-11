@@ -26,7 +26,7 @@ class oiServiceRequest(Document):
 		asset_location: DF.Data | None
 		asset_serial_no: DF.Data | None
 		assigned_to: DF.Link | None
-		completion_date: DF.Datetime | None
+		completion_date: DF.Date | None
 		creation_date: DF.Date | None
 		description: DF.TextEditor | None
 		due_date: DF.Date | None
@@ -184,24 +184,16 @@ def get_permission_query_conditions(user):
 	if "System Manager" in frappe.get_roles(user):
 		return ""
 
-	# Отримуємо організацію користувача
-	user_org = frappe.db.get_value("oiEmployee", {"user": user}, "organization")
+	user_employee = frappe.get_value("oiEmployee", {"user": user}, "name")
+	user_org = frappe.get_value("oiEmployee", user_employee, "organization")
 
 	if user_org:
-		# Користувач може бачити заявки своєї організації або призначені йому
 		return f"""
-			(`taboiServiceRequest`.`requester_organization` = '{user_org}'
-			OR `taboiServiceRequest`.`assigned_to` IN (
-				SELECT name FROM `taboiEmployee` WHERE user = '{user}'
-			))
-		"""
+            (`taboiServiceRequest`.`requester_organization` = '{user_org}'
+            OR `taboiServiceRequest`.`assigned_to` = '{user_employee}')
+        """
 	else:
-		# Якщо у користувача немає організації, показуємо тільки призначені йому
-		return f"""
-			`taboiServiceRequest`.`assigned_to` IN (
-				SELECT name FROM `taboiEmployee` WHERE user = '{user}'
-			)
-		"""
+		return f"`taboiServiceRequest`.`assigned_to` = '{user_employee}'"
 
 
 def has_permission(doc, user, permission_type):
@@ -258,32 +250,32 @@ def get_dashboard_data():
 	# Статистика по статусах
 	status_stats = frappe.db.sql(
 		"""
-		SELECT status, COUNT(*) as count
-		FROM `taboiServiceRequest`
-		GROUP BY status
-	""",
+        SELECT status, COUNT(*) as count
+        FROM `taboiServiceRequest`
+        GROUP BY status
+    """,
 		as_dict=True,
 	)
 
 	# Заявки по пріоритетах
 	priority_stats = frappe.db.sql(
 		"""
-		SELECT priority, COUNT(*) as count
-		FROM `taboiServiceRequest`
-		GROUP BY priority
-	""",
+        SELECT priority, COUNT(*) as count
+        FROM `taboiServiceRequest`
+        GROUP BY priority
+    """,
 		as_dict=True,
 	)
 
 	# Найактивніші типи заявок
 	request_type_stats = frappe.db.sql(
 		"""
-		SELECT request_type, COUNT(*) as count
-		FROM `taboiServiceRequest`
-		GROUP BY request_type
-		ORDER BY count DESC
-		LIMIT 5
-	""",
+        SELECT request_type, COUNT(*) as count
+        FROM `taboiServiceRequest`
+        GROUP BY request_type
+        ORDER BY count DESC
+        LIMIT 5
+    """,
 		as_dict=True,
 	)
 

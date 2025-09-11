@@ -16,6 +16,7 @@
   "creation_date",
   "due_date",
   "completion_date",
+  "time_statistics_html",
   "\u0437\u0430\u044f\u0432\u043d\u0438\u043a_\u0456_\u0432\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c_section",
   "requester",
   "requester_organization",
@@ -103,7 +104,7 @@
   },
   {
    "fieldname": "completion_date",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "label": "\u0424\u0430\u043a\u0442\u0438\u0447\u043d\u0430 \u0434\u0430\u0442\u0430 \u0432\u0438\u043a\u043e\u043d\u0430\u043d\u043d\u044f",
    "read_only": 1
   },
@@ -228,6 +229,11 @@
    "fieldtype": "Table",
    "label": "\u0416\u0443\u0440\u043d\u0430\u043b \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u0456",
    "options": "oiServiceRequestActivity"
+  },
+  {
+   "fieldname": "time_statistics_html",
+   "fieldtype": "HTML",
+   "label": "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430 \u0447\u0430\u0441\u0443"
   }
  ],
  "grid_page_length": 50,
@@ -238,7 +244,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2025-09-10 09:51:03.542844",
+ "modified": "2025-09-11 08:49:51.601075",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiServiceRequest",

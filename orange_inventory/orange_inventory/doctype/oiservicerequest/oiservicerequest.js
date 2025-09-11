@@ -16,22 +16,6 @@ frappe.ui.form.on("oiServiceRequest", {
 
 		// Показуємо статистику часу
 		show_time_statistics(frm);
-
-		// Автоматичне оновлення полів активу
-		if (frm.doc.related_asset) {
-			// update_asset_fields(frm);
-		}
-	},
-
-	related_asset(frm) {
-		if (frm.doc.related_asset) {
-			// update_asset_fields(frm);
-		} else {
-			// // Очищуємо поля активу
-			// frm.set_value("asset_location", "");
-			// frm.set_value("asset_serial_no", "");
-			// frm.set_value("asset_inventory_no", "");
-		}
 	},
 
 	status(frm) {
@@ -195,25 +179,9 @@ function show_time_statistics(frm) {
 
 	time_info += "</div>";
 
-	// Додаємо оновлену інформацію після поля статусу
-	status_field_wrapper.append(time_info);
-}
-
-function update_asset_fields(frm) {
-	frappe.call({
-		method: "frappe.client.get",
-		args: {
-			doctype: "oiAsset",
-			name: frm.doc.related_asset,
-		},
-		callback: function (r) {
-			if (r.message) {
-				frm.set_value("asset_location", r.message.location);
-				frm.set_value("asset_serial_no", r.message.serial_no);
-				frm.set_value("asset_inventory_no", r.message.inventory_no);
-			}
-		},
-	});
+	// Додаємо оновлену інформацію після поля статус
+	const html_content = $(time_info);
+	frm.fields_dict.time_statistics_html.html(html_content);
 }
 
 function get_days_by_priority(priority) {
@@ -285,7 +253,7 @@ function complete_work_dialog(frm) {
 			{
 				label: "Фактично витрачено годин",
 				fieldname: "actual_hours",
-				fieldtype: "Float",
+				fieldtype: "Duration",
 				default: frm.doc.actual_hours || 0,
 			},
 		],
