@@ -129,13 +129,6 @@ function set_default_values(frm) {
 }
 
 function show_time_statistics(frm) {
-	// Краще використовувати надійніший селектор через frm.get_field
-	const status_field_wrapper = frm.get_field("status").$wrapper.parent();
-
-	// 1. ВИРІШЕННЯ ПРОБЛЕМИ ДУБЛЮВАННЯ
-	// Видаляємо старий блок статистики, якщо він існує
-	status_field_wrapper.find(".time-statistics-block").remove();
-
 	if (!frm.doc.creation) return; // У нових документах дати створення ще немає
 
 	// Використовуємо утиліти frappe.datetime для різниці в днях

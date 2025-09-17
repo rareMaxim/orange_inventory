@@ -48,10 +48,10 @@
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "\u0421\u0435\u0440\u0456\u044f",
-   "options": "SR-.YYYY.-.#####\nMNT-.YYYY.-.#####\nINC-.YYYY.-.#####",
-   "reqd": 1
+   "options": "SR-.YYYY.-.#####\nMNT-.YYYY.-.#####\nINC-.YYYY.-.#####"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "title",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -60,6 +60,7 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "request_type",
    "fieldtype": "Autocomplete",
    "in_list_view": 1,
@@ -105,6 +106,7 @@
   {
    "fieldname": "completion_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "\u0424\u0430\u043a\u0442\u0438\u0447\u043d\u0430 \u0434\u0430\u0442\u0430 \u0432\u0438\u043a\u043e\u043d\u0430\u043d\u043d\u044f",
    "read_only": 1
   },
@@ -114,8 +116,10 @@
    "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a \u0456 \u0412\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "requester",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_preview": 1,
    "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a",
    "options": "oiEmployee",
@@ -143,6 +147,7 @@
   {
    "fieldname": "assigned_to",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_preview": 1,
    "label": "\u041f\u0440\u0438\u0437\u043d\u0430\u0447\u0435\u043d\u043e",
    "options": "oiEmployee"
@@ -169,6 +174,7 @@
    "label": "\u041e\u043f\u0438\u0441 \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "label": "\u041e\u043f\u0438\u0441 \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438"
@@ -188,6 +194,7 @@
    "label": "\u041f\u043e\u0432'\u044f\u0437\u0430\u043d\u0438\u0439 \u0410\u043a\u0442\u0438\u0432"
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "related_asset",
    "fieldtype": "Link",
    "in_preview": 1,
@@ -244,7 +251,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2025-09-11 08:49:51.601075",
+ "modified": "2025-09-12 11:42:24.896808",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiServiceRequest",
@@ -285,6 +292,7 @@
    "share": 1
   }
  ],
+ "quick_entry": 1,
  "row_format": "Dynamic",
  "show_preview_popup": 1,
  "show_title_field_in_link": 1,

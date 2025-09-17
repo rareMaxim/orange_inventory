@@ -243,7 +243,7 @@
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-09 17:15:36.679551",
+ "modified": "2025-09-15 14:43:34.108492",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset",
@@ -288,7 +288,7 @@
   }
  ],
  "row_format": "Dynamic",
- "search_fields": "serial_no",
+ "search_fields": "serial_no,inventory_no",
  "show_preview_popup": 1,
  "show_title_field_in_link": 1,
  "sort_field": "creation",
