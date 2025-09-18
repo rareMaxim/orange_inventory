@@ -170,7 +170,7 @@ def get_permission_query_conditions(user):
 		return ""
 	# 1. Перевірка для системного адміністратора
 	# Якщо поточний користувач - System Manager, він бачить все.
-	if "System Manager" in frappe.get_roles(user):
+	if "System Manager" or "Maintenance Manager" in frappe.get_roles(user):
 		# frappe.msgprint("Системний адміністратор має доступ до всіх активів.")
 		return ""
 	# Отримання організації, до якої належить користувач

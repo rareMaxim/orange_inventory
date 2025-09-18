@@ -26,6 +26,7 @@ class oiServiceRequest(Document):
 		asset_location: DF.Data | None
 		asset_serial_no: DF.Data | None
 		assigned_to: DF.Link | None
+		comments: DF.TextEditor | None
 		completion_date: DF.Date | None
 		creation_date: DF.Date | None
 		description: DF.TextEditor | None
@@ -112,6 +113,7 @@ class oiServiceRequest(Document):
 			},
 		)
 
+	@frappe.whitelist()
 	def add_comment(self, comment):
 		"""Додає коментар до заявки"""
 		if self.comments:
@@ -167,11 +169,11 @@ class oiServiceRequest(Document):
 			if requester_org:
 				self.requester_organization = requester_org
 
-		# Перевіряємо права доступу до активу
-		if self.related_asset and self.requester_organization:
-			asset_owner = frappe.db.get_value("oiAsset", self.related_asset, "current_owner")
-			if asset_owner != self.requester_organization:
-				frappe.throw(_("Ви не маєте доступу до цього активу"))
+		# # Перевіряємо права доступу до активу
+		# if self.related_asset and self.requester_organization:
+		# 	asset_owner = frappe.db.get_value("oiAsset", self.related_asset, "current_owner")
+		# 	if asset_owner != self.requester_organization:
+		# 		frappe.throw(_("Ви не маєте доступу до цього активу"))
 
 		# Перевіряємо дату виконання
 		if self.due_date and self.creation_date:

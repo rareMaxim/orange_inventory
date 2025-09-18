@@ -27,6 +27,8 @@
   "actual_hours",
   "\u043e\u043f\u0438\u0441_\u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438_section",
   "description",
+  "column_break_pjtb",
+  "comments",
   "column_break_hjfp",
   "resolution",
   "\u043f\u043e\u0432\u044f\u0437\u0430\u043d\u0438\u0439_\u0430\u043a\u0442\u0438\u0432_section",
@@ -241,6 +243,16 @@
    "fieldname": "time_statistics_html",
    "fieldtype": "HTML",
    "label": "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430 \u0447\u0430\u0441\u0443"
+  },
+  {
+   "fieldname": "column_break_pjtb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "comments",
+   "fieldtype": "Text Editor",
+   "label": "\u041a\u043e\u043c\u0435\u043d\u0442\u0430\u0440\u0456"
   }
  ],
  "grid_page_length": 50,
@@ -251,7 +263,7 @@
    "link_fieldname": "name"
   }
  ],
- "modified": "2025-09-12 11:42:24.896808",
+ "modified": "2025-09-18 08:52:32.629824",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiServiceRequest",

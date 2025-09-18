@@ -22,7 +22,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-14 16:05:44.089136",
+ "modified": "2025-09-17 15:56:53.689777",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardwareType",
@@ -38,6 +38,18 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
    "share": 1,
    "write": 1
   }
