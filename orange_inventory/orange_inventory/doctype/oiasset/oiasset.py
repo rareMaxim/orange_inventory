@@ -35,6 +35,7 @@ class oiAsset(Document):
 		location: DF.Data | None
 		manufacturer: DF.Link | None
 		movement_history: DF.Table[oiAssetMovementHistory]
+		naming_series: DF.Literal["ASSET-.#####"]
 		original_donor: DF.Link | None
 		quantity: DF.Float
 		responsible_employee: DF.Link | None

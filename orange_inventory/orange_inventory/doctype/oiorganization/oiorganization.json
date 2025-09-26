@@ -1,20 +1,32 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "hash",
+ "autoname": "naming_series:",
  "creation": "2025-08-04 09:43:33.547382",
+ "default_view": "Tree",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "organization_name",
   "abbreviation",
   "tax_code",
+  "naming_series",
   "column_break_tqfb",
   "contact_person",
   "phone",
   "email",
   "section_break_xabf",
-  "assets_dashboard"
+  "assets_dashboard",
+  "tab_2_tab",
+  "section_break_zxih",
+  "is_group",
+  "parent_oiorganization",
+  "section_break_yflr",
+  "lft",
+  "column_break_lpko",
+  "rgt",
+  "column_break_pjhs",
+  "old_parent"
  ],
  "fields": [
   {
@@ -66,10 +78,74 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "\u041a\u043e\u0434 \u0404\u0414\u0420\u041f\u041e\u0423"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "label": "Old Parent",
+   "options": "oiOrganization"
+  },
+  {
+   "fieldname": "parent_oiorganization",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Parent oiOrganization",
+   "options": "oiOrganization"
+  },
+  {
+   "fieldname": "section_break_zxih",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tab_2_tab",
+   "fieldtype": "Tab Break",
+   "label": "Tab 2"
+  },
+  {
+   "fieldname": "column_break_lpko",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_pjhs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_yflr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "ORG-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Name Series",
+   "options": "ORG-.#####"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
+ "is_tree": 1,
  "links": [
   {
    "link_doctype": "oiAsset",
@@ -80,11 +156,12 @@
    "link_fieldname": "organization"
   }
  ],
- "modified": "2025-09-10 08:53:04.035693",
+ "modified": "2025-09-24 14:47:24.197278",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiOrganization",
- "naming_rule": "Random",
+ "naming_rule": "By \"Naming Series\" field",
+ "nsm_parent_field": "parent_oiorganization",
  "owner": "Administrator",
  "permissions": [
   {

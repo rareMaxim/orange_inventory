@@ -1,0 +1,163 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-09-24 10:46:23.751287",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "section_break_qswl",
+  "items",
+  "\u044f\u0440\u043b\u0438\u043a_section",
+  "label_width_mm",
+  "column_break_gyhh",
+  "label_height_mm",
+  "column_break_lvox",
+  "\u0432\u0456\u0434\u0441\u0442\u0443\u043f_\u043c\u0456\u0436_\u044f\u0440\u043b\u0438\u043a\u0430\u043c\u0438_\u043c\u043c",
+  "section_break_bfzo",
+  "qr_size_mm",
+  "column_break_seml",
+  "columns",
+  "column_break_wvue",
+  "page_margin_mm",
+  "column_break_xrxt",
+  "font_px",
+  "section_break_akut",
+  "show_inventory_no",
+  "column_break_cptd",
+  "show_serial_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "\u041d\u0430\u0437\u0432\u0430 \u043f\u0456\u0434\u0431\u0456\u0440\u043a\u0438"
+  },
+  {
+   "default": "3",
+   "fieldname": "columns",
+   "fieldtype": "Int",
+   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c \u043a\u043e\u043b\u043e\u043d\u043e\u043a"
+  },
+  {
+   "default": "70",
+   "fieldname": "label_width_mm",
+   "fieldtype": "Int",
+   "label": "\u0448\u0438\u0440\u0438\u043d\u0430 \u044f\u0440\u043b\u0438\u043a\u0430 (\u043c\u043c)"
+  },
+  {
+   "default": "36",
+   "fieldname": "label_height_mm",
+   "fieldtype": "Int",
+   "label": "\u0432\u0438\u0441\u043e\u0442\u0430 \u044f\u0440\u043b\u0438\u043a\u0430 (\u043c\u043c)"
+  },
+  {
+   "fieldname": "\u0432\u0456\u0434\u0441\u0442\u0443\u043f_\u043c\u0456\u0436_\u044f\u0440\u043b\u0438\u043a\u0430\u043c\u0438_\u043c\u043c",
+   "fieldtype": "Int",
+   "label": "\u0432\u0456\u0434\u0441\u0442\u0443\u043f \u043c\u0456\u0436 \u044f\u0440\u043b\u0438\u043a\u0430\u043c\u0438 (\u043c\u043c)"
+  },
+  {
+   "default": "8",
+   "fieldname": "page_margin_mm",
+   "fieldtype": "Int",
+   "label": "\u043f\u043e\u043b\u044f \u0430\u0440\u043a\u0443\u0448\u0430 (\u043c\u043c)"
+  },
+  {
+   "default": "11",
+   "fieldname": "font_px",
+   "fieldtype": "Int",
+   "label": "\u0431\u0430\u0437\u043e\u0432\u0438\u0439 \u0440\u043e\u0437\u043c\u0456\u0440 \u0448\u0440\u0438\u0444\u0442\u0443, px"
+  },
+  {
+   "default": "18",
+   "fieldname": "qr_size_mm",
+   "fieldtype": "Int",
+   "label": "\u0440\u043e\u0437\u043c\u0456\u0440 QR, \u043c\u043c"
+  },
+  {
+   "default": "1",
+   "fieldname": "show_inventory_no",
+   "fieldtype": "Check",
+   "label": "show_inventory_no"
+  },
+  {
+   "default": "1",
+   "fieldname": "show_serial_no",
+   "fieldtype": "Check",
+   "label": "show_serial_no"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "items",
+   "options": "oiAssetLabelItem"
+  },
+  {
+   "fieldname": "\u044f\u0440\u043b\u0438\u043a_section",
+   "fieldtype": "Section Break",
+   "label": "\u042f\u0440\u043b\u0438\u043a"
+  },
+  {
+   "fieldname": "column_break_gyhh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_lvox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_bfzo",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_qswl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_seml",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_wvue",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xrxt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_akut",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_cptd",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-24 13:00:38.424685",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAssetLabelBatch",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

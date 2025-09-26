@@ -83,7 +83,7 @@ function setup_field_filters(frm) {
 	frm.set_query("requester", function () {
 		return {
 			filters: {
-				status: "Працює",
+				status: ["in", "Працює очно, Працює віддалено"],
 			},
 		};
 	});
@@ -92,7 +92,7 @@ function setup_field_filters(frm) {
 	frm.set_query("assigned_to", function () {
 		return {
 			filters: {
-				status: "Працює",
+				status: ["in", "Працює очно, Працює віддалено"],
 			},
 		};
 	});

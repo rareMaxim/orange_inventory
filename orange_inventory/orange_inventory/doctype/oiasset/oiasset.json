@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "hash",
+ "autoname": "naming_series:",
  "creation": "2025-08-04 10:40:21.713300",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -14,6 +14,7 @@
   "status",
   "manufacturer",
   "hardware_model",
+  "naming_series",
   "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
   "current_owner",
   "responsible_employee",
@@ -237,17 +238,30 @@
    "fieldname": "is_network_device",
    "fieldtype": "Check",
    "label": "\u0404 \u043c\u0435\u0440\u0435\u0436\u0435\u0432\u0438\u043c \u043f\u0440\u0438\u0441\u0442\u0440\u043e\u0454\u043c"
+  },
+  {
+   "default": "ASSET-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "ASSET-.#####"
   }
  ],
  "grid_page_length": 50,
  "image_field": "image",
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-09-17 13:55:41.900959",
+ "links": [
+  {
+   "link_doctype": "oiIssueOrder",
+   "link_fieldname": "asset",
+   "table_fieldname": "items"
+  }
+ ],
+ "modified": "2025-09-25 09:36:20.301413",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset",
- "naming_rule": "Random",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {

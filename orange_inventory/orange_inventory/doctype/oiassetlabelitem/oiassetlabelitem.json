@@ -1,0 +1,64 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-09-24 10:53:09.675906",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "asset",
+  "copies",
+  "override_title",
+  "override_inventory_no",
+  "override_serial_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "asset",
+   "options": "oiAsset",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "copies",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "copies"
+  },
+  {
+   "fieldname": "override_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "override_title"
+  },
+  {
+   "fieldname": "override_inventory_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "override_inventory_no"
+  },
+  {
+   "fieldname": "override_serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "override_serial_no"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-09-24 10:55:09.689421",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAssetLabelItem",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

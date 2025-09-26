@@ -22,7 +22,11 @@ class oiDonorProject(Document):
 		project_name: DF.Data | None
 		project_number: DF.Data | None
 		start_date: DF.Date | None
-		статус_проєкту: DF.Literal["\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439", "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u0439", "\u0417\u0430\u043f\u043b\u0430\u043d\u043e\u0432\u0430\u043d\u0438\u0439"]
+		status: DF.Literal[
+			"\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
+			"\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u0439",
+			"\u0417\u0430\u043f\u043b\u0430\u043d\u043e\u0432\u0430\u043d\u0438\u0439",
+		]
 	# end: auto-generated types
 
 	pass

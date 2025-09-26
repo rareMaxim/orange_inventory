@@ -7,6 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "asset",
+  "cost",
+  "count",
+  "total",
   "inventory_no",
   "reason"
  ],
@@ -32,13 +35,37 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "\u041f\u0440\u0438\u0447\u0438\u043d\u0430 \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "count",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "fetch_from": "asset.cost",
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "\u0426\u0456\u043d\u0430",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "asset.cost",
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "\u0421\u0443\u043c\u0430",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-06 12:53:36.740579",
+ "modified": "2025-09-26 13:17:12.242789",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiDecommissioningItem",
