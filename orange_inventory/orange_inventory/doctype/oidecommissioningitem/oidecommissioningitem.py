@@ -15,14 +15,16 @@ class oiDecommissioningItem(Document):
 		from frappe.types import DF
 
 		asset: DF.Link
-		cost: DF.Currency
-		count: DF.Float
+		avaible_count: DF.Float
+		count: DF.Int
 		inventory_no: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
 		reason: DF.SmallText | None
+		serial_no: DF.Data | None
 		total: DF.Currency
+		unit_price: DF.Currency
 	# end: auto-generated types
 
 	pass

@@ -7,11 +7,13 @@
  "engine": "InnoDB",
  "field_order": [
   "asset",
-  "cost",
+  "avaible_count",
+  "unit_price",
   "count",
   "total",
   "inventory_no",
-  "reason"
+  "reason",
+  "serial_no"
  ],
  "fields": [
   {
@@ -31,6 +33,7 @@
    "read_only": 1
   },
   {
+   "default": "\u0412\u0438\u0445\u0456\u0434 \u0437 \u043b\u0430\u0434\u0443 \u0443 \u0437\u0432\u2019\u044f\u0437\u043a\u0443 \u0437 \u0456\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u043e\u044e \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0454\u044e",
    "fieldname": "reason",
    "fieldtype": "Small Text",
    "in_list_view": 1,
@@ -38,34 +41,46 @@
   },
   {
    "fieldname": "count",
-   "fieldtype": "Float",
+   "fieldtype": "Int",
    "in_list_view": 1,
    "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
    "non_negative": 1,
    "precision": "2"
   },
   {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "\u0421\u0443\u043c\u0430",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "asset.quantity",
+   "fieldname": "avaible_count",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "\u0414\u043e\u0441\u0443\u043f\u043d\u043e, \u0448\u0442.",
+   "read_only": 1
+  },
+  {
    "fetch_from": "asset.cost",
-   "fieldname": "cost",
+   "fieldname": "unit_price",
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "\u0426\u0456\u043d\u0430",
    "read_only": 1
   },
   {
-   "fetch_from": "asset.cost",
-   "fieldname": "total",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "\u0421\u0443\u043c\u0430",
-   "read_only": 1
+   "fieldname": "serial_no",
+   "fieldtype": "Data",
+   "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-26 13:17:12.242789",
+ "modified": "2025-09-29 10:51:45.809351",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiDecommissioningItem",

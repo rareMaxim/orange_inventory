@@ -24,6 +24,9 @@ class oiDecommissioningAct(Document):
 		decision: DF.Link | None
 		decommission_date: DF.Date
 		items: DF.Table[oiDecommissioningItem]
+		registration_date: DF.Date | None
+		registration_index: DF.Data | None
+		total_amount: DF.Currency
 	# end: auto-generated types
 
 	def on_submit(self):
