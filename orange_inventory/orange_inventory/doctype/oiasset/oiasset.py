@@ -32,7 +32,7 @@ class oiAsset(Document):
 		image: DF.AttachImage | None
 		inventory_no: DF.Data | None
 		is_network_device: DF.Check
-		location: DF.Data | None
+		location: DF.Link | None
 		manufacturer: DF.Link | None
 		movement_history: DF.Table[oiAssetMovementHistory]
 		naming_series: DF.Literal["ASSET-.#####"]

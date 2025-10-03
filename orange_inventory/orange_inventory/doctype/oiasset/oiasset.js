@@ -20,7 +20,8 @@ let responsible_employee_filter = function (frm) {
 	frm.set_query("responsible_employee", function () {
 		return {
 			filters: {
-				organization: frm.doc.current_owner,
+				organization: ["not ancestors of", frm.doc.current_owner],
+				//[["oiAsset","current_owner","descendants+of+(inclusive)","ORG-00002"]]
 			},
 		};
 	});

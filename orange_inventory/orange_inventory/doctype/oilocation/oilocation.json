@@ -1,0 +1,95 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{building}-{room}",
+ "creation": "2025-10-02 14:52:11.184103",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "building",
+  "floor",
+  "room",
+  "responsible_user",
+  "responsible_name",
+  "responsible_phone",
+  "note"
+ ],
+ "fields": [
+  {
+   "fieldname": "building",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0411\u0443\u0434\u0456\u0432\u043b\u044f",
+   "reqd": 1
+  },
+  {
+   "fieldname": "floor",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u041f\u043e\u0432\u0435\u0440\u0445"
+  },
+  {
+   "fieldname": "room",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u041a\u0430\u0431\u0456\u043d\u0435\u0442/\u041a\u0456\u043c\u043d\u0430\u0442\u0430",
+   "reqd": 1
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Small Text",
+   "label": "\u041f\u0440\u0438\u043c\u0456\u0442\u043a\u0430"
+  },
+  {
+   "fieldname": "responsible_user",
+   "fieldtype": "Link",
+   "label": "\u0412\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0438\u0439 \u043f\u043e \u043a\u0430\u0431\u0456\u043d\u0435\u0442\u0443 (\u043a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447)",
+   "options": "oiEmployee"
+  },
+  {
+   "fetch_from": "responsible_user.full_name",
+   "fieldname": "responsible_name",
+   "fieldtype": "Data",
+   "label": "\u041f\u0406\u0411 \u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u043e\u0433\u043e"
+  },
+  {
+   "fetch_from": "responsible_user.phone",
+   "fieldname": "responsible_phone",
+   "fieldtype": "Data",
+   "label": "\u0422\u0435\u043b\u0435\u0444\u043e\u043d \u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u043e\u0433\u043e"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "location"
+  }
+ ],
+ "modified": "2025-10-03 08:31:55.474574",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiLocation",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

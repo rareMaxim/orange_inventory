@@ -1,0 +1,180 @@
+{
+ "app": "orange_inventory",
+ "charts": [],
+ "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">\u0420\u0435\u0454\u0441\u0442\u0440 \u0430\u043a\u0442\u0438\u0432\u0456\u0432</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u043a\u0442\u0438\u0432\u0438\",\"col\":3}},{\"id\":\"plzyUpT2iB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u0440\u0438\u0431\u0443\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440\",\"col\":3}},{\"id\":\"SMVm3FuNWX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0412\u0438\u0434\u0430\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440\",\"col\":3}},{\"id\":\"2eJ9Zmh4VB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u043a\u0442 \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"HaVMZ5dVkL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0417\u0430\u0434\u0430\u0447\u0456\",\"col\":3}},{\"id\":\"VERbs8D4Ay\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0406\u043d\u0434\u0435\u043a\u0441 \u0446\u0438\u0444\u0440\u043e\u0432\u043e\u0457 \u0442\u0440\u0430\u043d\u0441\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u0457\",\"col\":3}},{\"id\":\"FaA3dqvCua\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438</b></span>\",\"col\":12}},{\"id\":\"nsigI_lGo9\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0414\u043e\u043d\u043e\u0440\u0438\",\"col\":4}},{\"id\":\"vhtKHJ8suq\",\"type\":\"card\",\"data\":{\"card_name\":\"\u041e\u041c\u0421\",\"col\":4}},{\"id\":\"2jUTj_BK7B\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0410\u043a\u0442\u0438\u0432\u0438\",\"col\":4}}]",
+ "creation": "2024-04-30 10:55:44.202833",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "stock",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "\u0410\u043a\u0442\u0438\u0432\u0438",
+ "links": [
+  {
+   "description": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a \u0434\u043b\u044f \u0440\u043e\u0431\u043e\u0442\u0438 \u0437 \u0434\u043e\u043d\u043e\u0440\u0430\u043c\u0438",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0414\u043e\u043d\u043e\u0440\u0438",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0414\u043e\u043d\u043e\u0440\u0438",
+   "link_count": 0,
+   "link_to": "oiDonor",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u041f\u0440\u043e\u0454\u043a\u0442\u0438",
+   "link_count": 0,
+   "link_to": "oiDonorProject",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "description": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a \u041e\u041c\u0421",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u041e\u041c\u0421",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0421\u043f\u0456\u0432\u0440\u043e\u0431\u0456\u0442\u043d\u0438\u043a\u0438",
+   "link_count": 0,
+   "link_to": "oiEmployee",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u041e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u0457 \u0442\u0430 \u043f\u0456\u0434\u0440\u043e\u0437\u0434\u0456\u043b\u0438",
+   "link_count": 0,
+   "link_to": "oiOrganization",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0420\u0456\u0448\u0435\u043d\u043d\u044f",
+   "link_count": 0,
+   "link_to": "oiBasisDoc",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0410\u043a\u0442\u0438\u0432\u0438",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
+   "link_count": 0,
+   "link_to": "oiAssetType",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f",
+   "link_count": 0,
+   "link_to": "oiLocation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2025-10-03 08:22:59.937958",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "\u0410\u043a\u0442\u0438\u0432\u0438",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 31.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0406\u043d\u0434\u0435\u043a\u0441 \u0446\u0438\u0444\u0440\u043e\u0432\u043e\u0457 \u0442\u0440\u0430\u043d\u0441\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u0457",
+   "link_to": "oiHromadaSurvey",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "\u0417\u0430\u0434\u0430\u0447\u0456",
+   "link_to": "oiServiceRequest",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "doc_view": "List",
+   "label": "\u0410\u043a\u0442\u0438\u0432\u0438",
+   "link_to": "oiAsset",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Pink",
+   "doc_view": "List",
+   "label": "\u0410\u043a\u0442 \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f",
+   "link_to": "oiDecommissioningAct",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "\u041f\u0440\u0438\u0431\u0443\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440",
+   "link_to": "oiReceiptOrder",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Cyan",
+   "doc_view": "List",
+   "label": "\u0412\u0438\u0434\u0430\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440",
+   "link_to": "oiIssueOrder",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "\u0410\u043a\u0442\u0438\u0432\u0438",
+ "type": "Workspace"
+}

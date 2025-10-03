@@ -102,7 +102,7 @@ function setup_field_filters(frm) {
 		if (frm.doc.requester_organization) {
 			return {
 				filters: {
-					current_owner: frm.doc.requester_organization,
+					// current_owner: frm.doc.requester_organization,
 					status: ["!=", "Списано"],
 				},
 			};

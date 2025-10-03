@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class oiOrganization(Document):
+class oiLocation(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,19 +14,13 @@ class oiOrganization(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		abbreviation: DF.Data | None
-		contact_person: DF.Data | None
-		email: DF.Data | None
-		is_active: DF.Check
-		is_group: DF.Check
-		lft: DF.Int
-		naming_series: DF.Literal["ORG-.#####"]
-		old_parent: DF.Link | None
-		organization_name: DF.Data
-		parent_oiorganization: DF.Link | None
-		phone: DF.Data | None
-		rgt: DF.Int
-		tax_code: DF.Data | None
+		building: DF.Data
+		floor: DF.Data | None
+		note: DF.SmallText | None
+		responsible_name: DF.Data | None
+		responsible_phone: DF.Data | None
+		responsible_user: DF.Link | None
+		room: DF.Data
 	# end: auto-generated types
 
 	pass
