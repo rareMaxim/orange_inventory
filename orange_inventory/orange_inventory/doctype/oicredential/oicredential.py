@@ -15,6 +15,7 @@ class oiCredential(Document):
 		from frappe.types import DF
 
 		credential_type: DF.Literal["Website", "Email", "OS Account", "SNMP", "SSH Key", "Other"]
+		domain: DF.Data | None
 		linked_asset: DF.Link | None
 		notes: DF.SmallText | None
 		secret: DF.Password | None

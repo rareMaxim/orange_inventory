@@ -29,7 +29,7 @@ add_to_apps_screen = [
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/orange_inventory/css/orange_inventory.css"
-app_include_js = "/assets/orange_inventory/js/utils.js"
+app_include_js = ["/assets/orange_inventory/js/utils.js", "/assets/orange_inventory/js/map_defaults.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/orange_inventory/css/orange_inventory.css"
