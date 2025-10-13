@@ -17,7 +17,7 @@ class oiOrganization(Document):
 		abbreviation: DF.Data | None
 		contact_person: DF.Data | None
 		email: DF.Data | None
-		is_active: DF.Check
+		enabled: DF.Check
 		is_group: DF.Check
 		lft: DF.Int
 		naming_series: DF.Literal["ORG-.#####"]

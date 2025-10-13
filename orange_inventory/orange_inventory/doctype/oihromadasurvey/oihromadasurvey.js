@@ -12,7 +12,7 @@ frappe.ui.form.on("oiHromadaSurvey", {
 		// update_value_display(frm);
 	},
 	refresh(frm) {
-		if (frm.doc.is_group) {
+		if (frm.doc.type == "Група") {
 			frm.add_custom_button("Recompute Group Scores", async () => {
 				await frappe.call({
 					method: "orange_inventory.orange_inventory.doctype.oihromadasurvey.oihromadasurvey.recompute_group_scores",
@@ -38,18 +38,19 @@ frappe.ui.form.on("oiHromadaSurvey", {
 });
 
 function update_value_display(frm) {
-	if (frm.doc.is_group) {
+	if (frm.doc.type == "Група") {
 		// Для вузлів-груп не показуємо значення
 		frm.set_value("value_display", "");
+		frm.set_value("is_group", 1);
 		return;
 	}
 
 	const t = frm.doc.type;
-	if (t === "Boolean") {
+	if (t === "Якісні дані") {
 		// Показувати як Так/Ні (або 1/0 — вибери)
 		const v = cint(frm.doc.bool_data) ? "Так" : "Ні";
 		frm.set_value("value_display", v);
-	} else if (t === "Integer") {
+	} else if (t === "Кількісні дані") {
 		frm.set_value("value_display", frm.doc.int_data ?? "0");
 	} else {
 		frm.set_value("value_display", "");

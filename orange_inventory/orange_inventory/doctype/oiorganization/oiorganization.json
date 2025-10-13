@@ -7,7 +7,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "is_active",
+  "enabled",
   "organization_name",
   "abbreviation",
   "tax_code",
@@ -145,7 +145,7 @@
   },
   {
    "default": "0",
-   "fieldname": "is_active",
+   "fieldname": "enabled",
    "fieldtype": "Check",
    "label": "\u0410\u043a\u0442\u0438\u0432\u043d\u0430"
   }
@@ -163,7 +163,7 @@
    "link_fieldname": "organization"
   }
  ],
- "modified": "2025-10-02 16:19:57.872455",
+ "modified": "2025-10-10 13:59:32.581090",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiOrganization",

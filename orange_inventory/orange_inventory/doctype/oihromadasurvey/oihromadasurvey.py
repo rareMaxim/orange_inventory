@@ -16,6 +16,12 @@ class oiHromadaSurvey(NestedSet):
 		from frappe.types import DF
 
 		bool_data: DF.Check
+		description: DF.SmallText | None
+		enabled: DF.Check
+		frequency: DF.Literal[
+			"\u0420\u0430\u0437 \u043d\u0430 \u0440\u0456\u043a",
+			"\u0420\u0430\u0437 \u043d\u0430 \u043a\u0432\u0430\u0440\u0442\u0430\u043b",
+		]
 		id: DF.Data
 		int_data: DF.Int
 		is_group: DF.Check
@@ -29,19 +35,23 @@ class oiHromadaSurvey(NestedSet):
 		score_note: DF.SmallText | None
 		score_pairs: DF.Int
 		title: DF.SmallText
-		type: DF.Literal["Boolean", "Integer"]
+		type: DF.Literal[
+			"\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u043d\u0456 \u0434\u0430\u043d\u0456",
+			"\u042f\u043a\u0456\u0441\u043d\u0456 \u0434\u0430\u043d\u0456",
+			"\u0413\u0440\u0443\u043f\u0430",
+		]
 		value_display: DF.Data | None
 	# end: auto-generated types
 
 	def before_save(self):
 		# 1) value_display для листів
-		if cint(self.is_group):
+		if self.type == "Група":
 			# для груп власного значення не показуємо
 			self.value_display = ""
 		else:
-			if self.type == "Boolean":
+			if self.type == "Якісні дані":
 				self.value_display = "Так" if cint(self.bool_data) else "Ні"
-			elif self.type == "Integer":
+			elif self.type == "Кількісні дані":
 				self.value_display = str(self.int_data or "0")
 			else:
 				self.value_display = ""
@@ -54,9 +64,9 @@ def _leaf_numeric_value(row: dict) -> float:
 	"""Перетворюємо лист у числове значення:
 	Boolean -> 0 або 100; Integer -> int_data (float)."""
 	t = row.get("type")
-	if t == "Boolean":
+	if t == "Якісні дані":
 		return 100.0 if cint(row.get("bool_data")) else 0.0
-	if t == "Integer":
+	if t == "Кількісні дані":
 		return flt(row.get("int_data") or 0.0)
 	return 0.0
 
@@ -78,7 +88,7 @@ def _compute_group_score_from_direct_leaves(group_name: str) -> tuple[float, int
 
 	children = frappe.get_all(
 		"oiHromadaSurvey",
-		filters={"parent_oihromadasurvey": group_name, "is_group": 0},
+		filters={"parent_oihromadasurvey": group_name, "type": "Група"},
 		fields=["name", "lft", "type", "bool_data", "int_data"],
 	)
 	if not children:
@@ -89,9 +99,9 @@ def _compute_group_score_from_direct_leaves(group_name: str) -> tuple[float, int
 
 	def leaf_val(r):
 		t = r.get("type")
-		if t == "Boolean":
+		if t == "Якісні дані":
 			return 100.0 if cint(r.get("bool_data")) else 0.0
-		if t == "Integer":
+		if t == "Кількісні дані":
 			return flt(r.get("int_data") or 0.0)
 		return 0.0
 
@@ -116,7 +126,7 @@ def _compute_group_score_from_direct_leaves(group_name: str) -> tuple[float, int
 			# Спробуємо «врятувати» пару.
 			# Визначимо тип листа-деномінатора (по оригінальному rows):
 			den_row = children[i + 1]
-			if den_row.get("type") == "Boolean":
+			if den_row.get("type") == "Якісні дані":
 				# False у знаменнику -> вважаємо 1 (щоб не ламати ділення)
 				pairs_scores.append(100.0 * (num / 1.0))
 			else:
@@ -146,7 +156,7 @@ def recompute_group_scores(root: str | None = None):
 	"""Перерахувати бали для ВСІХ груп (або піддерева root).
 	Рахуємо лише для документів is_group=1 за їх ПРЯМИМИ листовими дітьми."""
 	# Вибірка груп
-	base_filters = {"is_group": 1}
+	base_filters = {"type": "Група"}
 	if root:
 		# обмежуємо піддеревом
 		node = frappe.get_value("oiHromadaSurvey", root, ["lft", "rgt"], as_dict=True)
@@ -154,7 +164,7 @@ def recompute_group_scores(root: str | None = None):
 			return {"status": "error", "msg": f"Root '{root}' not found"}
 		groups = frappe.get_all(
 			"oiHromadaSurvey",
-			filters={"is_group": 1, "lft": [">=", node.lft], "rgt": ["<=", node.rgt]},
+			filters={"type": "Група", "lft": [">=", node.lft], "rgt": ["<=", node.rgt]},
 			fields=["name", "lft", "rgt"],
 			order_by="lft asc",
 		)
@@ -185,13 +195,13 @@ def _recompute_all_groups_job(root: str | None = None):
 			return {"status": "error", "msg": f"Root '{root}' not found"}
 		groups = frappe.get_all(
 			"oiHromadaSurvey",
-			filters={"is_group": 1, "lft": [">=", node.lft], "rgt": ["<=", node.rgt]},
+			filters={"type": "Група", "lft": [">=", node.lft], "rgt": ["<=", node.rgt]},
 			fields=["name"],
 			order_by="lft asc",
 		)
 	else:
 		groups = frappe.get_all(
-			"oiHromadaSurvey", filters={"is_group": 1}, fields=["name"], order_by="lft asc"
+			"oiHromadaSurvey", filters={"type": "Група"}, fields=["name"], order_by="lft asc"
 		)
 
 	updated = 0
