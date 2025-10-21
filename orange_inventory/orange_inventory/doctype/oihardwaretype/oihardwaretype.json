@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "hash",
+ "autoname": "field:type_name",
  "creation": "2025-08-07 01:42:42.446994",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -16,17 +16,18 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "\u041d\u0430\u0437\u0432\u0430 \u0442\u0438\u043f\u0443",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-17 15:56:53.689777",
+ "modified": "2025-10-17 12:29:19.950888",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHardwareType",
- "naming_rule": "Random",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

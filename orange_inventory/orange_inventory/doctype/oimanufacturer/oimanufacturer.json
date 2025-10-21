@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "hash",
+ "autoname": "field:manufacturer_name",
  "creation": "2025-08-07 01:41:29.078207",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -14,17 +14,18 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "\u041d\u0430\u0437\u0432\u0430 \u0432\u0438\u0440\u043e\u0431\u043d\u0438\u043a\u0430",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-10 09:52:23.676287",
+ "modified": "2025-10-17 11:36:13.535030",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiManufacturer",
- "naming_rule": "Random",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

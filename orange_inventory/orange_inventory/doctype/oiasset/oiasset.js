@@ -15,7 +15,16 @@ let manufacturer_filter = function (frm) {
 		};
 	});
 };
-
+let responsible_employee_filter = function (frm) {
+	// Фільтр для поля "Виробник" на основі вибраної моделі
+	frm.set_query("responsible_employee", function () {
+		return {
+			filters: {
+				// status: frm.doc.manufacturer,
+			},
+		};
+	});
+};
 let calculate_total_amount = function (frm) {
 	let cost = flt(frm.doc.cost);
 	let qty = flt(frm.doc.quantity);

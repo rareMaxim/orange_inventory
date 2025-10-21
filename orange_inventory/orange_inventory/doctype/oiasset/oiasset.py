@@ -28,8 +28,10 @@ class oiAsset(Document):
 		asset_user: DF.Link | None
 		cost: DF.Currency
 		current_owner: DF.Link | None
+		enabled: DF.Check
 		hardware_model: DF.Link | None
 		image: DF.AttachImage | None
+		inventory_date: DF.Date | None
 		inventory_no: DF.Data | None
 		is_network_device: DF.Check
 		location: DF.Link | None
@@ -49,6 +51,7 @@ class oiAsset(Document):
 			"\u0421\u043f\u0438\u0441\u0430\u043d\u043e",
 		]
 		total: DF.Currency
+		type: DF.Link | None
 	# end: auto-generated types
 
 	def before_save(self):
