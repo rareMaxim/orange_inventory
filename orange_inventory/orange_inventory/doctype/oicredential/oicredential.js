@@ -84,7 +84,8 @@ frappe.ui.form.on("oiCredential", {
 						try {
 							d.fields_dict.secret_html.$wrapper.empty();
 						} catch (e) {
-							console.log("wipeSecret");
+							// Пропускаємо помилки при очищенні
+							frappe.logger().debug("Error wiping secret:", e);
 						}
 					}
 				},

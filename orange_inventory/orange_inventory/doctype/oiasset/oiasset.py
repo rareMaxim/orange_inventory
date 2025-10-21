@@ -3,10 +3,12 @@
 
 import json
 import re
+from datetime import datetime
 
 import frappe
+from dateutil.relativedelta import relativedelta
 from frappe.model.document import Document
-from frappe.utils import now
+from frappe.utils import getdate, now, today
 
 
 class oiAsset(Document):
@@ -33,6 +35,7 @@ class oiAsset(Document):
 		image: DF.AttachImage | None
 		inventory_date: DF.Date | None
 		inventory_no: DF.Data | None
+		inventory_status: DF.Data | None
 		is_network_device: DF.Check
 		location: DF.Link | None
 		manufacturer: DF.Link | None
@@ -54,11 +57,36 @@ class oiAsset(Document):
 		type: DF.Link | None
 	# end: auto-generated types
 
+	def validate(self):
+		self.update_inventory_status()
+
 	def before_save(self):
 		self.total = self.cost * self.quantity
 
 	def on_update(self):
 		self.create_network_ports_from_model()
+
+	def update_inventory_status(self):
+		"""Оновлює статус інвентаризації на основі дати останньої інвентаризації"""
+		if not self.inventory_date:
+			self.inventory_status = "Інвентаризація не проводилась"
+			return
+
+		inventory_date = getdate(self.inventory_date)
+		current_date = getdate(today())
+		delta = relativedelta(current_date, inventory_date)
+		months_diff = delta.years * 12 + delta.months
+
+		if months_diff >= 12:
+			self.inventory_status = "⚠️ Інвентаризація не проводилась більше 12 міс."
+		elif months_diff >= 9:
+			self.inventory_status = "⚠️ Інвентаризація не проводилась більше 9 міс."
+		elif months_diff >= 6:
+			self.inventory_status = "⚠️ Інвентаризація не проводилась більше 6 міс."
+		elif months_diff >= 3:
+			self.inventory_status = "⚠️ Інвентаризація не проводилась більше 3 міс."
+		else:
+			self.inventory_status = "✓ Інвентаризація актуальна"
 
 	def create_network_ports_from_model(self):
 		if not self.hardware_model:
@@ -169,25 +197,32 @@ def has_permission(doc, user):
 
 
 def get_permission_query_conditions(user):
+	"""
+	Визначає умови для фільтрації активів на основі ролей користувача.
+
+	Returns:
+	        str: SQL умова для WHERE clause або порожній рядок для повного доступу
+	"""
+	# 1. Перевірка системного налаштування для глобального доступу
 	if frappe.get_system_settings("allow_users_to_see_all_assets"):
-		# frappe.msgprint("Усі активи доступні для перегляду.")
 		return ""
-	# 1. Перевірка для системного адміністратора
-	# Якщо поточний користувач - System Manager, він бачить все.
-	if "System Manager" or "Maintenance Manager" in frappe.get_roles(user):
-		# frappe.msgprint("Системний адміністратор має доступ до всіх активів.")
+
+	# 2. Перевірка для привілейованих ролей (виправлено критичний bug)
+	user_roles = frappe.get_roles(user)
+	privileged_roles = {"System Manager", "Maintenance Manager"}
+
+	if any(role in user_roles for role in privileged_roles):
 		return ""
-	# Отримання організації, до якої належить користувач
+
+	# 3. Фільтрація по організації користувача
 	organization = frappe.db.get_value("oiEmployee", {"user": user}, "organization")
-	# frappe.msgprint(f"User's organization: {organization}")
+
 	if organization:
-		# Повернути умову для фільтрації
-		return f"(`taboiAsset`.`current_owner` = '{organization}')"
-		# pass
+		# Використовуємо безпечний спосіб для SQL умови
+		return f"(`taboiAsset`.`current_owner` = {frappe.db.escape(organization)})"
 	else:
 		# Якщо у користувача немає організації, не показувати нічого
 		return "(`taboiAsset`.`current_owner` = 'N/A')"
-		# pass
 
 
 @frappe.whitelist()
@@ -251,3 +286,63 @@ def get_network_ports_with_details(asset_name):
 	ports.sort(key=natural_sort_key)
 
 	return ports
+
+
+@frappe.whitelist()
+def set_inventory_date(asset_name, inventory_date=None, location=None):
+	"""
+	Встановлює дату інвентаризації для активу та опціонально оновлює місцезнаходження
+	"""
+	if not frappe.db.exists("oiAsset", asset_name):
+		frappe.throw("Актив не знайдено")
+
+	asset = frappe.get_doc("oiAsset", asset_name)
+
+	# Встановлюємо дату інвентаризації
+	asset.inventory_date = inventory_date if inventory_date else today()
+
+	# Оновлюємо місцезнаходження, якщо воно вказано
+	if location:
+		asset.location = location
+
+	asset.save()
+
+	return {"success": True, "inventory_date": asset.inventory_date, "location": asset.location}
+
+
+@frappe.whitelist()
+def get_inventory_status(asset_name):
+	"""
+	Повертає статус інвентаризації для активу з кольором для відображення
+	"""
+	if not frappe.db.exists("oiAsset", asset_name):
+		return None
+
+	asset = frappe.get_doc("oiAsset", asset_name)
+
+	if not asset.inventory_date:
+		return {"status": "Інвентаризація не проводилась", "months_since_inventory": None, "color": "gray"}
+
+	inventory_date = getdate(asset.inventory_date)
+	current_date = getdate(today())
+	delta = relativedelta(current_date, inventory_date)
+	months_diff = delta.years * 12 + delta.months
+
+	# Визначаємо статус та колір
+	if months_diff >= 12:
+		status = "⚠️ Інвентаризація > 12 міс."
+		color = "#d9534f"  # червоний
+	elif months_diff >= 9:
+		status = "⚠️ Інвентаризація > 9 міс."
+		color = "#f0ad4e"  # помаранчевий
+	elif months_diff >= 6:
+		status = "⚠️ Інвентаризація > 6 міс."
+		color = "#ff9800"  # жовто-помаранчевий
+	elif months_diff >= 3:
+		status = "⚠️ Інвентаризація > 3 міс."
+		color = "#5bc0de"  # блакитний
+	else:
+		status = "✓ Інвентаризація актуальна"
+		color = "#5cb85c"  # зелений
+
+	return {"status": status, "months_since_inventory": months_diff, "color": color}

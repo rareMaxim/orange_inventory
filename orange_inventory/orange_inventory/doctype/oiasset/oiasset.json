@@ -11,6 +11,7 @@
   "inventory_no",
   "serial_no",
   "inventory_date",
+  "inventory_status",
   "enabled",
   "column_break_nciz",
   "status",
@@ -134,14 +135,16 @@
    "in_preview": 1,
    "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
    "options": "oiOrganization",
-   "search_index": 1
+   "search_index": 1,
+   "in_standard_filter": 1
   },
   {
    "fieldname": "location",
    "fieldtype": "Link",
    "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f (\u041a\u0430\u0431\u0456\u043d\u0435\u0442)",
    "options": "oiLocation",
-   "search_index": 1
+   "search_index": 1,
+   "in_standard_filter": 1
   },
   {
    "fieldname": "acquisition_details_sb",
@@ -258,7 +261,9 @@
    "fieldname": "type",
    "fieldtype": "Link",
    "label": "\u0422\u0438\u043f",
-   "options": "oiHardwareType"
+   "options": "oiHardwareType",
+   "search_index": 1,
+   "in_standard_filter": 1
   },
   {
    "default": "1",
@@ -272,6 +277,12 @@
    "fieldname": "inventory_date",
    "fieldtype": "Date",
    "label": "\u0414\u0430\u0442\u0430 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
+  },
+  {
+   "fieldname": "inventory_status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
   }
  ],
  "grid_page_length": 50,
@@ -288,7 +299,7 @@
    "link_fieldname": "linked_asset"
   }
  ],
- "modified": "2025-10-21 08:43:44.422065",
+ "modified": "2025-10-21 12:10:09.503837",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset",

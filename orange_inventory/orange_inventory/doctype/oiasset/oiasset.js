@@ -37,12 +37,22 @@ frappe.ui.form.on("oiAsset", {
 	refresh(frm) {
 		manufacturer_filter(frm);
 		calculate_total_amount(frm);
+		update_inventory_status_display(frm);
+
 		// Показуємо кнопку тільки якщо актив "груповий" і знаходиться на складі
 		if (frm.doc.quantity > 1 && !frm.is_new()) {
 			frm.add_custom_button(__("Розділити Актив"), function () {
 				open_split_asset_dialog(frm);
 			}).addClass("btn-primary");
 		}
+
+		// Кнопка для проведення інвентаризації
+		if (!frm.is_new()) {
+			frm.add_custom_button(__("Провести Інвентаризацію"), function () {
+				conduct_inventory(frm);
+			});
+		}
+
 		// Якщо це мережевий пристрій, показуємо вкладку "Мережа" та завантажуємо порти
 		if (frm.doc.hardware_model) {
 			frappe.db
@@ -185,3 +195,75 @@ function render_network_ports(frm) {
 		},
 	});
 }
+
+// Функція для проведення інвентаризації
+let conduct_inventory = function (frm) {
+	let d = new frappe.ui.Dialog({
+		title: __("Провести Інвентаризацію"),
+		fields: [
+			{
+				label: "Дата інвентаризації",
+				fieldname: "inventory_date",
+				fieldtype: "Date",
+				default: frappe.datetime.get_today(),
+				reqd: 1,
+			},
+			{
+				label: "Місцезнаходження",
+				fieldname: "location",
+				fieldtype: "Link",
+				options: "oiLocation",
+				default: frm.doc.location,
+				description: __("Оберіть місцезнаходження активу (необов'язково)"),
+			},
+		],
+		primary_action_label: __("Провести"),
+		primary_action(values) {
+			frappe.call({
+				method: "orange_inventory.orange_inventory.doctype.oiasset.oiasset.set_inventory_date",
+				args: {
+					asset_name: frm.doc.name,
+					inventory_date: values.inventory_date,
+					location: values.location,
+				},
+				callback: function (r) {
+					if (!r.exc) {
+						frappe.show_alert({
+							message: __("Інвентаризація проведена успішно"),
+							indicator: "green",
+						});
+						frm.reload_doc();
+						d.hide();
+					}
+				},
+			});
+		},
+	});
+	d.show();
+};
+
+// Функція для оновлення відображення статусу інвентаризації
+let update_inventory_status_display = function (frm) {
+	if (!frm.doc.inventory_date) {
+		return;
+	}
+
+	frappe.call({
+		method: "orange_inventory.orange_inventory.doctype.oiasset.oiasset.get_inventory_status",
+		args: {
+			asset_name: frm.doc.name,
+		},
+		callback: function (r) {
+			if (r.message && r.message.status) {
+				let status = r.message.status;
+				let color = r.message.color;
+
+				frm.set_df_property(
+					"inventory_date",
+					"description",
+					`<span style="color: ${color}; font-weight: bold;">${status}</span>`
+				);
+			}
+		},
+	});
+};
