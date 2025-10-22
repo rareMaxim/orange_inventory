@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-21 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "recorded_date",
+  "period",
+  "column_break_1",
+  "int_value",
+  "bool_value",
+  "value_display",
+  "section_break_2",
+  "changed_by",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "recorded_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Дата запису",
+   "reqd": 1,
+   "default": "Now"
+  },
+  {
+   "fieldname": "period",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Період",
+   "description": "Наприклад: 2025-Q1, 2025-01, 2025"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "int_value",
+   "fieldtype": "Int",
+   "label": "Кількісне значення",
+   "description": "Для кількісних даних"
+  },
+  {
+   "fieldname": "bool_value",
+   "fieldtype": "Check",
+   "label": "Якісне значення",
+   "description": "Для якісних даних (Так/Ні)"
+  },
+  {
+   "fieldname": "value_display",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Відображення",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "changed_by",
+   "fieldtype": "Link",
+   "label": "Змінено користувачем",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Примітки"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-21 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiHromadaSurveyHistory",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "recorded_date",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

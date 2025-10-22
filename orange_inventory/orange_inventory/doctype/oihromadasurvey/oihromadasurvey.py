@@ -68,6 +68,71 @@ class oiHromadaSurvey(NestedSet):
 		# 2) НІЧОГО не рахуємо для score тут — групові бали залежать від дітей.
 		#    Розрахунок робимо окремою процедурою (див. recompute_group_scores).
 
+		# 3) Автоматичне збереження історії при зміні значень
+		self._track_value_changes()
+
+	def _track_value_changes(self):
+		"""
+		Відстежує зміни в int_data та bool_data і автоматично додає запис в історію.
+		"""
+		# Пропускаємо для груп
+		if self.type == "Група":
+			return
+
+		# Пропускаємо для нових документів
+		if self.is_new():
+			return
+
+		# Перевіряємо чи змінилися значення
+		value_changed = False
+
+		if self.type == "Кількісні дані":
+			if self.has_value_changed("int_data"):
+				value_changed = True
+				new_value = self.int_data
+				display = str(new_value or "0")
+		elif self.type == "Якісні дані":
+			if self.has_value_changed("bool_data"):
+				value_changed = True
+				new_value = cint(self.bool_data)
+				display = "Так" if new_value else "Ні"
+		else:
+			return
+
+		# Якщо значення змінилося, додаємо запис в історію
+		if value_changed:
+			self.append(
+				"value_history",
+				{
+					"recorded_date": frappe.utils.now(),
+					"period": self._get_current_period(),
+					"int_value": self.int_data if self.type == "Кількісні дані" else None,
+					"bool_value": cint(self.bool_data) if self.type == "Якісні дані" else 0,
+					"value_display": display,
+					"changed_by": frappe.session.user,
+					"notes": "Автоматичний запис при зміні значення",
+				},
+			)
+
+	def _get_current_period(self):
+		"""
+		Визначає поточний період на основі frequency.
+		Повертає рядок типу "2025-Q1" або "2025-01" або "2025"
+		"""
+		from datetime import datetime
+
+		now = datetime.now()
+		year = now.year
+
+		if self.frequency == "Раз на квартал":
+			quarter = (now.month - 1) // 3 + 1
+			return f"{year}-Q{quarter}"
+		elif self.frequency == "Раз на рік":
+			return str(year)
+		else:
+			# За замовчуванням - місяць
+			return f"{year}-{now.month:02d}"
+
 
 def _clamp_0_100(x: float) -> float:
 	return max(0.0, min(100.0, flt(x)))
@@ -521,6 +586,60 @@ def export_org_template(org: str, period: str | None = None):
 
 
 @frappe.whitelist()
+def get_value_trend_data(survey_id: str, limit: int = 50):
+	"""
+	Отримує дані для побудови графіка тенденцій для конкретного показника.
+
+	Args:
+	        survey_id: ID показника oiHromadaSurvey
+	        limit: Кількість останніх записів (за замовчуванням 50)
+
+	Returns:
+	        dict: {
+	                "labels": ["2025-Q1", "2025-Q2", ...],
+	                "values": [10, 15, 12, ...],
+	                "type": "Кількісні дані" | "Якісні дані",
+	                "title": "Назва показника"
+	        }
+	"""
+	survey = frappe.get_doc("oiHromadaSurvey", survey_id)
+
+	if survey.type == "Група":
+		frappe.throw("Для груп історія значень не відстежується")
+
+	# Отримуємо історію з child table
+	history = frappe.get_all(
+		"oiHromadaSurveyHistory",
+		filters={"parent": survey_id},
+		fields=["recorded_date", "period", "int_value", "bool_value", "value_display"],
+		order_by="recorded_date asc",
+		limit=limit,
+	)
+
+	labels = []
+	values = []
+
+	for entry in history:
+		# Використовуємо period якщо є, інакше дату
+		label = entry.period or entry.recorded_date.split(" ")[0]
+		labels.append(label)
+
+		if survey.type == "Кількісні дані":
+			values.append(flt(entry.int_value or 0))
+		elif survey.type == "Якісні дані":
+			# Конвертуємо булеве значення в 0/100 для графіка
+			values.append(100 if cint(entry.bool_value) else 0)
+
+	return {
+		"labels": labels,
+		"values": values,
+		"type": survey.type,
+		"title": survey.title,
+		"frequency": survey.frequency,
+	}
+
+
+@frappe.whitelist()
 def export_all_org_templates(period: str | None = None):
 	"""Згенерувати ZIP з шаблонами для всіх активних розпорядників + Summary.xlsx.
 	Summary містить: Організація, Всього пунктів, К-ть only_admin, К-ть пунктів для заповнення.
@@ -626,3 +745,152 @@ def export_all_org_templates(period: str | None = None):
 		f"oiHromadaSurvey_Templates_{safe_period}.zip", zip_bytes.getvalue()
 	)
 	return {"file_url": zip_url, "count": len(paths), "summary_rows": len(summary_rows)}
+
+
+@frappe.whitelist()
+def import_from_excel(file_url: str, org: str | None = None):
+	"""
+	Імпорт даних з Excel файлу, згенерованого через export_org_template.
+
+	Args:
+	        file_url: URL завантаженого файлу (з Frappe File)
+	        org: ID організації (опціонально, для валідації)
+
+	Returns:
+	        dict: {
+	                "status": "success" | "error",
+	                "updated": int,  # кількість оновлених записів
+	                "skipped": int,  # кількість пропущених
+	                "errors": list,  # список помилок
+	                "details": list  # детальна інформація про зміни
+	        }
+	"""
+	from openpyxl import load_workbook
+
+	# Отримати файл з системи
+	file_doc = frappe.get_doc("File", {"file_url": file_url})
+	file_path = file_doc.get_full_path()
+
+	if not os.path.exists(file_path):
+		frappe.throw(f"Файл не знайдено: {file_path}")
+
+	try:
+		wb = load_workbook(file_path, data_only=True)
+		ws = wb["Показники"]
+	except Exception as e:
+		frappe.throw(f"Помилка читання файлу Excel: {str(e)}")
+
+	updated = 0
+	skipped = 0
+	errors = []
+	details = []
+
+	# Починаємо з 5-го рядка (перші 4 - шапка)
+	for row_idx, row in enumerate(ws.iter_rows(min_row=5, values_only=True), start=5):
+		if not row or len(row) < 7:
+			continue
+
+		# Розпакування колонок (використовуємо тільки потрібні)
+		survey_id = row[1]  # B: ID
+		new_value = row[6]  # G: Значення для заповнення
+
+		# Пропускаємо порожні рядки
+		if not survey_id or not new_value:
+			skipped += 1
+			continue
+
+		try:
+			# Отримуємо документ
+			if not frappe.db.exists("oiHromadaSurvey", survey_id):
+				errors.append(f"Рядок {row_idx}: Показник {survey_id} не знайдено")
+				skipped += 1
+				continue
+
+			survey = frappe.get_doc("oiHromadaSurvey", survey_id)
+
+			# Валідація організації (якщо передано)
+			if org and survey.master_info != org:
+				errors.append(f"Рядок {row_idx}: Показник {survey_id} не належить організації {org}")
+				skipped += 1
+				continue
+
+			# Пропускаємо only_admin записи
+			if cint(survey.only_admin):
+				skipped += 1
+				continue
+
+			# Перевіряємо тип і оновлюємо значення
+			value_changed = False
+
+			if survey.type == "Кількісні дані":
+				# Конвертуємо в ціле число
+				try:
+					new_int_value = int(float(new_value)) if new_value else 0
+				except (ValueError, TypeError):
+					errors.append(f"Рядок {row_idx}: Некоректне числове значення '{new_value}'")
+					skipped += 1
+					continue
+
+				if survey.int_data != new_int_value:
+					old_val = survey.int_data
+					survey.int_data = new_int_value
+					value_changed = True
+					details.append(
+						{
+							"id": survey_id,
+							"title": survey.title,
+							"type": survey.type,
+							"old_value": old_val,
+							"new_value": new_int_value,
+						}
+					)
+
+			elif survey.type == "Якісні дані":
+				# Конвертуємо "Так"/"Ні" в bool
+				new_bool_str = str(new_value).strip()
+				if new_bool_str == "Так":
+					new_bool_value = 1
+				elif new_bool_str == "Ні":
+					new_bool_value = 0
+				else:
+					errors.append(
+						f"Рядок {row_idx}: Некоректне якісне значення '{new_value}' (очікується 'Так' або 'Ні')"
+					)
+					skipped += 1
+					continue
+
+				if cint(survey.bool_data) != new_bool_value:
+					old_val = "Так" if cint(survey.bool_data) else "Ні"
+					survey.bool_data = new_bool_value
+					value_changed = True
+					details.append(
+						{
+							"id": survey_id,
+							"title": survey.title,
+							"type": survey.type,
+							"old_value": old_val,
+							"new_value": "Так" if new_bool_value else "Ні",
+						}
+					)
+
+			# Зберігаємо тільки якщо були зміни
+			if value_changed:
+				survey.save()
+				updated += 1
+			else:
+				skipped += 1
+
+		except Exception as e:
+			errors.append(f"Рядок {row_idx}: Помилка обробки - {str(e)}")
+			skipped += 1
+			continue
+
+	frappe.db.commit()
+
+	return {
+		"status": "success" if not errors or updated > 0 else "error",
+		"updated": updated,
+		"skipped": skipped,
+		"errors": errors,
+		"details": details,
+	}
