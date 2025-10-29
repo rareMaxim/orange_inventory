@@ -1,0 +1,209 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:PER-{period}-{####}",
+ "creation": "2025-10-23 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_1",
+  "period",
+  "report_type",
+  "organization",
+  "column_break_2",
+  "status",
+  "submission_deadline",
+  "submitted_date",
+  "section_break_forms",
+  "description",
+  "section_break_actions",
+  "download_template_html",
+  "section_break_upload",
+  "filled_form_attachment",
+  "attachment_date",
+  "attachment_notes",
+  "section_break_import",
+  "import_status",
+  "import_date",
+  "import_details",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Основна інформація"
+  },
+  {
+   "fieldname": "period",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Період",
+   "reqd": 1,
+   "description": "Формат: РРРР-Q1/Q2/Q3/Q4 або РРРР (для річного)"
+  },
+  {
+   "fieldname": "report_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Тип звіту",
+   "options": "Квартальний\nРічний",
+   "reqd": 1,
+   "default": "Квартальний"
+  },
+  {
+   "fieldname": "organization",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Організація",
+   "options": "oiOrganization",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Статус",
+   "options": "Чернетка\nОчікує заповнення\nЗаповнено\nІмпортовано\nПрийнято\nВідхилено",
+   "default": "Чернетка",
+   "reqd": 1
+  },
+  {
+   "fieldname": "submission_deadline",
+   "fieldtype": "Date",
+   "label": "Термін подання",
+   "description": "Крайній термін подання звіту"
+  },
+  {
+   "fieldname": "submitted_date",
+   "fieldtype": "Datetime",
+   "label": "Дата подання",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_forms",
+   "fieldtype": "Section Break",
+   "label": "Опис"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Опис звіту",
+   "description": "Додаткова інформація про звіт"
+  },
+  {
+   "fieldname": "section_break_actions",
+   "fieldtype": "Section Break",
+   "label": "Завантаження шаблону"
+  },
+  {
+   "fieldname": "download_template_html",
+   "fieldtype": "HTML",
+   "label": "Завантажити шаблон",
+   "options": "<div class=\"alert alert-info\">\n  <strong>Інструкції:</strong>\n  <ol>\n    <li>Натисніть кнопку \"Завантажити шаблон Excel\" вище</li>\n    <li>Заповніть всі необхідні поля у файлі</li>\n    <li>Збережіть заповнений файл</li>\n    <li>Прикріпіть його у секції \"Завантаження заповненої форми\" нижче</li>\n  </ol>\n</div>"
+  },
+  {
+   "fieldname": "section_break_upload",
+   "fieldtype": "Section Break",
+   "label": "Завантаження заповненої форми"
+  },
+  {
+   "fieldname": "filled_form_attachment",
+   "fieldtype": "Attach",
+   "label": "Заповнена форма",
+   "description": "Прикріпіть заповнений Excel файл"
+  },
+  {
+   "fieldname": "attachment_date",
+   "fieldtype": "Datetime",
+   "label": "Дата прикріплення",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attachment_notes",
+   "fieldtype": "Small Text",
+   "label": "Примітки до файлу",
+   "description": "Додаткові коментарі до заповненої форми"
+  },
+  {
+   "fieldname": "section_break_import",
+   "fieldtype": "Section Break",
+   "label": "Статус імпорту"
+  },
+  {
+   "fieldname": "import_status",
+   "fieldtype": "Select",
+   "label": "Статус імпорту",
+   "options": "\nОчікує\nВ процесі\nУспішно\nПомилка",
+   "read_only": 1
+  },
+  {
+   "fieldname": "import_date",
+   "fieldtype": "Datetime",
+   "label": "Дата імпорту",
+   "read_only": 1
+  },
+  {
+   "fieldname": "import_details",
+   "fieldtype": "Long Text",
+   "label": "Деталі імпорту",
+   "read_only": 1,
+   "description": "Результати імпорту (оновлено, помилки тощо)"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "oiPeriodicReport",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-23 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiPeriodicReport",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "period",
+ "track_changes": 1
+}

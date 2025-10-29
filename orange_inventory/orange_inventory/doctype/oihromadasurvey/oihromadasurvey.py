@@ -24,6 +24,10 @@ class oiHromadaSurvey(NestedSet):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		from orange_inventory.orange_inventory.doctype.oihromadasurveyhistory.oihromadasurveyhistory import (
+			oiHromadaSurveyHistory,
+		)
+
 		bool_data: DF.Check
 		description: DF.SmallText | None
 		enabled: DF.Check
@@ -50,6 +54,7 @@ class oiHromadaSurvey(NestedSet):
 			"\u0413\u0440\u0443\u043f\u0430",
 		]
 		value_display: DF.Data | None
+		value_history: DF.Table[oiHromadaSurveyHistory]
 	# end: auto-generated types
 
 	def before_save(self):
@@ -339,6 +344,8 @@ def _fetch_leaf_rows_for_org(org: str):
 			"parent_oihromadasurvey",
 			"lft",
 			"rgt",
+			"modified",
+			"modified_by",
 		],
 		order_by="lft asc",
 	)
@@ -370,17 +377,17 @@ def _make_data_sheet(wb: Workbook, org_meta: dict, period: str, rows: list[dict]
 	head_fill, bold, center, wrap, border = _excel_styles()
 
 	# Шапка
-	ws.merge_cells("A1:H1")
+	ws.merge_cells("A1:I1")
 	ws["A1"] = f"Організація: {org_meta['title']}"
 	ws["A1"].font = Font(bold=True, size=13)
 	ws["A1"].alignment = center
 
-	ws.merge_cells("A2:H2")
+	ws.merge_cells("A2:I2")
 	extra = f" | ЄДРПОУ: {org_meta['tax_code']}" if org_meta.get("tax_code") else ""
 	ws["A2"] = f"Період: {period}{extra}"
 	ws["A2"].alignment = center
 
-	ws.append([""] * 8)  # рядок 3 — порожній
+	ws.append([""] * 9)  # рядок 3 — порожній
 
 	# Заголовки (рядок 4)
 	headers = [
@@ -391,6 +398,7 @@ def _make_data_sheet(wb: Workbook, org_meta: dict, period: str, rows: list[dict]
 		"Періодичність",
 		"Поточне значення",
 		"Значення для заповнення",
+		"Остання зміна",
 		"Примітка",
 	]
 	ws.append(headers)
@@ -455,6 +463,15 @@ def _make_data_sheet(wb: Workbook, org_meta: dict, period: str, rows: list[dict]
 		is_admin = cint(r.get("only_admin"))
 		g_value = f_value if is_admin else ""
 
+		# H: Остання зміна
+		modified_date = r.get("modified")
+		if modified_date:
+			from frappe.utils import get_datetime
+
+			h_value = get_datetime(modified_date).strftime("%d.%m.%Y %H:%M")
+		else:
+			h_value = "-"
+
 		ws.append(
 			[
 				path,  # A
@@ -464,7 +481,8 @@ def _make_data_sheet(wb: Workbook, org_meta: dict, period: str, rows: list[dict]
 				r.get("frequency") or "",  # E
 				f_value,  # F (Поточне значення)
 				g_value,  # G (Значення для заповнення)
-				r.get("description") or "",  # H (Примітка)
+				h_value,  # H (Остання зміна)
+				r.get("description") or "",  # I (Примітка)
 			]
 		)
 
@@ -492,17 +510,17 @@ def _make_data_sheet(wb: Workbook, org_meta: dict, period: str, rows: list[dict]
 	# Заблокувати редагування ВСІХ колонок, крім G (ввод), через DV FALSE
 	if ws.max_row >= 5:
 		dv_block.add(f"A5:F{ws.max_row}")
-		dv_block.add(f"H5:H{ws.max_row}")
+		dv_block.add(f"H5:I{ws.max_row}")
 
 	# Стилі для тіла таблиці
-	for row in ws.iter_rows(min_row=5, max_row=ws.max_row, min_col=1, max_col=8):
+	for row in ws.iter_rows(min_row=5, max_row=ws.max_row, min_col=1, max_col=9):
 		for cell in row:
 			cell.alignment = wrap
 			cell.border = border
 
 	# Freeze + фільтри
 	ws.freeze_panes = "A5"
-	ws.auto_filter.ref = f"A4:H{ws.max_row}"
+	ws.auto_filter.ref = f"A4:I{ws.max_row}"
 
 	_autowidth(ws)
 
@@ -893,4 +911,250 @@ def import_from_excel(file_url: str, org: str | None = None):
 		"skipped": skipped,
 		"errors": errors,
 		"details": details,
+	}
+
+
+@frappe.whitelist()
+def generate_completion_report(period: str | None = None):
+	"""
+	Генерує звіт про заповнення показників для всіх організацій за вказаний період.
+
+	Args:
+	        period: Період для звіту (напр. '2025-Q1'). Якщо не вказано - поточна дата.
+
+	Returns:
+	        dict: {
+	                "file_url": str,  # URL згенерованого Excel файлу
+	                "total_orgs": int,  # Загальна кількість організацій
+	                "filled_orgs": int,  # Кількість організацій що заповнили
+	                "unfilled_orgs": int  # Кількість організацій що не заповнили
+	        }
+	"""
+	the_period = period or nowdate()
+
+	# Отримати всі активні організації
+	orgs = frappe.get_all(
+		"oiOrganization",
+		filters={"enabled": 1},
+		fields=["name", "organization_name", "abbreviation"],
+		order_by="organization_name",
+	)
+
+	if not orgs:
+		frappe.throw("Немає активних організацій для звіту.")
+
+	report_data = []
+	filled_count = 0
+	unfilled_count = 0
+
+	for org in orgs:
+		org_name = org.name
+		org_title = org.organization_name or org.abbreviation or org_name
+
+		# Отримати всі показники для організації (листи, не групи)
+		indicators = frappe.get_all(
+			"oiHromadaSurvey",
+			filters={
+				"master_info": org_name,
+				"is_group": 0,
+				"enabled": 1,
+				"only_admin": 0,  # Тільки показники для заповнення
+			},
+			fields=["name", "title", "type", "int_data", "bool_data", "modified", "modified_by"],
+			order_by="name",
+		)
+
+		total_indicators = len(indicators)
+		filled_indicators = 0
+		unfilled_indicators = 0
+		last_update_date = None
+		last_update_by = None
+		unfilled_list = []
+
+		for ind in indicators:
+			# Перевірити чи показник заповнено
+			is_filled = False
+
+			if ind.type == "Кількісні дані":
+				# Вважаємо заповненим, якщо значення не None (навіть 0 - це заповнено)
+				is_filled = ind.int_data is not None
+			elif ind.type == "Якісні дані":
+				# Для якісних даних завжди є значення (0 або 1), тому перевіряємо чи modified після базової дати
+				# Альтернативно можна перевірити наявність історії
+				history_count = frappe.db.count("oiHromadaSurveyHistory", filters={"parent": ind.name})
+				is_filled = history_count > 0
+
+			if is_filled:
+				filled_indicators += 1
+				# Оновлюємо дату останнього оновлення
+				if not last_update_date or ind.modified > last_update_date:
+					last_update_date = ind.modified
+					last_update_by = ind.modified_by
+			else:
+				unfilled_indicators += 1
+				unfilled_list.append(f"{ind.name}: {ind.title}")
+
+		# Статус організації
+		completion_percentage = (filled_indicators / total_indicators * 100) if total_indicators > 0 else 0
+
+		if completion_percentage == 100:
+			status = "✓ Заповнено"
+			filled_count += 1
+		elif completion_percentage > 0:
+			status = f"⚠ Частково ({completion_percentage:.0f}%)"
+			unfilled_count += 1
+		else:
+			status = "✗ Не заповнено"
+			unfilled_count += 1
+
+		report_data.append(
+			{
+				"organization": org_title,
+				"status": status,
+				"total": total_indicators,
+				"filled": filled_indicators,
+				"unfilled": unfilled_indicators,
+				"completion_pct": completion_percentage,
+				"last_update": last_update_date.strftime("%d.%m.%Y %H:%M") if last_update_date else "-",
+				"updated_by": last_update_by or "-",
+				"unfilled_items": unfilled_list,
+			}
+		)
+
+	# Створити Excel звіт
+	wb = Workbook()
+	ws = wb.active
+	ws.title = "Звіт про заповнення"
+
+	# Стилі
+	head_fill, bold, center, wrap, border = _excel_styles()
+
+	# Шапка звіту
+	ws.merge_cells("A1:H1")
+	ws["A1"] = f"Звіт про заповнення показників за період: {the_period}"
+	ws["A1"].font = Font(size=14, bold=True)
+	ws["A1"].alignment = center
+
+	ws.merge_cells("A2:H2")
+	ws["A2"] = f"Дата формування: {nowdate()}"
+	ws["A2"].alignment = center
+
+	# Заголовки колонок
+	headers = [
+		"Організація",
+		"Статус",
+		"Всього показників",
+		"Заповнено",
+		"Не заповнено",
+		"% виконання",
+		"Остання зміна",
+		"Змінив",
+	]
+
+	ws.append(headers)
+	for cell in ws[4]:
+		cell.fill = head_fill
+		cell.font = bold
+		cell.alignment = center
+		cell.border = border
+
+	# Дані
+	for row_data in report_data:
+		ws.append(
+			[
+				row_data["organization"],
+				row_data["status"],
+				row_data["total"],
+				row_data["filled"],
+				row_data["unfilled"],
+				f"{row_data['completion_pct']:.1f}%",
+				row_data["last_update"],
+				row_data["updated_by"],
+			]
+		)
+
+	# Стилі для даних
+	for row in ws.iter_rows(min_row=5, max_row=ws.max_row, min_col=1, max_col=8):
+		for cell in row:
+			cell.alignment = wrap
+			cell.border = border
+
+			# Підсвітка статусу
+			if cell.column == 2:  # Колонка "Статус"
+				if "✓" in str(cell.value):
+					cell.fill = PatternFill("solid", fgColor="C6EFCE")  # Зелений
+				elif "✗" in str(cell.value):
+					cell.fill = PatternFill("solid", fgColor="FFC7CE")  # Червоний
+				elif "⚠" in str(cell.value):
+					cell.fill = PatternFill("solid", fgColor="FFEB9C")  # Жовтий
+
+	# Рядок підсумків
+	last_data_row = ws.max_row
+	total_row = last_data_row + 1
+	ws.append(
+		[
+			"Разом",
+			"",
+			f"=SUM(C5:C{last_data_row})",
+			f"=SUM(D5:D{last_data_row})",
+			f"=SUM(E5:E{last_data_row})",
+			f"=AVERAGE(F5:F{last_data_row})",
+			"",
+			"",
+		]
+	)
+	for cell in ws[total_row]:
+		cell.font = bold
+		cell.border = border
+	ws[f"A{total_row}"].alignment = center
+
+	# Налаштування
+	ws.freeze_panes = "A5"
+	ws.auto_filter.ref = f"A4:H{total_row}"
+	_autowidth(ws)
+
+	# Створити окремий аркуш з деталями незаповнених показників
+	ws_details = wb.create_sheet("Незаповнені показники")
+	ws_details.append(["Організація", "ID показника", "Назва показника"])
+	for cell in ws_details[1]:
+		cell.fill = head_fill
+		cell.font = bold
+		cell.alignment = center
+		cell.border = border
+
+	for row_data in report_data:
+		if row_data["unfilled_items"]:
+			for item in row_data["unfilled_items"]:
+				parts = item.split(": ", 1)
+				ws_details.append(
+					[
+						row_data["organization"],
+						parts[0] if len(parts) > 0 else "",
+						parts[1] if len(parts) > 1 else "",
+					]
+				)
+
+	for row in ws_details.iter_rows(min_row=2, max_row=ws_details.max_row, min_col=1, max_col=3):
+		for cell in row:
+			cell.alignment = wrap
+			cell.border = border
+
+	ws_details.freeze_panes = "A2"
+	ws_details.auto_filter.ref = f"A1:C{ws_details.max_row}"
+	_autowidth(ws_details)
+
+	# Зберегти файл
+	bio = io.BytesIO()
+	wb.save(bio)
+
+	safe_period = str(the_period).replace("/", "-").replace("\\", "-").replace(" ", "_")
+	filename = f"Completion_Report_{safe_period}.xlsx"
+
+	file_url = _save_bytes_as_private_file(filename, bio.getvalue())
+
+	return {
+		"file_url": file_url,
+		"total_orgs": len(orgs),
+		"filled_orgs": filled_count,
+		"unfilled_orgs": unfilled_count,
 	}

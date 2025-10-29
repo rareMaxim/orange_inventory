@@ -1,0 +1,246 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "format:CRSS-{YYYY}-{#####}",
+ "creation": "2025-10-28 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "submission_info_section",
+  "submission_date",
+  "status",
+  "column_break_1",
+  "employee",
+  "workflow_state",
+  "personal_info_section",
+  "last_name",
+  "first_name",
+  "patronymic",
+  "column_break_2",
+  "email",
+  "phone",
+  "course_info_section",
+  "course",
+  "completion_date",
+  "column_break_3",
+  "certificate_number",
+  "certificate_file",
+  "admin_section",
+  "processed_by",
+  "processed_date",
+  "section_break_4",
+  "admin_notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "submission_info_section",
+   "fieldtype": "Section Break",
+   "label": "Інформація про подання"
+  },
+  {
+   "default": "Today",
+   "fieldname": "submission_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Дата подання",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Очікує обробки",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Статус",
+   "options": "Очікує обробки\nОброблено\nВідхилено\nДублікат",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Співробітник",
+   "options": "oiEmployee"
+  },
+  {
+   "fieldname": "workflow_state",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Workflow State",
+   "options": "Workflow State"
+  },
+  {
+   "fieldname": "personal_info_section",
+   "fieldtype": "Section Break",
+   "label": "Персональні дані"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Прізвище",
+   "reqd": 1
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Ім'я",
+   "reqd": 1
+  },
+  {
+   "fieldname": "patronymic",
+   "fieldtype": "Data",
+   "label": "По батькові"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Телефон",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "course_info_section",
+   "fieldtype": "Section Break",
+   "label": "Інформація про курс"
+  },
+  {
+   "fieldname": "course",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Курс",
+   "options": "oiCourse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "completion_date",
+   "fieldtype": "Date",
+   "label": "Дата завершення курсу",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "certificate_number",
+   "fieldtype": "Data",
+   "label": "Номер сертифікату"
+  },
+  {
+   "fieldname": "certificate_file",
+   "fieldtype": "Attach",
+   "label": "Файл сертифікату",
+   "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:!doc.__islocal",
+   "fieldname": "admin_section",
+   "fieldtype": "Section Break",
+   "label": "Обробка адміністратором"
+  },
+  {
+   "fieldname": "processed_by",
+   "fieldtype": "Link",
+   "label": "Оброблено користувачем",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "processed_date",
+   "fieldtype": "Datetime",
+   "label": "Дата обробки",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "admin_notes",
+   "fieldtype": "Text",
+   "label": "Примітки адміністратора"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2025-10-28 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiCourseSubmission",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "read": 1,
+   "role": "Guest",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Очікує обробки"
+  },
+  {
+   "color": "Green",
+   "title": "Оброблено"
+  },
+  {
+   "color": "Red",
+   "title": "Відхилено"
+  },
+  {
+   "color": "Gray",
+   "title": "Дублікат"
+  }
+ ],
+ "title_field": "last_name",
+ "track_changes": 1
+}

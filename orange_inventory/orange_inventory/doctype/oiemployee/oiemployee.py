@@ -1,7 +1,7 @@
 # Copyright (c) 2025, Maxim Sysoev and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -15,7 +15,8 @@ class oiEmployee(Document):
 		from frappe.types import DF
 
 		birthday: DF.Date | None
-		department: DF.Data | None
+		department: DF.Link | None
+		enabled: DF.Check
 		full_name: DF.Data
 		organization: DF.Link | None
 		phone: DF.Data | None
@@ -33,3 +34,56 @@ class oiEmployee(Document):
 	# end: auto-generated types
 
 	pass
+
+
+@frappe.whitelist()
+def get_department_query(doctype, txt, searchfield, start, page_len, filters):
+	"""
+	Filter departments (organizations) to show only those that are descendants
+	of the selected organization in the tree structure.
+	If no organization is selected, show all organizations.
+	"""
+	if not filters or not filters.get("organization"):
+		# If no organization selected, show all organizations
+		return frappe.db.sql(
+			"""
+			SELECT name, organization_name, tax_code
+			FROM `taboiOrganization`
+			WHERE (organization_name LIKE %(txt)s OR tax_code LIKE %(txt)s OR name LIKE %(txt)s)
+			ORDER BY organization_name
+			LIMIT %(start)s, %(page_len)s
+			""",
+			{"txt": f"%{txt}%", "start": start, "page_len": page_len},
+			as_dict=False,
+		)
+
+	# Get the parent organization
+	parent_org = filters.get("organization")
+
+	# Get the lft and rgt values of the parent organization for tree filtering
+	parent_data = frappe.db.get_value("oiOrganization", parent_org, ["lft", "rgt"], as_dict=True)
+
+	if not parent_data:
+		return []
+
+	# Return organizations that are descendants (within the lft/rgt range)
+	# Including parent organization itself by using >= and <=
+	return frappe.db.sql(
+		"""
+		SELECT name, organization_name, tax_code
+		FROM `taboiOrganization`
+		WHERE lft > %(lft)s
+			AND rgt < %(rgt)s
+			AND (organization_name LIKE %(txt)s OR tax_code LIKE %(txt)s OR name LIKE %(txt)s)
+		ORDER BY lft
+		LIMIT %(start)s, %(page_len)s
+		""",
+		{
+			"lft": parent_data.lft,
+			"rgt": parent_data.rgt,
+			"txt": f"%{txt}%",
+			"start": start,
+			"page_len": page_len,
+		},
+		as_dict=False,
+	)

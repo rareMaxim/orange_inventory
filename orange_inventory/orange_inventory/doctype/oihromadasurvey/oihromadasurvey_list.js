@@ -104,6 +104,79 @@ frappe.listview_settings["oiHromadaSurvey"] = {
 		listview.page.add_menu_item(__("Імпорт даних з Excel"), () => {
 			show_import_dialog_listview(listview);
 		});
+
+		// Кнопка звіту про заповнення показників
+		listview.page.add_menu_item(__("Звіт про заповнення показників"), () => {
+			const d = new frappe.ui.Dialog({
+				title: __("Звіт про заповнення показників"),
+				fields: [
+					{
+						fieldtype: "Data",
+						fieldname: "period",
+						label: __("Період"),
+						default: defaultPeriod(),
+						reqd: 1,
+						description: __("Період для звіту (напр. 2025-Q1)"),
+					},
+					{
+						fieldtype: "Section Break",
+					},
+					{
+						fieldtype: "HTML",
+						fieldname: "info",
+						options: `
+							<div style="padding: 10px; background-color: #e3f2fd; border-radius: 5px; margin-bottom: 10px;">
+								<h4 style="margin-top: 0;">📊 Що включає звіт:</h4>
+								<ul style="margin-bottom: 0;">
+									<li>Статус заповнення для кожної організації</li>
+									<li>Кількість заповнених та незаповнених показників</li>
+									<li>Дата останнього оновлення та хто змінив</li>
+									<li>Детальний список незаповнених показників</li>
+									<li>Процент виконання по кожній організації</li>
+								</ul>
+							</div>
+						`,
+					},
+				],
+				primary_action_label: __("Згенерувати звіт"),
+				primary_action: async (values) => {
+					d.hide();
+					frappe.show_progress(__("Генерація звіту"), 50, 100, __("Обробка даних..."));
+
+					try {
+						const r = await frappe.call({
+							method: "orange_inventory.orange_inventory.doctype.oihromadasurvey.oihromadasurvey.generate_completion_report",
+							args: { period: values.period },
+							freeze: true,
+							freeze_message: __("Генеруємо звіт про заповнення…"),
+						});
+
+						frappe.hide_progress();
+
+						if (r.message && r.message.file_url) {
+							const result = r.message;
+							frappe.show_alert({
+								message: __(
+									`Звіт готовий! Всього організацій: ${result.total_orgs}, Заповнили: ${result.filled_orgs}, Не заповнили: ${result.unfilled_orgs}`
+								),
+								indicator: "green",
+							});
+							window.open(result.file_url, "_blank");
+						} else {
+							frappe.msgprint(__("Не вдалося згенерувати звіт"));
+						}
+					} catch (error) {
+						frappe.hide_progress();
+						frappe.msgprint({
+							title: __("Помилка"),
+							message: error.message || __("Сталася помилка при генерації звіту"),
+							indicator: "red",
+						});
+					}
+				},
+			});
+			d.show();
+		});
 	},
 };
 

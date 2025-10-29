@@ -99,6 +99,7 @@
    "fieldname": "type",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "\u0422\u0438\u043f",
    "mandatory_depends_on": "eval:doc.is_group!=1",
    "options": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u043d\u0456 \u0434\u0430\u043d\u0456\n\u042f\u043a\u0456\u0441\u043d\u0456 \u0434\u0430\u043d\u0456\n\u0413\u0440\u0443\u043f\u0430"
@@ -196,25 +197,25 @@
    "label": "\u0410\u043a\u0442\u0438\u0432\u043d\u0430"
   },
   {
+   "depends_on": "eval:doc.type!=\"\u0413\u0440\u0443\u043f\u0430\"",
    "fieldname": "history_tab",
    "fieldtype": "Tab Break",
-   "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f \u0417\u043d\u0430\u0447\u0435\u043d\u044c",
-   "depends_on": "eval:doc.type!=\"\u0413\u0440\u0443\u043f\u0430\""
+   "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f \u0417\u043d\u0430\u0447\u0435\u043d\u044c"
   },
   {
+   "depends_on": "eval:doc.type!=\"\u0413\u0440\u0443\u043f\u0430\"",
+   "description": "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u0430 \u0456\u0441\u0442\u043e\u0440\u0456\u044f \u0437\u043c\u0456\u043d \u043f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0456\u0432",
    "fieldname": "value_history",
    "fieldtype": "Table",
    "label": "\u0417\u043c\u0456\u043d\u0438 \u0437\u043d\u0430\u0447\u0435\u043d\u044c",
-   "options": "oiHromadaSurveyHistory",
-   "depends_on": "eval:doc.type!=\"\u0413\u0440\u0443\u043f\u0430\"",
-   "description": "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u0430 \u0456\u0441\u0442\u043e\u0440\u0456\u044f \u0437\u043c\u0456\u043d \u043f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0456\u0432"
+   "options": "oiHromadaSurveyHistory"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2025-10-13 14:03:31.870312",
+ "modified": "2025-10-28 12:16:27.889650",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHromadaSurvey",
