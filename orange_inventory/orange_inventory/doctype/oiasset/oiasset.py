@@ -20,6 +20,9 @@ class oiAsset(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		from orange_inventory.orange_inventory.doctype.oiassetcomponent.oiassetcomponent import (
+			oiAssetComponent,
+		)
 		from orange_inventory.orange_inventory.doctype.oiassetmovementhistory.oiassetmovementhistory import (
 			oiAssetMovementHistory,
 		)
@@ -28,6 +31,7 @@ class oiAsset(Document):
 		asset_name: DF.SmallText
 		asset_type: DF.Link | None
 		asset_user: DF.Link | None
+		components: DF.Table[oiAssetComponent]
 		cost: DF.Currency
 		current_owner: DF.Link | None
 		enabled: DF.Check
@@ -42,6 +46,7 @@ class oiAsset(Document):
 		movement_history: DF.Table[oiAssetMovementHistory]
 		naming_series: DF.Literal["ASSET-.#####"]
 		original_donor: DF.Link | None
+		parent_asset: DF.Link | None
 		quantity: DF.Float
 		responsible_employee: DF.Link | None
 		serial_no: DF.Data | None
@@ -59,6 +64,8 @@ class oiAsset(Document):
 
 	def validate(self):
 		self.update_inventory_status()
+		self.validate_components()
+		self.update_component_parent_assets()
 
 	def before_save(self):
 		self.total = self.cost * self.quantity
@@ -133,6 +140,61 @@ class oiAsset(Document):
 				# Якщо раптом виникне дублікат (наприклад, при паралельних запитах),
 				# ми його просто проігноруємо.
 				pass
+
+	def validate_components(self):
+		"""Валідує компоненти активу"""
+		if not self.components:
+			return
+
+		# Перевіряємо на дублікати компонентів
+		component_assets = [comp.component_asset for comp in self.components]
+		if len(component_assets) != len(set(component_assets)):
+			frappe.throw("Не можна додати один і той же компонент двічі")
+
+		# Перевіряємо, чи компонент не є батьківським активом (запобігаємо циклічним залежностям)
+		for comp in self.components:
+			if comp.component_asset == self.name:
+				frappe.throw("Актив не може бути компонентом самого себе")
+
+			# Перевіряємо, чи компонент вже встановлено в інший актив
+			existing_parent = frappe.db.get_value("oiAsset", comp.component_asset, "parent_asset")
+			if existing_parent and existing_parent != self.name:
+				frappe.throw(
+					f"Актив {comp.component_asset} вже встановлено в {existing_parent}. "
+					"Спочатку видаліть його звідти."
+				)
+
+	def update_component_parent_assets(self):
+		"""Оновлює поле parent_asset для всіх компонентів"""
+		if not self.components:
+			# Якщо компонентів немає, очищаємо parent_asset для всіх активів, які раніше були компонентами
+			frappe.db.sql(
+				"""
+				UPDATE `taboiAsset`
+				SET parent_asset = NULL
+				WHERE parent_asset = %s
+			""",
+				(self.name,),
+			)
+			return
+
+		# Отримуємо список поточних компонентів
+		current_components = [comp.component_asset for comp in self.components]
+
+		# Оновлюємо parent_asset для поточних компонентів
+		for comp_name in current_components:
+			frappe.db.set_value("oiAsset", comp_name, "parent_asset", self.name, update_modified=False)
+
+		# Очищаємо parent_asset для компонентів, які були видалені
+		frappe.db.sql(
+			"""
+			UPDATE `taboiAsset`
+			SET parent_asset = NULL
+			WHERE parent_asset = %s
+			AND name NOT IN ({})
+		""".format(",".join(["%s"] * len(current_components))),
+			tuple([self.name] + current_components),
+		)
 
 
 @frappe.whitelist()

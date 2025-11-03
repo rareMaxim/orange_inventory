@@ -37,11 +37,15 @@
   "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
   "column_break_bpvr",
   "movement_history",
+  "components_tab",
+  "components_section",
+  "components",
   "network_tab",
   "network_ports_dashboard",
   "dev_tab",
   "image",
-  "is_network_device"
+  "is_network_device",
+  "parent_asset"
  ],
  "fields": [
   {
@@ -283,6 +287,29 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
+  },
+  {
+   "fieldname": "parent_asset",
+   "fieldtype": "Link",
+   "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0432",
+   "options": "oiAsset",
+   "read_only": 1
+  },
+  {
+   "fieldname": "components_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
+  },
+  {
+   "fieldname": "components_section",
+   "fieldtype": "Section Break",
+   "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0456 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
+  },
+  {
+   "fieldname": "components",
+   "fieldtype": "Table",
+   "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438",
+   "options": "oiAssetComponent"
   }
  ],
  "grid_page_length": 50,

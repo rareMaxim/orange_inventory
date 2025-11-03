@@ -53,6 +53,21 @@ frappe.ui.form.on("oiAsset", {
 			});
 		}
 
+		// Показуємо інформацію про батьківський актив, якщо компонент встановлено
+		if (frm.doc.parent_asset) {
+			frappe.db.get_value("oiAsset", frm.doc.parent_asset, "asset_name").then((r) => {
+				if (r.message && r.message.asset_name) {
+					frm.dashboard.add_comment(
+						__("Цей актив встановлено в: {0}", [
+							`<a href="/app/oiasset/${frm.doc.parent_asset}">${r.message.asset_name}</a>`,
+						]),
+						"blue",
+						true
+					);
+				}
+			});
+		}
+
 		// Якщо це мережевий пристрій, показуємо вкладку "Мережа" та завантажуємо порти
 		if (frm.doc.hardware_model) {
 			frappe.db
@@ -75,6 +90,20 @@ frappe.ui.form.on("oiAsset", {
 	},
 	manufacturer: function (frm) {
 		manufacturer_filter(frm);
+	},
+});
+
+// Обробники для child table "components"
+frappe.ui.form.on("oiAssetComponent", {
+	component_asset: function (_frm, cdt, cdn) {
+		// Оновлюємо дані про компонент після його вибору
+		let row = locals[cdt][cdn];
+		if (row.component_asset) {
+			frappe.db.get_doc("oiAsset", row.component_asset).then((doc) => {
+				frappe.model.set_value(cdt, cdn, "asset_name", doc.asset_name);
+				frappe.model.set_value(cdt, cdn, "serial_no", doc.serial_no);
+			});
+		}
 	},
 });
 
