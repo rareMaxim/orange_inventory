@@ -19,16 +19,24 @@ class oiAssetLabelBatch(Document):
 		)
 
 		columns: DF.Int
+		creation_date: DF.Date | None
 		font_px: DF.Int
 		items: DF.Table[oiAssetLabelItem]
+		label_gap_mm: DF.Int
 		label_height_mm: DF.Int
 		label_width_mm: DF.Int
+		logo_image: DF.AttachImage | None
+		organization_name: DF.Data | None
 		page_margin_mm: DF.Int
+		print_mode: DF.Literal["Color", "Monochrome"]
 		qr_size_mm: DF.Int
 		show_inventory_no: DF.Check
+		show_location: DF.Check
+		show_logo: DF.Check
+		show_mvo: DF.Check
+		show_organization: DF.Check
 		show_serial_no: DF.Check
-		title: DF.Data | None
-		відступ_між_ярликами_мм: DF.Int
+		title: DF.Data
 	# end: auto-generated types
 
 	pass

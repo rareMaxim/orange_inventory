@@ -6,138 +6,253 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "section_break_qswl",
+  "column_break_gpju",
+  "creation_date",
+  "section_break_items",
   "items",
-  "\u044f\u0440\u043b\u0438\u043a_section",
+  "label_settings_section",
   "label_width_mm",
-  "column_break_gyhh",
+  "column_break_label1",
   "label_height_mm",
-  "column_break_lvox",
-  "\u0432\u0456\u0434\u0441\u0442\u0443\u043f_\u043c\u0456\u0436_\u044f\u0440\u043b\u0438\u043a\u0430\u043c\u0438_\u043c\u043c",
-  "section_break_bfzo",
+  "column_break_label2",
+  "label_gap_mm",
+  "page_settings_section",
   "qr_size_mm",
-  "column_break_seml",
+  "column_break_page1",
   "columns",
-  "column_break_wvue",
+  "column_break_page2",
   "page_margin_mm",
-  "column_break_xrxt",
+  "column_break_page3",
   "font_px",
-  "section_break_akut",
+  "fields_to_show_section",
   "show_inventory_no",
-  "column_break_cptd",
-  "show_serial_no"
+  "column_break_fields1",
+  "show_serial_no",
+  "column_break_fields2",
+  "show_mvo",
+  "column_break_fields3",
+  "show_organization",
+  "column_break_fields4",
+  "show_location",
+  "branding_section",
+  "print_mode",
+  "column_break_brand1",
+  "show_logo",
+  "column_break_brand2",
+  "logo_image",
+  "logo_opacity",
+  "column_break_brand3",
+  "organization_name"
  ],
  "fields": [
   {
    "fieldname": "title",
    "fieldtype": "Data",
-   "label": "\u041d\u0430\u0437\u0432\u0430 \u043f\u0456\u0434\u0431\u0456\u0440\u043a\u0438"
+   "in_list_view": 1,
+   "label": "Назва підбірки",
+   "reqd": 1
   },
   {
-   "default": "3",
-   "fieldname": "columns",
-   "fieldtype": "Int",
-   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c \u043a\u043e\u043b\u043e\u043d\u043e\u043a"
+   "default": "Today",
+   "fieldname": "creation_date",
+   "fieldtype": "Date",
+   "label": "Дата створення",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_items",
+   "fieldtype": "Section Break",
+   "label": "Активи для друку"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Активи",
+   "options": "oiAssetLabelItem"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "label_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Налаштування ярлика"
   },
   {
    "default": "70",
    "fieldname": "label_width_mm",
    "fieldtype": "Int",
-   "label": "\u0448\u0438\u0440\u0438\u043d\u0430 \u044f\u0440\u043b\u0438\u043a\u0430 (\u043c\u043c)"
+   "label": "Ширина ярлика (мм)"
+  },
+  {
+   "fieldname": "column_break_label1",
+   "fieldtype": "Column Break"
   },
   {
    "default": "36",
    "fieldname": "label_height_mm",
    "fieldtype": "Int",
-   "label": "\u0432\u0438\u0441\u043e\u0442\u0430 \u044f\u0440\u043b\u0438\u043a\u0430 (\u043c\u043c)"
+   "label": "Висота ярлика (мм)"
   },
   {
-   "fieldname": "\u0432\u0456\u0434\u0441\u0442\u0443\u043f_\u043c\u0456\u0436_\u044f\u0440\u043b\u0438\u043a\u0430\u043c\u0438_\u043c\u043c",
-   "fieldtype": "Int",
-   "label": "\u0432\u0456\u0434\u0441\u0442\u0443\u043f \u043c\u0456\u0436 \u044f\u0440\u043b\u0438\u043a\u0430\u043c\u0438 (\u043c\u043c)"
+   "fieldname": "column_break_label2",
+   "fieldtype": "Column Break"
   },
   {
-   "default": "8",
-   "fieldname": "page_margin_mm",
+   "default": "4",
+   "fieldname": "label_gap_mm",
    "fieldtype": "Int",
-   "label": "\u043f\u043e\u043b\u044f \u0430\u0440\u043a\u0443\u0448\u0430 (\u043c\u043c)"
+   "label": "Відступ між ярликами (мм)"
   },
   {
-   "default": "11",
-   "fieldname": "font_px",
-   "fieldtype": "Int",
-   "label": "\u0431\u0430\u0437\u043e\u0432\u0438\u0439 \u0440\u043e\u0437\u043c\u0456\u0440 \u0448\u0440\u0438\u0444\u0442\u0443, px"
+   "collapsible": 1,
+   "fieldname": "page_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Налаштування сторінки"
   },
   {
    "default": "18",
    "fieldname": "qr_size_mm",
    "fieldtype": "Int",
-   "label": "\u0440\u043e\u0437\u043c\u0456\u0440 QR, \u043c\u043c"
+   "label": "Розмір QR-коду (мм)"
+  },
+  {
+   "fieldname": "column_break_page1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "3",
+   "fieldname": "columns",
+   "fieldtype": "Int",
+   "label": "Кількість колонок"
+  },
+  {
+   "fieldname": "column_break_page2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "8",
+   "fieldname": "page_margin_mm",
+   "fieldtype": "Int",
+   "label": "Поля аркуша (мм)"
+  },
+  {
+   "fieldname": "column_break_page3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "11",
+   "fieldname": "font_px",
+   "fieldtype": "Int",
+   "label": "Базовий розмір шрифту (px)"
+  },
+  {
+   "fieldname": "fields_to_show_section",
+   "fieldtype": "Section Break",
+   "label": "Відображувані поля"
   },
   {
    "default": "1",
    "fieldname": "show_inventory_no",
    "fieldtype": "Check",
-   "label": "show_inventory_no"
+   "label": "Показувати інвентарний номер"
+  },
+  {
+   "fieldname": "column_break_fields1",
+   "fieldtype": "Column Break"
   },
   {
    "default": "1",
    "fieldname": "show_serial_no",
    "fieldtype": "Check",
-   "label": "show_serial_no"
+   "label": "Показувати серійний номер"
   },
   {
-   "fieldname": "items",
-   "fieldtype": "Table",
-   "label": "items",
-   "options": "oiAssetLabelItem"
+   "fieldname": "column_break_fields2",
+   "fieldtype": "Column Break"
   },
   {
-   "fieldname": "\u044f\u0440\u043b\u0438\u043a_section",
+   "default": "0",
+   "fieldname": "show_mvo",
+   "fieldtype": "Check",
+   "label": "Показувати МВО"
+  },
+  {
+   "fieldname": "column_break_fields3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_organization",
+   "fieldtype": "Check",
+   "label": "Показувати організацію"
+  },
+  {
+   "fieldname": "column_break_fields4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_location",
+   "fieldtype": "Check",
+   "label": "Показувати місцезнаходження"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "branding_section",
    "fieldtype": "Section Break",
-   "label": "\u042f\u0440\u043b\u0438\u043a"
+   "label": "Брендування та стиль"
   },
   {
-   "fieldname": "column_break_gyhh",
+   "default": "Color",
+   "fieldname": "print_mode",
+   "fieldtype": "Select",
+   "label": "Режим друку",
+   "options": "Color\nMonochrome"
+  },
+  {
+   "fieldname": "column_break_brand1",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_lvox",
+   "default": "0",
+   "fieldname": "show_logo",
+   "fieldtype": "Check",
+   "label": "Показувати логотип"
+  },
+  {
+   "fieldname": "column_break_brand2",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_bfzo",
-   "fieldtype": "Section Break"
+   "depends_on": "eval:doc.show_logo==1",
+   "fieldname": "logo_image",
+   "fieldtype": "Attach Image",
+   "label": "Логотип"
   },
   {
-   "fieldname": "section_break_qswl",
-   "fieldtype": "Section Break"
+   "default": "10",
+   "depends_on": "eval:doc.show_logo==1",
+   "fieldname": "logo_opacity",
+   "fieldtype": "Int",
+   "label": "Прозорість логотипу (%)"
   },
   {
-   "fieldname": "column_break_seml",
+   "fieldname": "column_break_brand3",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_wvue",
-   "fieldtype": "Column Break"
+   "fieldname": "organization_name",
+   "fieldtype": "Data",
+   "label": "Назва організації (для етикетки)"
   },
   {
-   "fieldname": "column_break_xrxt",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_akut",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_cptd",
+   "fieldname": "column_break_gpju",
    "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-24 13:00:38.424685",
+ "modified": "2025-11-07 10:13:30.170974",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAssetLabelBatch",

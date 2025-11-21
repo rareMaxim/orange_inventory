@@ -28,6 +28,27 @@ frappe.ui.form.on("oiEmployee", {
 				},
 			};
 		});
+
+		// Add button to print asset labels for this employee
+		if (!frm.is_new()) {
+			frm.add_custom_button(
+				__("Друк етикеток активів"),
+				function () {
+					frappe.call({
+						method: "orange_inventory.orange_inventory.doctype.oiemployee.oiemployee.create_label_batch_for_employee",
+						args: {
+							employee: frm.doc.name,
+						},
+						callback: function (r) {
+							if (r.message) {
+								frappe.set_route("Form", "oiAssetLabelBatch", r.message);
+							}
+						},
+					});
+				},
+				__("Дії")
+			);
+		}
 	},
 
 	organization(frm) {

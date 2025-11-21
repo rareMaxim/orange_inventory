@@ -1,0 +1,198 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:counterparty_name",
+ "creation": "2025-11-11 10:30:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "основна_інформація_section",
+  "counterparty_name",
+  "counterparty_short_name",
+  "counterparty_type",
+  "column_break_basic",
+  "edrpou",
+  "ipn",
+  "is_active",
+  "реквізити_section",
+  "legal_address",
+  "postal_address",
+  "column_break_address",
+  "bank_details",
+  "контакти_section",
+  "contact_person",
+  "phone",
+  "column_break_contact",
+  "email",
+  "website",
+  "додаткова_інформація_section",
+  "notes",
+  "attachments"
+ ],
+ "fields": [
+  {
+   "fieldname": "основна_інформація_section",
+   "fieldtype": "Section Break",
+   "label": "Основна Інформація"
+  },
+  {
+   "fieldname": "counterparty_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Повна назва контрагента",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "counterparty_short_name",
+   "fieldtype": "Data",
+   "label": "Коротка назва"
+  },
+  {
+   "default": "Юридична особа",
+   "fieldname": "counterparty_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Тип контрагента",
+   "options": "Юридична особа\nФізична особа-підприємець\nФізична особа\nДержавна установа\nМіжнародна організація",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_basic",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "edrpou",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "ЄДРПОУ",
+   "unique": 1
+  },
+  {
+   "depends_on": "eval:doc.counterparty_type=='Фізична особа-підприємець' || doc.counterparty_type=='Фізична особа'",
+   "fieldname": "ipn",
+   "fieldtype": "Data",
+   "label": "ІПН",
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Активний"
+  },
+  {
+   "fieldname": "реквізити_section",
+   "fieldtype": "Section Break",
+   "label": "Реквізити"
+  },
+  {
+   "fieldname": "legal_address",
+   "fieldtype": "Small Text",
+   "label": "Юридична адреса"
+  },
+  {
+   "fieldname": "postal_address",
+   "fieldtype": "Small Text",
+   "label": "Поштова адреса"
+  },
+  {
+   "fieldname": "column_break_address",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bank_details",
+   "fieldtype": "Text Editor",
+   "label": "Банківські реквізити"
+  },
+  {
+   "fieldname": "контакти_section",
+   "fieldtype": "Section Break",
+   "label": "Контакти"
+  },
+  {
+   "fieldname": "contact_person",
+   "fieldtype": "Data",
+   "label": "Контактна особа"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Телефон"
+  },
+  {
+   "fieldname": "column_break_contact",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "website",
+   "fieldtype": "Data",
+   "label": "Веб-сайт",
+   "options": "URL"
+  },
+  {
+   "fieldname": "додаткова_інформація_section",
+   "fieldtype": "Section Break",
+   "label": "Додаткова Інформація"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text Editor",
+   "label": "Примітки"
+  },
+  {
+   "fieldname": "attachments",
+   "fieldtype": "Attach",
+   "label": "Прикріплені файли"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiContract",
+   "link_fieldname": "counterparty"
+  }
+ ],
+ "modified": "2025-11-11 10:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiCounterparty",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "counterparty_short_name",
+ "track_changes": 1
+}

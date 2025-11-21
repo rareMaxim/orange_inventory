@@ -93,8 +93,17 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_calendar_and_gantt": 1,
- "links": [],
- "modified": "2025-10-28 12:12:35.605247",
+ "links": [
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "responsible_employee"
+  },
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "asset_user"
+  }
+ ],
+ "modified": "2025-11-07 11:24:41.527038",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiEmployee",

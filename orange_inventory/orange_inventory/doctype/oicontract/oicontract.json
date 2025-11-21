@@ -1,0 +1,249 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ДОГ-{YYYY}-{#####}",
+ "creation": "2025-11-11 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "основна_інформація_section",
+  "contract_number",
+  "contract_type",
+  "contract_date",
+  "status",
+  "column_break_basic",
+  "responsible_person",
+  "counterparty",
+  "умови_договору_section",
+  "start_date",
+  "end_date",
+  "payment_terms",
+  "column_break_terms",
+  "delivery_terms",
+  "warranty_period",
+  "позиції_договору_section",
+  "contract_items",
+  "column_break_items",
+  "total_amount",
+  "currency",
+  "моніторинг_цін_section",
+  "price_monitoring",
+  "документи_section",
+  "attachments",
+  "notes_section",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "основна_інформація_section",
+   "fieldtype": "Section Break",
+   "label": "Основна Інформація"
+  },
+  {
+   "fieldname": "contract_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Номер договору",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Тип договору",
+   "options": "oiContractType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contract_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Дата договору",
+   "reqd": 1
+  },
+  {
+   "default": "Чернетка",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Статус",
+   "options": "Чернетка\nНа узгодженні\nУзгоджено\nПідписаний\nВ процесі виконання\nВиконаний\nРозірваний\nЗакритий",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_basic",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "counterparty",
+   "fieldtype": "Link",
+   "label": "Контрагент",
+   "options": "oiCounterparty",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fetch_from": "counterparty.edrpou",
+   "fieldname": "counterparty_edrpou",
+   "fieldtype": "Data",
+   "label": "ЄДРПОУ",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "counterparty.legal_address",
+   "fieldname": "counterparty_address",
+   "fieldtype": "Small Text",
+   "label": "Адреса контрагента",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "counterparty.phone",
+   "fieldname": "counterparty_contact",
+   "fieldtype": "Data",
+   "label": "Контактна інформація",
+   "read_only": 1
+  },
+  {
+   "fieldname": "responsible_person",
+   "fieldtype": "Link",
+   "label": "Відповідальна особа",
+   "options": "oiEmployee"
+  },
+  {
+   "fieldname": "умови_договору_section",
+   "fieldtype": "Section Break",
+   "label": "Умови Договору"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Дата початку дії"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "Дата закінчення дії"
+  },
+  {
+   "fieldname": "payment_terms",
+   "fieldtype": "Text Editor",
+   "label": "Умови оплати"
+  },
+  {
+   "fieldname": "column_break_terms",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_terms",
+   "fieldtype": "Text Editor",
+   "label": "Умови постачання"
+  },
+  {
+   "fieldname": "warranty_period",
+   "fieldtype": "Data",
+   "label": "Гарантійний період"
+  },
+  {
+   "fieldname": "позиції_договору_section",
+   "fieldtype": "Section Break",
+   "label": "Позиції Договору"
+  },
+  {
+   "fieldname": "contract_items",
+   "fieldtype": "Table",
+   "label": "Позиції",
+   "options": "oiContractItem"
+  },
+  {
+   "fieldname": "column_break_items",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Загальна сума",
+   "read_only": 1
+  },
+  {
+   "default": "UAH",
+   "fieldname": "currency",
+   "fieldtype": "Select",
+   "label": "Валюта",
+   "options": "UAH\nUSD\nEUR"
+  },
+  {
+   "fieldname": "моніторинг_цін_section",
+   "fieldtype": "Section Break",
+   "label": "Моніторинг Цін"
+  },
+  {
+   "fieldname": "price_monitoring",
+   "fieldtype": "Link",
+   "label": "Моніторинг цін (основа)",
+   "options": "oiPriceMonitoring",
+   "read_only": 1
+  },
+  {
+   "fieldname": "документи_section",
+   "fieldtype": "Section Break",
+   "label": "Документи"
+  },
+  {
+   "fieldname": "attachments",
+   "fieldtype": "Attach",
+   "label": "Прикріплені файли"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Примітки"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text Editor",
+   "label": "Примітки"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "contract"
+  }
+ ],
+ "modified": "2025-11-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiContract",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "contract_number",
+ "track_changes": 1
+}

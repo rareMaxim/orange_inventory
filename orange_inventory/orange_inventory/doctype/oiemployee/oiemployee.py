@@ -87,3 +87,67 @@ def get_department_query(doctype, txt, searchfield, start, page_len, filters):
 		},
 		as_dict=False,
 	)
+
+
+@frappe.whitelist()
+def create_label_batch_for_employee(employee):
+	"""
+	Create an oiAssetLabelBatch document with all assets
+	where responsible_employee equals the given employee.
+
+	Args:
+	        employee: Name of the oiEmployee document
+
+	Returns:
+	        Name of the created oiAssetLabelBatch document
+	"""
+	# Get employee details
+	emp_doc = frappe.get_doc("oiEmployee", employee)
+
+	# Find all assets for this employee
+	assets = frappe.get_all(
+		"oiAsset",
+		filters={
+			"responsible_employee": employee,
+			"docstatus": ["<", 2],  # Not cancelled
+		},
+		fields=["name", "asset_name", "inventory_no", "serial_no"],
+		order_by="inventory_no",
+	)
+
+	if not assets:
+		frappe.msgprint(f"Не знайдено активів для МВО: {emp_doc.full_name}")
+		return None
+
+	# Create new AssetLabelBatch
+	batch = frappe.new_doc("oiAssetLabelBatch")
+	batch.title = f"Етикетки для {emp_doc.full_name}"
+
+	# Set default print settings
+	batch.columns = 3
+	batch.label_width_mm = 66
+	batch.label_height_mm = 42
+	batch.label_gap_mm = 0
+	batch.page_margin_mm = 5
+	batch.font_px = 11
+	batch.qr_size_mm = 15
+
+	# Enable common fields
+	batch.show_inventory_no = 1
+	batch.show_mvo = 1
+	batch.show_organization = 1
+	batch.show_location = 1
+
+	# Add all assets to the batch
+	for asset in assets:
+		batch.append("items", {"asset": asset.name, "copies": 1})
+
+	# Save the document
+	batch.insert()
+
+	frappe.msgprint(
+		f"Створено пакет етикеток з {len(assets)} активами для МВО: {emp_doc.full_name}",
+		title="Успішно створено",
+	)
+
+	return batch.name

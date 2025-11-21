@@ -6,7 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+  "основна_інформація_section",
   "asset_name",
   "inventory_no",
   "serial_no",
@@ -19,7 +19,7 @@
   "hardware_model",
   "type",
   "naming_series",
-  "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
+  "місцезнаходження_та_відповідальність_section",
   "responsible_employee",
   "current_owner",
   "column_break_ivjv",
@@ -29,12 +29,13 @@
   "asset_type",
   "original_donor",
   "source_project",
+  "contract",
   "column_break_cgpf",
   "acquisition_date",
   "cost",
   "quantity",
   "total",
-  "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
+  "історія_переміщень_section",
   "column_break_bpvr",
   "movement_history",
   "components_tab",
@@ -49,9 +50,9 @@
  ],
  "fields": [
   {
-   "fieldname": "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+   "fieldname": "основна_інформація_section",
    "fieldtype": "Section Break",
-   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+   "label": "Основна Інформація"
   },
   {
    "allow_in_quick_entry": 1,
@@ -59,28 +60,28 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "in_preview": 1,
-   "label": "\u041d\u0430\u0439\u043c\u0435\u043d\u0443\u0432\u0430\u043d\u043d\u044f",
+   "label": "Найменування",
    "reqd": 1
   },
   {
-   "default": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f",
+   "default": "Очікує прийняття",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_preview": 1,
-   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
-   "options": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\n\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
+   "label": "Статус",
+   "options": "Очікує прийняття\nНа складі\nВ експлуатації\nПередано\nСписано"
   },
   {
-   "fieldname": "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
+   "fieldname": "місцезнаходження_та_відповідальність_section",
    "fieldtype": "Section Break",
-   "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f \u0442\u0430 \u0412\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c"
+   "label": "Місцезнаходження та Відповідальність"
   },
   {
    "fieldname": "responsible_employee",
    "fieldtype": "Link",
    "in_preview": 1,
-   "label": "\u041c\u0430\u0442\u0435\u0440\u0456\u0430\u043b\u044c\u043d\u043e-\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0430 \u043e\u0441\u043e\u0431\u0430",
-   "mandatory_depends_on": "eval:doc.status!=\"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\"",
+   "label": "Матеріально-відповідальна особа",
+   "mandatory_depends_on": "eval:doc.status!=\"Очікує прийняття\"",
    "options": "oiEmployee"
   },
   {
@@ -93,8 +94,8 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
-   "label": "\u0406\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
-   "mandatory_depends_on": "eval:doc.status!=\"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\""
+   "label": "Інвентарний номер",
+   "mandatory_depends_on": "eval:doc.status!=\"Очікує прийняття\""
   },
   {
    "fieldname": "column_break_ivjv",
@@ -106,13 +107,13 @@
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
-   "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
+   "label": "Серійний номер",
    "unique": 1
   },
   {
    "fieldname": "asset_type",
    "fieldtype": "Link",
-   "label": "\u0422\u0438\u043f \u0410\u043a\u0442\u0438\u0432\u0443",
+   "label": "Тип Активу",
    "options": "oiAssetType"
   },
   {
@@ -120,14 +121,14 @@
    "fetch_if_empty": 1,
    "fieldname": "image",
    "fieldtype": "Attach Image",
-   "label": "\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0456\u044f",
+   "label": "Фотографія",
    "print_hide": 1
   },
   {
    "default": "1",
    "fieldname": "quantity",
    "fieldtype": "Float",
-   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
+   "label": "Кількість",
    "non_negative": 1,
    "precision": "2"
   },
@@ -137,7 +138,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_preview": 1,
-   "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
+   "label": "Поточний власник",
    "options": "oiOrganization",
    "search_index": 1,
    "in_standard_filter": 1
@@ -145,7 +146,7 @@
   {
    "fieldname": "location",
    "fieldtype": "Link",
-   "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f (\u041a\u0430\u0431\u0456\u043d\u0435\u0442)",
+   "label": "Місцезнаходження (Кабінет)",
    "options": "oiLocation",
    "search_index": 1,
    "in_standard_filter": 1
@@ -153,25 +154,32 @@
   {
    "fieldname": "acquisition_details_sb",
    "fieldtype": "Section Break",
-   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u043f\u0440\u043e \u043d\u0430\u0434\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
+   "label": "Інформація про надходження"
   },
   {
    "fieldname": "acquisition_date",
    "fieldtype": "Date",
-   "label": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0434\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
+   "label": "Дата надходження"
   },
   {
    "fieldname": "original_donor",
    "fieldtype": "Link",
-   "label": "\u041f\u0435\u0440\u0432\u0438\u043d\u043d\u0438\u0439 \u0414\u043e\u043d\u043e\u0440",
+   "label": "Первинний Донор",
    "options": "oiDonor",
    "search_index": 1
   },
   {
    "fieldname": "source_project",
    "fieldtype": "Link",
-   "label": "\u041f\u0440\u043e\u0454\u043a\u0442-\u0434\u0436\u0435\u0440\u0435\u043b\u043e",
+   "label": "Проєкт-джерело",
    "options": "oiDonorProject",
+   "search_index": 1
+  },
+  {
+   "fieldname": "contract",
+   "fieldtype": "Link",
+   "label": "Договір",
+   "options": "oiContract",
    "search_index": 1
   },
   {
@@ -182,21 +190,21 @@
    "default": "0",
    "fieldname": "cost",
    "fieldtype": "Currency",
-   "label": "\u0412\u0430\u0440\u0442\u0456\u0441\u0442\u044c",
+   "label": "Вартість",
    "options": "UAH"
   },
   {
    "fieldname": "total",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "\u0421\u0443\u043c\u0430",
+   "label": "Сума",
    "options": "UAH",
    "read_only": 1
   },
   {
-   "fieldname": "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
+   "fieldname": "історія_переміщень_section",
    "fieldtype": "Section Break",
-   "label": " \u0406\u0441\u0442\u043e\u0440\u0456\u044f \u041f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c"
+   "label": " Історія Переміщень"
   },
   {
    "fieldname": "column_break_bpvr",
@@ -205,7 +213,7 @@
   {
    "fieldname": "movement_history",
    "fieldtype": "Table",
-   "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f",
+   "label": "Історія",
    "options": "oiAssetMovementHistory",
    "read_only": 1
   },
@@ -214,28 +222,28 @@
    "fetch_if_empty": 1,
    "fieldname": "manufacturer",
    "fieldtype": "Link",
-   "label": "\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a",
+   "label": "Виробник",
    "options": "oiManufacturer"
   },
   {
    "fieldname": "hardware_model",
    "fieldtype": "Link",
    "in_preview": 1,
-   "label": "\u041c\u043e\u0434\u0435\u043b\u044c",
+   "label": "Модель",
    "options": "oiHardwareModel"
   },
   {
    "fieldname": "asset_user",
    "fieldtype": "Link",
    "in_preview": 1,
-   "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
-   "mandatory_depends_on": "eval:doc.status==\"\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\"",
+   "label": "Користувач",
+   "mandatory_depends_on": "eval:doc.status==\"В експлуатації\"",
    "options": "oiEmployee"
   },
   {
    "fieldname": "network_tab",
    "fieldtype": "Tab Break",
-   "label": "\u041c\u0435\u0440\u0435\u0436\u0430"
+   "label": "Мережа"
   },
   {
    "fieldname": "network_ports_dashboard",
@@ -251,7 +259,7 @@
    "fetch_from": "hardware_model.is_network_device",
    "fieldname": "is_network_device",
    "fieldtype": "Check",
-   "label": "\u0404 \u043c\u0435\u0440\u0435\u0436\u0435\u0432\u0438\u043c \u043f\u0440\u0438\u0441\u0442\u0440\u043e\u0454\u043c"
+   "label": "Є мережевим пристроєм"
   },
   {
    "default": "ASSET-.#####",
@@ -264,7 +272,7 @@
    "fetch_from": "hardware_model.hardware_type",
    "fieldname": "type",
    "fieldtype": "Link",
-   "label": "\u0422\u0438\u043f",
+   "label": "Тип",
    "options": "oiHardwareType",
    "search_index": 1,
    "in_standard_filter": 1
@@ -280,35 +288,35 @@
    "bold": 1,
    "fieldname": "inventory_date",
    "fieldtype": "Date",
-   "label": "\u0414\u0430\u0442\u0430 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
+   "label": "Дата інвентаризації"
   },
   {
    "fieldname": "inventory_status",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
+   "label": "Статус інвентаризації"
   },
   {
    "fieldname": "parent_asset",
    "fieldtype": "Link",
-   "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0432",
+   "label": "Встановлено в",
    "options": "oiAsset",
    "read_only": 1
   },
   {
    "fieldname": "components_tab",
    "fieldtype": "Tab Break",
-   "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
+   "label": "Компоненти"
   },
   {
    "fieldname": "components_section",
    "fieldtype": "Section Break",
-   "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0456 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
+   "label": "Встановлені компоненти"
   },
   {
    "fieldname": "components",
    "fieldtype": "Table",
-   "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438",
+   "label": "Компоненти",
    "options": "oiAssetComponent"
   }
  ],
@@ -379,23 +387,23 @@
  "states": [
   {
    "color": "Orange",
-   "title": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f"
+   "title": "Очікує прийняття"
   },
   {
    "color": "Green",
-   "title": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456"
+   "title": "На складі"
   },
   {
    "color": "Blue",
-   "title": "\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457"
+   "title": "В експлуатації"
   },
   {
    "color": "Yellow",
-   "title": "\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e"
+   "title": "Передано"
   },
   {
    "color": "Pink",
-   "title": "\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
+   "title": "Списано"
   }
  ],
  "title_field": "asset_name",

@@ -1,0 +1,186 @@
+{
+ "actions": [],
+ "creation": "2025-11-11 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_name",
+  "hardware_model",
+  "quantity",
+  "column_break_1",
+  "supplier_1",
+  "phone_1",
+  "address_1",
+  "price_1",
+  "url_1",
+  "column_break_2",
+  "supplier_2",
+  "phone_2",
+  "address_2",
+  "price_2",
+  "url_2",
+  "column_break_3",
+  "supplier_3",
+  "phone_3",
+  "address_3",
+  "price_3",
+  "url_3",
+  "analysis_section",
+  "min_price",
+  "max_price",
+  "avg_price",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Назва позиції",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hardware_model",
+   "fieldtype": "Link",
+   "label": "Модель обладнання",
+   "options": "oiHardwareModel"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Кількість"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Section Break",
+   "label": "Постачальник 1"
+  },
+  {
+   "fieldname": "supplier_1",
+   "fieldtype": "Data",
+   "label": "Постачальник 1"
+  },
+  {
+   "fieldname": "phone_1",
+   "fieldtype": "Data",
+   "label": "Телефон 1"
+  },
+  {
+   "fieldname": "address_1",
+   "fieldtype": "Small Text",
+   "label": "Адреса 1"
+  },
+  {
+   "fieldname": "price_1",
+   "fieldtype": "Currency",
+   "label": "Ціна 1"
+  },
+  {
+   "fieldname": "url_1",
+   "fieldtype": "Data",
+   "label": "Посилання 1"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Section Break",
+   "label": "Постачальник 2"
+  },
+  {
+   "fieldname": "supplier_2",
+   "fieldtype": "Data",
+   "label": "Постачальник 2"
+  },
+  {
+   "fieldname": "phone_2",
+   "fieldtype": "Data",
+   "label": "Телефон 2"
+  },
+  {
+   "fieldname": "address_2",
+   "fieldtype": "Small Text",
+   "label": "Адреса 2"
+  },
+  {
+   "fieldname": "price_2",
+   "fieldtype": "Currency",
+   "label": "Ціна 2"
+  },
+  {
+   "fieldname": "url_2",
+   "fieldtype": "Data",
+   "label": "Посилання 2"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Section Break",
+   "label": "Постачальник 3"
+  },
+  {
+   "fieldname": "supplier_3",
+   "fieldtype": "Data",
+   "label": "Постачальник 3"
+  },
+  {
+   "fieldname": "phone_3",
+   "fieldtype": "Data",
+   "label": "Телефон 3"
+  },
+  {
+   "fieldname": "address_3",
+   "fieldtype": "Small Text",
+   "label": "Адреса 3"
+  },
+  {
+   "fieldname": "price_3",
+   "fieldtype": "Currency",
+   "label": "Ціна 3"
+  },
+  {
+   "fieldname": "url_3",
+   "fieldtype": "Data",
+   "label": "Посилання 3"
+  },
+  {
+   "fieldname": "analysis_section",
+   "fieldtype": "Section Break",
+   "label": "Аналіз цін"
+  },
+  {
+   "fieldname": "min_price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Мінімальна ціна",
+   "read_only": 1
+  },
+  {
+   "fieldname": "max_price",
+   "fieldtype": "Currency",
+   "label": "Максимальна ціна",
+   "read_only": 1
+  },
+  {
+   "fieldname": "avg_price",
+   "fieldtype": "Currency",
+   "label": "Середня ціна",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Примітки"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-11-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiPriceMonitoringItem",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

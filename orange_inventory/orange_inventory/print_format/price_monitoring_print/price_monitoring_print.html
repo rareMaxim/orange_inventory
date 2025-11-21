@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: 'DejaVu Sans', 'Calibri', Arial, sans-serif;
+            font-size: 9pt;
+            line-height: 1.3;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .document-header {
+            text-align: right;
+            margin-bottom: 10px;
+            font-size: 10pt;
+        }
+
+        .document-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 11pt;
+            margin: 15px 0 5px 0;
+            text-transform: uppercase;
+        }
+
+        .document-subtitle {
+            text-align: center;
+            font-size: 10pt;
+            margin: 5px 0;
+        }
+
+        .department-info {
+            text-align: center;
+            font-size: 9pt;
+            margin: 5px 0 15px 0;
+        }
+
+        .approval-section {
+            text-align: right;
+            margin: 10px 0;
+            font-size: 9pt;
+        }
+
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 8.5pt;
+        }
+
+        .main-table td,
+        .main-table th {
+            border: 1px solid #000;
+            padding: 4px 6px;
+            vertical-align: top;
+        }
+
+        .main-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .header-row {
+            background-color: #e8e8e8;
+            font-weight: bold;
+        }
+
+        .label-cell {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            width: 180px;
+        }
+
+        .supplier-header {
+            background-color: #d9d9d9;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .date-cell {
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .supplier-info {
+            font-size: 8pt;
+            line-height: 1.4;
+        }
+
+        .price-cell {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .center-cell {
+            text-align: center;
+        }
+
+        .total-row {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .additional-info-row {
+            background-color: #fafafa;
+        }
+
+        .conclusion-section {
+            margin-top: 15px;
+            font-size: 9pt;
+            line-height: 1.4;
+        }
+
+        .empty-cell {
+            background-color: #fff;
+        }
+
+        .no-border-top {
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка документа -->
+    <div class="document-header">
+        {{ frappe.format(doc.monitoring_date, {'fieldtype': 'Date'}) or frappe.utils.today() }}
+    </div>
+
+    <div class="document-title">
+        АНАЛІЗ ЕКОНОМІЧНО ОБҐРУНТОВАНОЇ ЦІНИ ЗАКУПІВЛІ ТОВАРІВ
+    </div>
+
+    {% if doc.monitoring_purpose %}
+    <div class="document-subtitle">
+        {{ frappe.utils.strip_html(doc.monitoring_purpose) }}
+    </div>
+    {% endif %}
+
+    {% if doc.expected_counterparty %}
+    <div class="department-info">
+        {{ frappe.get_doc('oiCounterparty', doc.expected_counterparty).counterparty_name if doc.expected_counterparty else '' }}
+    </div>
+    {% endif %}
+
+    {% if doc.approved_by %}
+    <div class="approval-section">
+        {% set employee = frappe.get_doc('oiEmployee', doc.approved_by) if doc.approved_by else None %}
+        {% if employee %}
+        ВО {{ employee.position or '' }}<br>
+        {{ employee.full_name }}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Основна таблиця моніторингу -->
+    {% for item in doc.monitoring_items %}
+    {% set suppliers = [] %}
+    {% if item.supplier_1 and item.price_1 %}
+        {% set _ = suppliers.append({'name': item.supplier_1, 'price_with_vat': item.price_1, 'price_without_vat': item.price_1 / 1.2 if item.price_1 else 0, 'phone': item.phone_1 or '', 'address': item.address_1 or ''}) %}
+    {% endif %}
+    {% if item.supplier_2 and item.price_2 %}
+        {% set _ = suppliers.append({'name': item.supplier_2, 'price_with_vat': item.price_2, 'price_without_vat': item.price_2 / 1.2 if item.price_2 else 0, 'phone': item.phone_2 or '', 'address': item.address_2 or ''}) %}
+    {% endif %}
+    {% if item.supplier_3 and item.price_3 %}
+        {% set _ = suppliers.append({'name': item.supplier_3, 'price_with_vat': item.price_3, 'price_without_vat': item.price_3 / 1.2 if item.price_3 else 0, 'phone': item.phone_3 or '', 'address': item.address_3 or ''}) %}
+    {% endif %}
+
+    <table class="main-table">
+        <!-- Дата переговорів -->
+        <tr>
+            <td class="label-cell">Дата переговорів</td>
+            <td class="empty-cell"></td>
+            {% for supplier in suppliers %}
+            <td class="date-cell">{{ frappe.format(doc.monitoring_date, {'fieldtype': 'Date'}) }}</td>
+            <td class="empty-cell"></td>
+            {% endfor %}
+        </tr>
+
+        <!-- Найменування контрагентів -->
+        <tr>
+            <td class="label-cell">Найменування контрагентів</td>
+            <td class="empty-cell"></td>
+            {% for supplier in suppliers %}
+            <td class="supplier-info" colspan="2">
+                {{ supplier.name }}
+                {% if supplier.address %}
+                <br>{{ supplier.address }}
+                {% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+
+        <!-- Номер телефону -->
+        <tr>
+            <td class="label-cell">Номер конт. телефону</td>
+            <td class="empty-cell"></td>
+            {% for supplier in suppliers %}
+            <td class="center-cell" colspan="2">{{ supplier.phone or '-' }}</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Заголовок таблиці цін -->
+        <tr class="header-row">
+            <td class="empty-cell"></td>
+            <td class="center-cell">Кіль-кість, шт.</td>
+            {% for supplier in suppliers %}
+            <td class="center-cell">Ціна за од., грн без ПДВ</td>
+            <td class="center-cell">Cума, грн.</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Позиція товару -->
+        <tr>
+            <td class="label-cell">
+                {{ item.item_name }}
+                {% if item.hardware_model %}
+                <br>({{ item.hardware_model }})
+                {% endif %}
+            </td>
+            <td class="center-cell">{{ item.quantity or 1 }}</td>
+            {% for supplier in suppliers %}
+            <td class="price-cell">{{ "%.2f"|format(supplier.price_without_vat) }}</td>
+            <td class="price-cell">{{ "%.2f"|format(supplier.price_without_vat * (item.quantity or 1)) }}</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Всього -->
+        <tr class="total-row">
+            <td>Всього</td>
+            <td class="center-cell">{{ item.quantity or 1 }}</td>
+            {% for supplier in suppliers %}
+            <td class="center-cell">-</td>
+            <td class="price-cell">{{ "%.2f"|format(supplier.price_without_vat * (item.quantity or 1)) }}</td>
+            {% endfor %}
+        </tr>
+
+        <!-- без ПДВ -->
+        <tr>
+            <td class="label-cell">без ПДВ</td>
+            <td class="center-cell">-</td>
+            {% for supplier in suppliers %}
+            <td class="center-cell">-</td>
+            <td class="price-cell">0</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Додаткові умови -->
+        <tr class="additional-info-row">
+            <td class="label-cell">Додаткові умови закупівлі**</td>
+            <td class="center-cell">-</td>
+            {% for supplier in suppliers %}
+            <td class="center-cell" colspan="2">-</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Умови оплати/поставки -->
+        <tr class="additional-info-row">
+            <td class="label-cell">Умови оплати/поставки</td>
+            <td class="center-cell">-</td>
+            {% for supplier in suppliers %}
+            <td class="center-cell" colspan="2">-</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Наявність документації -->
+        <tr class="additional-info-row">
+            <td class="label-cell">Наявність супровідної документації (сертифікати, лицензії, дозволи, інше)</td>
+            <td class="center-cell">-</td>
+            {% for supplier in suppliers %}
+            <td class="center-cell" colspan="2">-</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Інші переваги -->
+        <tr class="additional-info-row">
+            <td class="label-cell">Інші переваги контрагентів крім перерахованих</td>
+            <td class="center-cell">-</td>
+            {% for supplier in suppliers %}
+            <td class="center-cell" colspan="2">-</td>
+            {% endfor %}
+        </tr>
+
+        <!-- Висновок -->
+        {% if doc.summary or doc.recommendations %}
+        <tr>
+            <td class="label-cell">Висновок стосовно прийнятого рішення</td>
+            <td colspan="{{ 1 + suppliers|length * 2 }}">
+                {% if doc.summary %}
+                    {{ frappe.utils.strip_html(doc.summary) }}
+                {% endif %}
+                {% if doc.recommendations %}
+                    <br>{{ frappe.utils.strip_html(doc.recommendations) }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endif %}
+    </table>
+    {% endfor %}
+</body>
+</html>
