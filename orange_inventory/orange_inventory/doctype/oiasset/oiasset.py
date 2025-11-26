@@ -32,6 +32,7 @@ class oiAsset(Document):
 		asset_type: DF.Link | None
 		asset_user: DF.Link | None
 		components: DF.Table[oiAssetComponent]
+		contract: DF.Link | None
 		cost: DF.Currency
 		current_owner: DF.Link | None
 		enabled: DF.Check
@@ -56,6 +57,7 @@ class oiAsset(Document):
 			"\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456",
 			"\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457",
 			"\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e",
+			"\u0421\u043f\u0438\u0441\u0443\u0454\u0442\u044c\u0441\u044f",
 			"\u0421\u043f\u0438\u0441\u0430\u043d\u043e",
 		]
 		total: DF.Currency
@@ -250,6 +252,117 @@ def split_asset(source_asset_name, serial_numbers):
 	return "Success"
 
 
+@frappe.whitelist()
+def split_asset_partial(source_asset_name, quantity_to_split, serial_numbers):
+	"""
+	Часткове розділення "групового" активу:
+	1. Зменшує кількість у вихідному активі на quantity_to_split.
+	2. Створює нові активи з серійними номерами для відокремлених одиниць.
+
+	Args:
+	        source_asset_name: Назва вихідного активу
+	        quantity_to_split: Кількість одиниць для відокремлення
+	        serial_numbers: Список серійних номерів для відокремлених одиниць
+	"""
+	# Перевірка та декодування JSON
+	if isinstance(serial_numbers, str):
+		try:
+			serial_numbers = json.loads(serial_numbers)
+		except json.JSONDecodeError:
+			frappe.throw("Не вдалося обробити список серійних номерів.")
+
+	if isinstance(quantity_to_split, str):
+		try:
+			quantity_to_split = int(quantity_to_split)
+		except ValueError:
+			frappe.throw("Невірний формат кількості для відокремлення.")
+
+	# Валідація вхідних даних
+	if not isinstance(serial_numbers, list):
+		frappe.throw("Серійні номери повинні бути списком.")
+
+	# Перевіряємо кількість серійних номерів тільки якщо вони були надані
+	if serial_numbers and len(serial_numbers) > 0:
+		if quantity_to_split != len(serial_numbers):
+			frappe.throw(
+				f"Кількість серійних номерів ({len(serial_numbers)}) не співпадає з кількістю для відокремлення ({quantity_to_split})."
+			)
+
+	source_asset = frappe.get_doc("oiAsset", source_asset_name)
+
+	if quantity_to_split < 1 or quantity_to_split >= source_asset.quantity:
+		frappe.throw(
+			f"Кількість для відокремлення повинна бути від 1 до {source_asset.quantity - 1}. Ви вказали: {quantity_to_split}."
+		)
+
+	# Копіюємо оригінальні дані активу ДО внесення змін
+	original_source_asset_copy = source_asset.as_dict()
+
+	# КРОК 1: Зменшуємо кількість у вихідному активі
+	remaining_quantity = source_asset.quantity - quantity_to_split
+	source_asset.quantity = remaining_quantity
+	source_asset.append(
+		"movement_history",
+		{
+			"date": now(),
+			"movement_type": f"Часткове розділення (відокремлено {quantity_to_split} од., залишилось {remaining_quantity} од.)",
+		},
+	)
+	source_asset.save()
+
+	# КРОК 2: Створення нових активів для відокремлених одиниць
+	created_assets = []
+
+	# Якщо є серійні номери - створюємо окремі активи для кожного
+	if serial_numbers and len(serial_numbers) > 0:
+		for sn in serial_numbers:
+			new_asset = frappe.new_doc("oiAsset")
+			new_asset.update(original_source_asset_copy)
+
+			# Встановлюємо нові, унікальні значення
+			new_asset.name = None  # Скидаємо ім'я, щоб Frappe згенерував нове
+			new_asset.serial_no = sn
+			new_asset.quantity = 1
+			new_asset.movement_history = []  # Очищаємо історію для нового активу
+			new_asset.append(
+				"movement_history",
+				{
+					"date": now(),
+					"movement_type": f"Створено шляхом розділення з {source_asset_name}",
+				},
+			)
+
+			new_asset.insert(ignore_permissions=True, ignore_mandatory=True)
+			created_assets.append(new_asset.name)
+	else:
+		# Якщо серійних номерів немає - створюємо один актив з вказаною кількістю
+		new_asset = frappe.new_doc("oiAsset")
+		new_asset.update(original_source_asset_copy)
+
+		# Встановлюємо нові, унікальні значення
+		new_asset.name = None  # Скидаємо ім'я, щоб Frappe згенерував нове
+		new_asset.serial_no = None  # Без серійного номера
+		new_asset.quantity = quantity_to_split
+		new_asset.movement_history = []  # Очищаємо історію для нового активу
+		new_asset.append(
+			"movement_history",
+			{
+				"date": now(),
+				"movement_type": f"Створено шляхом розділення з {source_asset_name}",
+			},
+		)
+
+		new_asset.insert(ignore_permissions=True, ignore_mandatory=True)
+		created_assets.append(new_asset.name)
+
+	return {
+		"success": True,
+		"source_asset": source_asset_name,
+		"remaining_quantity": remaining_quantity,
+		"created_assets": created_assets,
+	}
+
+
 def has_permission(doc, user):
 	organization = frappe.db.get_value("oiEmployee", {"user": user}, "organization")
 	if doc.current_owner == organization:
@@ -408,3 +521,222 @@ def get_inventory_status(asset_name):
 		color = "#5cb85c"  # зелений
 
 	return {"status": status, "months_since_inventory": months_diff, "color": color}
+
+
+@frappe.whitelist()
+def add_asset_to_decommissioning_act(asset_name, decommissioning_act, quantity, reason):
+	"""
+	Додає актив до акту списання.
+	Якщо акт не вказано або не існує - створює новий.
+
+	Args:
+	        asset_name: Назва активу
+	        decommissioning_act: Назва акту списання (може бути None)
+	        quantity: Кількість для списання
+	        reason: Причина списання
+	"""
+	# Перевірка та конвертація типів
+	if isinstance(quantity, str):
+		try:
+			quantity = float(quantity)
+		except ValueError:
+			frappe.throw("Невірний формат кількості")
+
+	# Перевірка існування активу
+	if not frappe.db.exists("oiAsset", asset_name):
+		frappe.throw(f"Актив {asset_name} не знайдено")
+
+	asset = frappe.get_doc("oiAsset", asset_name)
+
+	# Валідація кількості
+	if quantity <= 0 or quantity > asset.quantity:
+		frappe.throw(f"Кількість повинна бути від 0 до {asset.quantity}")
+
+	# Якщо акт не вказано або не існує - створюємо новий
+	if not decommissioning_act or not frappe.db.exists("oiDecommissioningAct", decommissioning_act):
+		act = frappe.get_doc(
+			{
+				"doctype": "oiDecommissioningAct",
+				"decommission_date": today(),
+			}
+		)
+		act.insert()
+		decommissioning_act = act.name
+	else:
+		act = frappe.get_doc("oiDecommissioningAct", decommissioning_act)
+
+	# Перевіряємо, чи акт не затверджений
+	if act.docstatus != 0:
+		frappe.throw("Не можна додавати активи до затвердженого акту списання")
+
+	# Перевіряємо, чи актив вже доданий до цього акту
+	existing_item = None
+	for item in act.items:
+		if item.asset == asset_name:
+			existing_item = item
+			break
+
+	if existing_item:
+		# Якщо актив вже є - оновлюємо кількість
+		existing_item.count = quantity
+		existing_item.reason = reason
+		existing_item.total = quantity * asset.cost
+	else:
+		# Додаємо новий рядок
+		act.append(
+			"items",
+			{
+				"asset": asset_name,
+				"inventory_no": asset.inventory_no,
+				"serial_no": asset.serial_no,
+				"count": quantity,
+				"unit_price": asset.cost,
+				"total": quantity * asset.cost,
+				"reason": reason,
+				"avaible_count": asset.quantity,
+			},
+		)
+
+	# Змінюємо статус активу на "Списується"
+	asset.status = "Списується"
+	asset.save()
+
+	# Перераховуємо загальну суму
+	total_amount = sum(item.total for item in act.items)
+	act.total_amount = total_amount
+
+	act.save()
+
+	return act.name
+
+
+@frappe.whitelist()
+def add_multiple_assets_to_decommissioning_act(asset_names, decommissioning_act, reason):
+	"""
+	Додає множину активів до акту списання.
+
+	Args:
+	        asset_names: Список назв активів (JSON string або list)
+	        decommissioning_act: Назва акту списання
+	        reason: Причина списання
+	"""
+	# Перевірка та декодування JSON
+	if isinstance(asset_names, str):
+		try:
+			asset_names = json.loads(asset_names)
+		except json.JSONDecodeError:
+			frappe.throw("Не вдалося обробити список активів.")
+
+	if not isinstance(asset_names, list) or len(asset_names) == 0:
+		frappe.throw("Необхідно передати хоча б один актив")
+
+	# Перевірка існування акту списання
+	if not decommissioning_act or not frappe.db.exists("oiDecommissioningAct", decommissioning_act):
+		frappe.throw("Акт списання не знайдено")
+
+	act = frappe.get_doc("oiDecommissioningAct", decommissioning_act)
+
+	# Перевіряємо, чи акт не затверджений
+	if act.docstatus != 0:
+		frappe.throw("Не можна додавати активи до затвердженого акту списання")
+
+	added_count = 0
+	skipped_count = 0
+
+	for asset_name in asset_names:
+		try:
+			# Перевірка існування активу
+			if not frappe.db.exists("oiAsset", asset_name):
+				skipped_count += 1
+				continue
+
+			asset = frappe.get_doc("oiAsset", asset_name)
+
+			# Перевірка, чи можна списати актив
+			if asset.quantity <= 0 or asset.status == "Списано" or asset.status == "Списується":
+				skipped_count += 1
+				continue
+
+			# Перевіряємо, чи актив вже доданий до цього акту
+			existing_item = None
+			for item in act.items:
+				if item.asset == asset_name:
+					existing_item = item
+					break
+
+			if existing_item:
+				# Якщо актив вже є - оновлюємо причину
+				existing_item.reason = reason
+			else:
+				# Додаємо новий рядок (кількість = доступна кількість активу)
+				act.append(
+					"items",
+					{
+						"asset": asset_name,
+						"inventory_no": asset.inventory_no,
+						"serial_no": asset.serial_no,
+						"count": asset.quantity,  # Додаємо всю доступну кількість
+						"unit_price": asset.cost,
+						"total": asset.quantity * asset.cost,
+						"reason": reason,
+						"avaible_count": asset.quantity,
+					},
+				)
+				added_count += 1
+
+			# Змінюємо статус активу на "Списується"
+			asset.status = "Списується"
+			asset.save()
+
+		except Exception as e:
+			frappe.log_error(f"Помилка додавання активу {asset_name}: {str(e)}")
+			skipped_count += 1
+
+	# Перераховуємо загальну суму
+	total_amount = sum(item.total for item in act.items)
+	act.total_amount = total_amount
+
+	act.save()
+
+	# Повідомлення про результат
+	if added_count > 0:
+		frappe.msgprint(f"Додано активів: {added_count}. Пропущено: {skipped_count}")
+	else:
+		frappe.throw("Не вдалося додати жодного активу")
+
+	return act.name
+
+
+@frappe.whitelist()
+def find_decommissioning_act_for_asset(asset_name):
+	"""
+	Знаходить незатверджений акт списання, в якому є вказаний актив.
+
+	Args:
+	        asset_name: Назва активу
+
+	Returns:
+	        Назва акту списання або None
+	"""
+	# Шукаємо незатверджені акти списання, які містять цей актив
+	acts = frappe.db.sql(
+		"""
+		SELECT DISTINCT parent
+		FROM `taboiDecommissioningItem`
+		WHERE asset = %s
+		AND parent IN (
+			SELECT name
+			FROM `taboiDecommissioningAct`
+			WHERE docstatus = 0
+		)
+		ORDER BY creation DESC
+		LIMIT 1
+	""",
+		(asset_name,),
+		as_dict=True,
+	)
+
+	if acts and len(acts) > 0:
+		return acts[0].parent
+
+	return None

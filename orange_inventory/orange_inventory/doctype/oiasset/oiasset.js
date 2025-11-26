@@ -53,6 +53,30 @@ frappe.ui.form.on("oiAsset", {
 			});
 		}
 
+		// Кнопка для додавання до акту списання або відкриття існуючого акту
+		if (!frm.is_new() && frm.doc.quantity > 0 && frm.doc.status !== "Списано") {
+			// Перевіряємо, чи актив вже в акті списання
+			frappe.call({
+				method: "orange_inventory.orange_inventory.doctype.oiasset.oiasset.find_decommissioning_act_for_asset",
+				args: {
+					asset_name: frm.doc.name,
+				},
+				callback: function (r) {
+					if (r.message) {
+						// Актив вже в акті списання - показуємо кнопку для відкриття акту
+						frm.add_custom_button(__("Відкрити акт списання"), function () {
+							frappe.set_route("Form", "oiDecommissioningAct", r.message);
+						});
+					} else {
+						// Актив ще не в акті - показуємо кнопку для додавання
+						frm.add_custom_button(__("Додати до списання"), function () {
+							add_to_decommissioning_act(frm);
+						});
+					}
+				},
+			});
+		}
+
 		// Показуємо інформацію про батьківський актив, якщо компонент встановлено
 		if (frm.doc.parent_asset) {
 			frappe.db.get_value("oiAsset", frm.doc.parent_asset, "asset_name").then((r) => {
@@ -112,39 +136,76 @@ let open_split_asset_dialog = function (frm) {
 		title: __("Розділення Активу: " + frm.doc.asset_name),
 		fields: [
 			{
-				label: "Серійні номери",
+				label: "Загальна кількість",
+				fieldname: "total_quantity_info",
+				fieldtype: "HTML",
+				options: `<div style="padding: 10px; background-color: #f0f4f7; border-radius: 4px; margin-bottom: 10px;">
+					<strong>Поточна кількість:</strong> ${frm.doc.quantity} шт.
+				</div>`,
+			},
+			{
+				label: "Кількість для відокремлення",
+				fieldname: "quantity_to_split",
+				fieldtype: "Int",
+				reqd: 1,
+				default: 1,
+				description: __(
+					"Вкажіть скільки одиниць потрібно відокремити від основної позиції (від 1 до {0})",
+					[frm.doc.quantity - 1]
+				),
+			},
+			{
+				fieldtype: "Column Break",
+			},
+			{
+				label: "Серійні номери для відокремлених одиниць",
 				fieldname: "serial_numbers",
 				fieldtype: "Small Text",
-				reqd: 1,
+				reqd: 0,
 				description: __(
-					"Введіть  <b>{0}</b> серійних номерів, кожен з нового рядка або через кому.",
-					[frm.doc.quantity]
+					"Введіть серійні номери для відокремлених одиниць, кожен з нового рядка або через кому (необов'язково)."
 				),
 			},
 		],
 		primary_action_label: __("Розділити"),
 		primary_action(values) {
-			// "Очищаємо" список серійних номерів від зайвих пробілів та пустих рядків
-			const serials = values.serial_numbers
-				.replace(/\n/g, ",") // замінюємо нові рядки на коми
-				.split(",")
-				.map((s) => s.trim())
-				.filter((s) => s); // видаляємо пусті елементи
-
-			if (serials.length !== frm.doc.quantity) {
+			// Валідація кількості для відокремлення
+			const quantity_to_split = parseInt(values.quantity_to_split);
+			if (quantity_to_split < 1 || quantity_to_split >= frm.doc.quantity) {
 				frappe.msgprint(
-					__(
-						"Кількість введених серійних номерів ({0}) не співпадає з кількістю активу ({1}).",
-						[serials.length, frm.doc.quantity]
-					)
+					__("Кількість для відокремлення повинна бути від 1 до {0}", [
+						frm.doc.quantity - 1,
+					])
 				);
 				return;
 			}
 
+			// "Очищаємо" список серійних номерів від зайвих пробілів та пустих рядків
+			let serials = [];
+			if (values.serial_numbers && values.serial_numbers.trim()) {
+				serials = values.serial_numbers
+					.replace(/\n/g, ",") // замінюємо нові рядки на коми
+					.split(",")
+					.map((s) => s.trim())
+					.filter((s) => s); // видаляємо пусті елементи
+
+				// Перевіряємо тільки якщо були введені серійні номери
+				if (serials.length !== quantity_to_split) {
+					frappe.msgprint(
+						__(
+							"Кількість введених серійних номерів ({0}) не співпадає з кількістю для відокремлення ({1}).",
+							[serials.length, quantity_to_split]
+						)
+					);
+					return;
+				}
+			}
+
 			frappe.call({
-				method: "orange_inventory.orange_inventory.doctype.oiasset.oiasset.split_asset",
+				method: "orange_inventory.orange_inventory.doctype.oiasset.oiasset.split_asset_partial",
 				args: {
 					source_asset_name: frm.doc.name,
+					quantity_to_split: quantity_to_split,
 					serial_numbers: serials,
 				},
 				callback: function (r) {
@@ -295,4 +356,96 @@ let update_inventory_status_display = function (frm) {
 			}
 		},
 	});
+};
+
+// Функція для додавання активу до акту списання
+let add_to_decommissioning_act = function (frm) {
+	let d = new frappe.ui.Dialog({
+		title: __("Додати до акту списання"),
+		fields: [
+			{
+				label: "Актив",
+				fieldname: "asset_info",
+				fieldtype: "HTML",
+				options: `<div style="padding: 10px; background-color: #f0f4f7; border-radius: 4px; margin-bottom: 15px;">
+					<strong>Актив:</strong> ${frm.doc.asset_name}<br>
+					<strong>Інвентарний номер:</strong> ${frm.doc.inventory_no || "—"}<br>
+					<strong>Серійний номер:</strong> ${frm.doc.serial_no || "—"}<br>
+					<strong>Доступна кількість:</strong> ${frm.doc.quantity} шт.<br>
+					<strong>Вартість за одиницю:</strong> ${format_currency(frm.doc.cost, "UAH")}
+				</div>`,
+			},
+			{
+				label: "Оберіть акт списання",
+				fieldname: "decommissioning_act",
+				fieldtype: "Link",
+				options: "oiDecommissioningAct",
+				reqd: 1,
+				get_query: function () {
+					return {
+						filters: {
+							docstatus: 0, // Тільки чернетки
+						},
+					};
+				},
+				description: __(
+					"Оберіть існуючий акт списання або залишіть порожнім для створення нового"
+				),
+			},
+			{
+				fieldtype: "Column Break",
+			},
+			{
+				label: "Кількість для списання",
+				fieldname: "quantity",
+				fieldtype: "Float",
+				reqd: 1,
+				default: frm.doc.quantity,
+				description: __("Вкажіть кількість одиниць для списання (максимум: {0})", [
+					frm.doc.quantity,
+				]),
+			},
+			{
+				label: "Причина списання",
+				fieldname: "reason",
+				fieldtype: "Small Text",
+				default: "Вихід з ладу у зв'язку з інтенсивною експлуатацією",
+				reqd: 1,
+			},
+		],
+		primary_action_label: __("Додати"),
+		primary_action(values) {
+			// Валідація кількості
+			const qty = parseFloat(values.quantity);
+			if (qty <= 0 || qty > frm.doc.quantity) {
+				frappe.msgprint(__("Кількість повинна бути від 0 до {0}", [frm.doc.quantity]));
+				return;
+			}
+
+			frappe.call({
+				method: "orange_inventory.orange_inventory.doctype.oiasset.oiasset.add_asset_to_decommissioning_act",
+				args: {
+					asset_name: frm.doc.name,
+					decommissioning_act: values.decommissioning_act,
+					quantity: qty,
+					reason: values.reason,
+				},
+				callback: function (r) {
+					if (!r.exc) {
+						frappe.show_alert({
+							message: __("Актив додано до акту списання"),
+							indicator: "green",
+						});
+						d.hide();
+
+						// Питаємо користувача, чи хоче він відкрити акт списання
+						frappe.confirm(__("Відкрити акт списання?"), function () {
+							frappe.set_route("Form", "oiDecommissioningAct", r.message);
+						});
+					}
+				},
+			});
+		},
+	});
+	d.show();
 };
