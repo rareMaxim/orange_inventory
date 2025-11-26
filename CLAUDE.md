@@ -323,10 +323,23 @@ bench start
 
 ### Working with Frappe
 
+**Database Access Priority (IMPORTANT!):**
+
+When working with the database, always follow this priority order:
+
+1. **Frappe ORM** (PREFERRED) - Use `frappe.get_doc()`, `frappe.get_all()`, `frappe.db.get_value()`, etc.
+2. **Frappe QueryBuilder** (when ORM is insufficient) - Type-safe query construction
+3. **Raw SQL** (LAST RESORT) - Only when QueryBuilder cannot handle the query
+
 **Key Frappe APIs:**
 
 ```python
 import frappe
+from frappe.query_builder import DocType
+
+# ============================================
+# PRIORITY 1: Frappe ORM (Use this first!)
+# ============================================
 
 # Get a document
 doc = frappe.get_doc("oiAsset", "ASSET-00001")
@@ -345,17 +358,55 @@ doc.save()
 # Delete
 doc.delete()
 
-# Database queries
+# Query documents (preferred method)
 assets = frappe.get_all("oiAsset",
     filters={"status": "В експлуатації"},
-    fields=["name", "asset_name", "serial_no"]
+    fields=["name", "asset_name", "serial_no"],
+    order_by="creation desc"
 )
 
-# Direct SQL (use sparingly)
+# Get single value
+asset_name = frappe.db.get_value("oiAsset", "ASSET-00001", "asset_name")
+
+# Get single document as dict
+asset_dict = frappe.db.get_value("oiAsset", "ASSET-00001",
+    ["name", "asset_name", "cost"], as_dict=True)
+
+# Check if document exists
+exists = frappe.db.exists("oiAsset", {"serial_no": "SN12345"})
+
+# Count documents
+count = frappe.db.count("oiAsset", {"status": "На складі"})
+
+# ============================================
+# PRIORITY 2: Frappe QueryBuilder
+# Use when ORM is insufficient (joins, complex conditions)
+# ============================================
+
+# Example: Join query with QueryBuilder
+Asset = DocType("oiAsset")
+Location = DocType("oiLocation")
+
+query = (
+    frappe.qb.from_(Asset)
+    .left_join(Location).on(Asset.location == Location.name)
+    .select(Asset.name, Asset.asset_name, Location.location_name)
+    .where(Asset.status == "В експлуатації")
+    .orderby(Asset.creation, order=frappe.qb.desc)
+)
+results = query.run(as_dict=True)
+
+# ============================================
+# PRIORITY 3: Raw SQL (LAST RESORT!)
+# Only use when QueryBuilder cannot handle the query
+# ============================================
+
+# Raw SQL - use only when necessary
 result = frappe.db.sql("""
     SELECT name, asset_name
     FROM `taboiAsset`
     WHERE status = %s
+    LIMIT 10
 """, ("В експлуатації",), as_dict=True)
 
 # Error handling
@@ -447,7 +498,57 @@ def calculate_total(items):  # Missing type hints
     return sum([item.get('amount') or 0 for item in items])  # Single quotes, list comprehension
 ```
 
-### 3. Error Handling
+### 3. Database Access Priority (CRITICAL!)
+
+**Always follow this priority order when working with the database:**
+
+1. **Frappe ORM (First choice)** - Use `frappe.get_doc()`, `frappe.get_all()`, `frappe.db.get_value()`, `frappe.db.exists()`, etc.
+   - Type-safe
+   - Handles permissions automatically
+   - Validates data
+   - Triggers document events
+
+2. **Frappe QueryBuilder (Second choice)** - Use when ORM is insufficient
+   - Type-safe query construction
+   - Supports complex joins and conditions
+   - Better than raw SQL for maintainability
+   - Import with: `from frappe.query_builder import DocType`
+
+3. **Raw SQL (Last resort)** - Only when QueryBuilder cannot handle the query
+   - Use `frappe.db.sql()` with parameterized queries
+   - Always use table prefix: `taboiAsset` not `oiAsset`
+   - Always use placeholders (%s) to prevent SQL injection
+
+```python
+# GOOD: Use ORM first
+assets = frappe.get_all("oiAsset",
+    filters={"status": "В експлуатації", "location": "Київ"},
+    fields=["name", "asset_name"]
+)
+
+# BETTER: Use QueryBuilder for complex queries
+from frappe.query_builder import DocType
+
+Asset = DocType("oiAsset")
+Location = DocType("oiLocation")
+
+assets = (
+    frappe.qb.from_(Asset)
+    .left_join(Location).on(Asset.location == Location.name)
+    .select(Asset.name, Location.location_name)
+    .where(Asset.status == "В експлуатації")
+).run(as_dict=True)
+
+# LAST RESORT: Raw SQL only when absolutely necessary
+assets = frappe.db.sql("""
+    SELECT a.name, l.location_name
+    FROM `taboiAsset` a
+    LEFT JOIN `taboiLocation` l ON a.location = l.name
+    WHERE a.status = %s
+""", ("В експлуатації",), as_dict=True)
+```
+
+### 4. Error Handling
 
 ```python
 # Use frappe.throw() for user-facing errors
@@ -462,7 +563,7 @@ except Exception as e:
     frappe.throw("Не вдалося обробити дані")
 ```
 
-### 4. Ukrainian Localization
+### 5. Ukrainian Localization
 
 - **Field labels**: Always in Ukrainian
 - **Error messages**: In Ukrainian
@@ -471,7 +572,7 @@ except Exception as e:
 - **Code comments**: Can be in English or Ukrainian
 - **Documentation**: Mixed (technical docs in English, user guides in Ukrainian)
 
-### 5. Permission Checks
+### 6. Permission Checks
 
 Always check permissions in whitelisted functions:
 
@@ -487,7 +588,7 @@ def reveal_secret(credential: str, reason: str | None = None):
     return secret
 ```
 
-### 6. Child Table Handling
+### 7. Child Table Handling
 
 ```python
 # Access child table
@@ -507,7 +608,7 @@ for comp in self.components:
         break
 ```
 
-### 7. Date Handling
+### 8. Date Handling
 
 ```python
 from frappe.utils import getdate, now, today, add_days, date_diff
@@ -1033,7 +1134,13 @@ doc.delete()
 
 ### Query Database
 
+**IMPORTANT: Follow the priority order - ORM → QueryBuilder → Raw SQL**
+
 ```python
+# ========================================
+# PRIORITY 1: Frappe ORM (Use this first!)
+# ========================================
+
 # Get all with filters
 assets = frappe.get_all("oiAsset",
     filters={"status": "В експлуатації"},
@@ -1042,13 +1149,38 @@ assets = frappe.get_all("oiAsset",
     limit=10
 )
 
-# Get single value
+# Count documents
 count = frappe.db.count("oiAsset", {"status": "На складі"})
 
-# Get single field
+# Get single field value
 name = frappe.db.get_value("oiAsset", "ASSET-00001", "asset_name")
 
-# Raw SQL
+# Get multiple fields as dict
+asset_data = frappe.db.get_value("oiAsset", "ASSET-00001",
+    ["name", "asset_name", "cost"], as_dict=True)
+
+# Check existence
+exists = frappe.db.exists("oiAsset", {"serial_no": "SN12345"})
+
+# ========================================
+# PRIORITY 2: QueryBuilder (for complex queries)
+# ========================================
+
+from frappe.query_builder import DocType
+
+Asset = DocType("oiAsset")
+results = (
+    frappe.qb.from_(Asset)
+    .select(Asset.name, Asset.cost)
+    .where(Asset.cost > 1000)
+    .orderby(Asset.creation, order=frappe.qb.desc)
+).run(as_dict=True)
+
+# ========================================
+# PRIORITY 3: Raw SQL (LAST RESORT!)
+# ========================================
+
+# Only use when ORM and QueryBuilder cannot handle the query
 results = frappe.db.sql("""
     SELECT name, cost FROM `taboiAsset`
     WHERE cost > %s
@@ -1084,7 +1216,7 @@ When working with Orange Inventory:
 1. **Always use TABS** (not spaces) for indentation
 2. **Never edit auto-generated type hints** in Python files
 3. **Check Ukrainian field values** for statuses and dropdowns
-4. **Use `frappe.get_doc()`** instead of direct SQL when possible
+4. **Database Priority (CRITICAL)**: Always use Frappe ORM first, then QueryBuilder, then Raw SQL as last resort
 5. **Whitelist all API functions** with `@frappe.whitelist()`
 6. **Check permissions** in whitelisted functions
 7. **Use `frappe.throw()`** for user-facing errors
