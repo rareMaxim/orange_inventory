@@ -114,7 +114,7 @@ class oiServiceRequest(Document):
 		)
 
 	@frappe.whitelist()
-	def add_comment(self, comment):
+	def add_request_comment(self, comment):
 		"""Додає коментар до заявки"""
 		if self.comments:
 			self.comments += f"\n\n[{now()}] {get_fullname()}: {comment}"
