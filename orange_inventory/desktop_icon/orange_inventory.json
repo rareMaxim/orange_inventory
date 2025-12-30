@@ -1,0 +1,20 @@
+{
+ "app": "orange_inventory",
+ "creation": "2025-11-22 01:27:18.516859",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon_type": "App",
+ "idx": 1,
+ "label": "Orange Inventory",
+ "link": "/app/orange-inventory",
+ "link_type": "External",
+ "logo_url": "/assets/orange_inventory/images/oi-logo.webp",
+ "modified": "2025-12-30 12:12:59.386447",
+ "modified_by": "Administrator",
+ "name": "Orange Inventory",
+ "owner": "Administrator",
+ "roles": [],
+ "sidebar": "",
+ "standard": 1
+}

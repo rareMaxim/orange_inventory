@@ -1,7 +1,7 @@
 # CLAUDE.md - Orange Inventory Development Guide for AI Assistants
 
-**Last Updated:** 2025-11-25
-**Version:** 1.0
+**Last Updated:** 2025-12-30
+**Version:** 1.1
 
 ---
 
@@ -18,7 +18,8 @@
 9. [Testing](#testing)
 10. [Important Gotchas](#important-gotchas)
 11. [Git Workflow](#git-workflow)
-12. [Resources](#resources)
+12. [Frappe UI Components](#frappe-ui-components-workspace-shortcuts-number-cards)
+13. [Resources](#resources)
 
 ---
 
@@ -1017,6 +1018,436 @@ git push -u origin claude/[session-id]
 
 ---
 
+## Frappe UI Components: Workspace, Shortcuts, Number Cards
+
+### Workspace Configuration
+
+Workspaces are the main navigation hubs in Frappe. Each module should have a workspace for visual representation in the system.
+
+**Location:** `orange_inventory/orange_inventory/workspace/orange_inventory/orange_inventory.json`
+
+**Key Fields:**
+```json
+{
+  "doctype": "Workspace",
+  "label": "Orange Inventory",
+  "title": "Orange Inventory",
+  "icon": "stock",
+  "indicator_color": "green",
+  "module": "Orange Inventory",
+  "public": 1,
+  "content": "[...blocks...]",
+  "shortcuts": [...],
+  "number_cards": [...],
+  "charts": [...],
+  "links": [...]
+}
+```
+
+### Workspace Block Types
+
+The `content` field contains a JSON array of visual blocks:
+
+| Block Type | Purpose | Example Data |
+|------------|---------|--------------|
+| `header` | Section title | `{"text": "<span>Section</span>", "col": 12}` |
+| `paragraph` | Rich text | `{"text": "Description", "col": 12}` |
+| `shortcut` | Quick action button | `{"shortcut_name": "Assets", "col": 3}` |
+| `card` | Link card | `{"card_name": "Card Name", "col": 4}` |
+| `number_card` | KPI metric | `{"number_card_name": "Count", "col": 4}` |
+| `chart` | Dashboard chart | `{"chart_name": "Chart", "col": 6}` |
+| `spacer` | Vertical space | `{"col": 12}` |
+| `quick_list` | Quick list | `{"quick_list_name": "List", "col": 6}` |
+| `custom_block` | Custom HTML/JS | `{"custom_block_name": "Block", "col": 6}` |
+
+**Column System:** Total width = 12 columns. Common sizes: 3 (4/row), 4 (3/row), 6 (2/row), 12 (full).
+
+### Shortcuts (Quick Actions)
+
+Shortcuts appear as buttons in the workspace for quick access to DocTypes, Pages, Reports.
+
+**Structure:**
+```json
+{
+  "type": "DocType",        // DocType, Report, Page, Dashboard, URL
+  "link_to": "oiAsset",     // Target name
+  "label": "Активи",        // Display label
+  "doc_view": "List",       // List, Report, Dashboard, Tree, New, Calendar, Kanban
+  "color": "Blue",          // Badge color
+  "stats_filter": "[]"      // Optional: JSON filter for count display
+}
+```
+
+**Adding a Page to Shortcuts:**
+```json
+{
+  "type": "Page",
+  "link_to": "solution-assets",
+  "label": "Активи за рішенням",
+  "color": "Orange"
+}
+```
+
+### Number Cards (KPI Metrics)
+
+Number cards display real-time counts/sums on the workspace.
+
+**Location:** `orange_inventory/orange_inventory/number_card/[card_name]/[card_name].json`
+
+**Example:**
+```json
+{
+  "doctype": "Number Card",
+  "label": "Активи в експлуатації",
+  "document_type": "oiAsset",
+  "function": "Count",
+  "filters_json": "[[\"oiAsset\",\"status\",\"=\",\"В експлуатації\",false]]",
+  "show_percentage_stats": 1,
+  "stats_time_interval": "Daily",
+  "is_standard": 1
+}
+```
+
+**Functions:** Count, Sum, Average, Minimum, Maximum
+
+### Desktop Icon (App Screen)
+
+Desktop Icons appear on the main app launcher (`/app`) and provide entry points to modules.
+
+**Location:** `orange_inventory/desktop_icon/orange_inventory.json`
+
+**Structure:**
+```json
+{
+  "doctype": "Desktop Icon",
+  "label": "Orange Inventory",
+  "app": "orange_inventory",
+  "icon_type": "App",
+  "link_type": "Workspace",           // Workspace, DocType, External
+  "link_to": "Orange Inventory",      // Workspace name (if link_type=Workspace)
+  "link": "/app/orange-inventory",    // URL (if link_type=External)
+  "logo_url": "/assets/orange_inventory/images/oi-logo.webp",
+  "icon": "stock",                    // Frappe icon name (if no logo)
+  "hidden": 0,
+  "standard": 1,
+  "idx": 1,                           // Display order
+  "sidebar": "Orange Inventory",      // Link to Workspace Sidebar
+  "roles": []                         // Role restrictions
+}
+```
+
+**Icon Types:**
+- `App` - Main application entry
+- `Folder` - Group of icons
+- `Link` - Direct link to DocType/Page
+
+**Link Types:**
+- `Workspace` - Opens a Workspace
+- `DocType` - Opens DocType list
+- `External` - Opens custom URL
+
+**Also configure in `hooks.py`:**
+```python
+add_to_apps_screen = [
+  {
+    "name": "orange_inventory",
+    "logo": "/assets/orange_inventory/images/oi-logo.webp",
+    "title": "Orange Inventory",
+    "route": "/app/orange-inventory"
+  }
+]
+```
+
+### Workspace Sidebar
+
+Workspace Sidebar provides persistent navigation in the left panel when viewing a module.
+
+**Location:** `orange_inventory/workspace_sidebar/orange_inventory.json`
+
+**Structure:**
+```json
+{
+  "doctype": "Workspace Sidebar",
+  "title": "Orange Inventory",
+  "name": "Orange Inventory",
+  "app": "orange_inventory",
+  "module": "Orange Inventory",
+  "header_icon": "stock",
+  "for_user": "",                     // Empty = all users
+  "items": [...]
+}
+```
+
+**Sidebar Item Types:**
+
+| Type | Purpose |
+|------|---------|
+| `Link` | Navigation link to DocType/Page/Report |
+| `Section Break` | Section header with optional collapse |
+| `Spacer` | Visual spacing |
+| `Sidebar Item Group` | Grouped items |
+
+**Sidebar Item Structure:**
+```json
+{
+  "type": "Link",
+  "label": "Активи",
+  "link_type": "DocType",             // DocType, Page, Report, Workspace, Dashboard, URL
+  "link_to": "oiAsset",
+  "icon": "file",
+  "child": 1,                         // 1 = child item (indented)
+  "collapsible": 1,
+  "keep_closed": 0,
+  "show_arrow": 0,
+  "filters": "[]",                    // JSON filters for list view
+  "route_options": "{}",              // Additional route params
+  "display_depends_on": ""            // JS condition for visibility
+}
+```
+
+**Section Break Example:**
+```json
+{
+  "type": "Section Break",
+  "label": "Реєстр активів",
+  "collapsible": 1,
+  "keep_closed": 0,
+  "indent": 0
+}
+```
+
+**Complete Sidebar Example:**
+```json
+{
+  "doctype": "Workspace Sidebar",
+  "title": "Orange Inventory",
+  "header_icon": "stock",
+  "app": "orange_inventory",
+  "module": "Orange Inventory",
+  "items": [
+    {
+      "type": "Link",
+      "label": "Головна",
+      "link_type": "Workspace",
+      "link_to": "Orange Inventory",
+      "icon": "home",
+      "child": 0
+    },
+    {
+      "type": "Section Break",
+      "label": "Реєстр активів",
+      "collapsible": 1
+    },
+    {
+      "type": "Link",
+      "label": "Активи",
+      "link_type": "DocType",
+      "link_to": "oiAsset",
+      "icon": "file",
+      "child": 1
+    },
+    {
+      "type": "Link",
+      "label": "Активи за рішенням",
+      "link_type": "Page",
+      "link_to": "solution-assets",
+      "icon": "list",
+      "child": 1
+    },
+    {
+      "type": "Section Break",
+      "label": "Операції",
+      "collapsible": 1
+    },
+    {
+      "type": "Link",
+      "label": "Прибутковий ордер",
+      "link_type": "DocType",
+      "link_to": "oiReceiptOrder",
+      "icon": "arrow-down",
+      "child": 1
+    },
+    {
+      "type": "Link",
+      "label": "Видатковий ордер",
+      "link_type": "DocType",
+      "link_to": "oiIssueOrder",
+      "icon": "arrow-up",
+      "child": 1
+    }
+  ]
+}
+```
+
+**Linking Desktop Icon to Sidebar:**
+
+In Desktop Icon JSON, add:
+```json
+{
+  "sidebar": "Orange Inventory"
+}
+```
+
+This connects the Desktop Icon to the Workspace Sidebar, so when user clicks the app icon, the sidebar navigation appears.
+
+### Creating Custom Pages
+
+Custom pages provide specialized interfaces beyond standard DocType forms.
+
+**Directory Structure:**
+```
+page/
+└── my_page/
+    ├── my_page.json    # Page metadata
+    ├── my_page.js      # Frontend logic
+    ├── my_page.py      # Backend API (optional)
+    └── __init__.py
+```
+
+**my_page.json:**
+```json
+{
+  "doctype": "Page",
+  "name": "my-page",
+  "page_name": "my-page",
+  "title": "My Page Title",
+  "module": "Orange Inventory",
+  "standard": "Yes"
+}
+```
+
+**my_page.js:**
+```javascript
+frappe.pages["my-page"].on_page_load = function(wrapper) {
+  var page = frappe.ui.make_app_page({
+    parent: wrapper,
+    title: "My Page",
+    single_column: true
+  });
+
+  // Add filters
+  page.add_field({
+    fieldname: "my_filter",
+    fieldtype: "Link",
+    options: "oiAsset",
+    change: () => { /* reload data */ }
+  });
+
+  // Call backend
+  frappe.call({
+    method: "orange_inventory.orange_inventory.page.my_page.my_page.get_data",
+    callback: (r) => { /* render */ }
+  });
+};
+```
+
+**my_page.py:**
+```python
+import frappe
+
+@frappe.whitelist()
+def get_data(filters=None):
+    return frappe.get_all("oiAsset", filters=filters, fields=["name", "asset_name"])
+```
+
+### Adding Page to Workspace
+
+**Method 1: As Shortcut (Recommended)**
+
+Add to workspace JSON shortcuts:
+```json
+{
+  "type": "Page",
+  "link_to": "my-page",
+  "label": "My Page",
+  "color": "Blue"
+}
+```
+
+**Method 2: As Link Card**
+
+Add to workspace JSON links:
+```json
+{
+  "type": "Link",
+  "link_type": "Page",
+  "link_to": "my-page",
+  "label": "My Page",
+  "description": "Page description"
+}
+```
+
+### Best Practices
+
+1. **Always create workspaces** for visual module representation
+2. **Use Number Cards** for key metrics (asset counts, totals)
+3. **Add shortcuts** for frequently used DocTypes and Pages
+4. **Group related items** with header blocks
+5. **Use Ukrainian labels** for consistency with the rest of the app
+6. **Register pages in workspace** so users can discover them
+7. **Create Desktop Icon** for app visibility on main launcher
+8. **Create Workspace Sidebar** for persistent navigation
+9. **Link Desktop Icon to Sidebar** for seamless navigation experience
+10. **Add custom buttons** on DocType forms to link to related pages:
+
+```javascript
+frappe.ui.form.on("oiBasisDoc", {
+  refresh(frm) {
+    if (!frm.is_new()) {
+      frm.add_custom_button(__("Переглянути активи"), function() {
+        frappe.set_route("solution-assets", { decision: frm.doc.name });
+      }, __("Дії"));
+    }
+  }
+});
+```
+
+### File Structure for UI Components
+
+```
+orange_inventory/
+├── desktop_icon/
+│   └── orange_inventory.json       # App icon on launcher
+├── workspace_sidebar/
+│   └── orange_inventory.json       # Left sidebar navigation
+├── workspace/
+│   └── orange_inventory/
+│       └── orange_inventory.json   # Main workspace content
+├── number_card/
+│   ├── активи_в_експлуатації/
+│   │   └── активи_в_експлуатації.json
+│   └── ...
+└── page/
+    ├── network_map/
+    │   ├── network_map.json
+    │   └── network_map.js
+    └── solution_assets/
+        ├── solution_assets.json
+        ├── solution_assets.js
+        └── solution_assets.py
+```
+
+### Example: Orange Inventory UI Structure
+
+**Desktop Icon** (`desktop_icon/orange_inventory.json`):
+- Logo: `/assets/orange_inventory/images/oi-logo.webp`
+- Links to Workspace "Orange Inventory"
+- Should link to Workspace Sidebar
+
+**Workspace** (`workspace/orange_inventory/orange_inventory.json`):
+- **5 Number Cards**: активи_в_експлуатації, активи_на_складі, кількість, ноутбуки, принтери
+- **4 Shortcuts**: Активи, Прибутковий ордер, Видатковий ордер, Акт списання
+
+**Custom Pages**:
+- `network-map` - Network topology visualization
+- `solution-assets` - Assets by decision with transfer history
+
+**Workspace Sidebar** (to be created):
+- Should mirror workspace shortcuts in sidebar format
+- Group items by sections: Реєстр активів, Операції, Довідники, тощо
+
+---
+
 ## Resources
 
 ### Documentation Files (in Repository)
@@ -1041,6 +1472,10 @@ git push -u origin claude/[session-id]
 - **DocTypes**: Document types (database tables + logic)
 - **DocFields**: Fields in a DocType
 - **Controller**: Python class for DocType logic
+- **Desktop Icon**: App entry point on main launcher (`/app`)
+- **Workspace**: Module dashboard with shortcuts, cards, charts
+- **Workspace Sidebar**: Persistent left navigation panel
+- **Number Card**: KPI metric display widget
 - **Hooks**: Event handlers defined in `hooks.py`
 - **Whitelisting**: Exposing functions to API/frontend
 - **Permissions**: Role-based access control
