@@ -16,6 +16,43 @@ from openpyxl.worksheet.datavalidation import DataValidation
 
 
 class oiHromadaSurvey(NestedSet):
+	def validate(self):
+		"""Валідація перед збереженням."""
+		self._validate_no_circular_reference()
+		self._validate_data_values()
+		self._validate_group_has_no_data()
+
+	def _validate_data_values(self):
+		"""Перевіряє що числові дані не від'ємні."""
+		if self.type == "Кількісні дані" and self.int_data is not None:
+			if cint(self.int_data) < 0:
+				frappe.throw(
+					"Значення кількісних даних не може бути від'ємним",
+					frappe.ValidationError,
+				)
+
+	def _validate_group_has_no_data(self):
+		"""Перевіряє що групи не мають значень int_data/bool_data."""
+		if self.type == "Група":
+			if self.int_data and cint(self.int_data) != 0:
+				frappe.throw(
+					"Група не може мати числове значення (int_data)",
+					frappe.ValidationError,
+				)
+			if self.bool_data and cint(self.bool_data) != 0:
+				frappe.throw(
+					"Група не може мати якісне значення (bool_data)",
+					frappe.ValidationError,
+				)
+
+	def _validate_no_circular_reference(self):
+		"""Перевіряє що документ не посилається сам на себе як на батька."""
+		if self.parent_oihromadasurvey and self.parent_oihromadasurvey == self.name:
+			frappe.throw(
+				"Документ не може посилатися сам на себе як на батьківський елемент",
+				frappe.ValidationError,
+			)
+
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -119,24 +156,62 @@ class oiHromadaSurvey(NestedSet):
 				},
 			)
 
+	def after_save(self):
+		"""Виконується після збереження документа."""
+		# Автоматичний перерахунок score батьківських груп при зміні значень
+		if self.type != "Група":
+			self._update_parent_scores()
+
+	def _update_parent_scores(self):
+		"""
+		Оновлює score всіх батьківських груп при зміні значення показника.
+		Працює від безпосереднього батька до кореня.
+		"""
+		if not self.parent_oihromadasurvey:
+			return
+
+		from frappe.query_builder import DocType
+
+		Survey = DocType("oiHromadaSurvey")
+
+		# Отримуємо всіх предків-груп використовуючи QueryBuilder
+		parent_groups = (
+			frappe.qb.from_(Survey)
+			.select(Survey.name)
+			.where(Survey.lft < self.lft)
+			.where(Survey.rgt > self.rgt)
+			.where(Survey.type == "Група")
+			.orderby(Survey.lft, order=frappe.qb.desc)
+		).run(as_dict=True)
+
+		# Перераховуємо score для кожної групи (від найближчого батька до кореня)
+		for group in parent_groups:
+			score, used_pairs, note = _compute_group_score_from_direct_leaves(group["name"])
+			frappe.db.set_value(
+				"oiHromadaSurvey",
+				group["name"],
+				{"score": flt(score, 2), "score_pairs": used_pairs, "score_note": note},
+				update_modified=False,
+			)
+
 	def _get_current_period(self):
 		"""
 		Визначає поточний період на основі frequency.
 		Повертає рядок типу "2025-Q1" або "2025-01" або "2025"
 		"""
-		from datetime import datetime
+		from frappe.utils import now_datetime
 
-		now = datetime.now()
-		year = now.year
+		current = now_datetime()
+		year = current.year
 
 		if self.frequency == "Раз на квартал":
-			quarter = (now.month - 1) // 3 + 1
+			quarter = (current.month - 1) // 3 + 1
 			return f"{year}-Q{quarter}"
 		elif self.frequency == "Раз на рік":
 			return str(year)
 		else:
 			# За замовчуванням - місяць
-			return f"{year}-{now.month:02d}"
+			return f"{year}-{current.month:02d}"
 
 
 def _clamp_0_100(x: float) -> float:
@@ -223,6 +298,10 @@ def _compute_group_score_from_direct_leaves(group_name: str) -> tuple[float, int
 def recompute_group_scores(root: str | None = None):
 	"""Перерахувати бали для ВСІХ груп (або піддерева root).
 	Рахуємо лише для документів is_group=1 за їх ПРЯМИМИ листовими дітьми."""
+	# Перевірка прав доступу
+	if not frappe.has_permission("oiHromadaSurvey", "write"):
+		frappe.throw("Недостатньо прав для перерахунку балів", frappe.PermissionError)
+
 	# Вибірка груп
 	base_filters = {"type": "Група"}
 	if root:
@@ -290,6 +369,10 @@ def _recompute_all_groups_job(root: str | None = None):
 def recompute_all_groups(root: str | None = None, background: int = 1):
 	"""Публічний ендпоінт: перерахунок одразу для всіх груп.
 	background=1 -> запускає у фоні через чергу."""
+	# Перевірка прав доступу
+	if not frappe.has_permission("oiHromadaSurvey", "write"):
+		frappe.throw("Недостатньо прав для перерахунку балів", frappe.PermissionError)
+
 	if int(background or 0):
 		frappe.enqueue(
 			"orange_inventory.orange_inventory.doctype.oihromadasurvey.oihromadasurvey._recompute_all_groups_job",
@@ -302,23 +385,75 @@ def recompute_all_groups(root: str | None = None, background: int = 1):
 		return _recompute_all_groups_job(root=root)
 
 
+# Глобальний кеш для шляхів груп (очищається при кожному експорті)
+_group_paths_cache: dict[str, str] = {}
+
+
+def _build_group_paths_cache():
+	"""
+	Будує кеш шляхів для всіх вузлів одним запитом.
+	Значно швидше ніж робити окремий запит для кожного вузла.
+	"""
+	global _group_paths_cache
+	_group_paths_cache.clear()
+
+	from frappe.query_builder import DocType
+
+	Survey = DocType("oiHromadaSurvey")
+
+	# Отримуємо всі групи з їх lft/rgt
+	groups = (
+		frappe.qb.from_(Survey)
+		.select(Survey.name, Survey.title, Survey.lft, Survey.rgt)
+		.where(Survey.type == "Група")
+		.orderby(Survey.lft)
+	).run(as_dict=True)
+
+	# Будуємо шляхи для кожної групи
+	for group in groups:
+		ancestors = [g["title"] for g in groups if g["lft"] <= group["lft"] and g["rgt"] >= group["rgt"]]
+		_group_paths_cache[group["name"]] = " / ".join(ancestors)
+
+	# Отримуємо всі листові вузли (не групи) з їх lft/rgt
+	leaves = (
+		frappe.qb.from_(Survey).select(Survey.name, Survey.lft, Survey.rgt).where(Survey.type != "Група")
+	).run(as_dict=True)
+
+	# Будуємо шляхи для листових вузлів
+	for leaf in leaves:
+		ancestors = [g["title"] for g in groups if g["lft"] <= leaf["lft"] and g["rgt"] >= leaf["rgt"]]
+		_group_paths_cache[leaf["name"]] = " / ".join(ancestors)
+
+
 def _get_group_path(docname: str) -> str:
-	"""Повертає шлях груп для вузла-листа: 'Група / Підгрупа / ...'."""
-	# Беремо усіх предків типу 'Група', від кореня до батька
+	"""Повертає шлях груп для вузла: 'Група / Підгрупа / ...'."""
+	global _group_paths_cache
+
+	# Якщо кеш є, використовуємо його
+	if docname in _group_paths_cache:
+		return _group_paths_cache[docname]
+
+	# Fallback: якщо немає в кеші, робимо запит (для поодиноких викликів)
+	from frappe.query_builder import DocType
+
+	Survey = DocType("oiHromadaSurvey")
+
 	node = frappe.db.get_value("oiHromadaSurvey", docname, ["lft", "rgt"], as_dict=True)
 	if not node:
 		return ""
-	rows = frappe.db.sql(
-		"""
-        select name, title
-        from `taboiHromadaSurvey`
-        where lft <= %s and rgt >= %s and type = "Група"
-        order by lft asc
-        """,
-		(node.lft, node.rgt),
-		as_dict=True,
-	)
-	return " / ".join([r.title for r in rows])
+
+	rows = (
+		frappe.qb.from_(Survey)
+		.select(Survey.name, Survey.title)
+		.where(Survey.lft <= node.lft)
+		.where(Survey.rgt >= node.rgt)
+		.where(Survey.type == "Група")
+		.orderby(Survey.lft)
+	).run(as_dict=True)
+
+	path = " / ".join([r.title for r in rows])
+	_group_paths_cache[docname] = path
+	return path
 
 
 def _fetch_leaf_rows_for_org(org: str):
@@ -577,11 +712,18 @@ def _get_org_meta(org: str) -> dict:
 
 @frappe.whitelist()
 def export_org_template(org: str, period: str | None = None):
+	# Перевірка прав доступу
+	if not frappe.has_permission("oiHromadaSurvey", "read"):
+		frappe.throw("Недостатньо прав для експорту шаблону", frappe.PermissionError)
+
 	if not org:
 		frappe.throw("Не вказано розпорядника (org).")
 	rows = _fetch_leaf_rows_for_org(org)
 	if not rows:
 		frappe.throw(f"Для розпорядника '{org}' не знайдено показників.")
+
+	# Будуємо кеш шляхів груп для оптимізації
+	_build_group_paths_cache()
 
 	org_meta = _get_org_meta(org)
 	the_period = period or nowdate()
@@ -591,8 +733,11 @@ def export_org_template(org: str, period: str | None = None):
 
 	bio = io.BytesIO()
 	wb.save(bio)
-	safe_title = org_meta["title"].replace("/", "-").replace("\\", "-")
-	filename = f"{safe_title}_{the_period}.xlsx".replace(" ", "_")
+	# Обмежуємо довжину назви для уникнення помилки "File name too long"
+	safe_title = org_meta["title"].replace("/", "-").replace("\\", "-").replace(" ", "_")
+	if len(safe_title) > 80:
+		safe_title = safe_title[:77] + "..."
+	filename = f"{safe_title}_{the_period}.xlsx"
 
 	url = _save_bytes_as_private_file(
 		filename,
@@ -662,6 +807,10 @@ def export_all_org_templates(period: str | None = None):
 	"""Згенерувати ZIP з шаблонами для всіх активних розпорядників + Summary.xlsx.
 	Summary містить: Організація, Всього пунктів, К-ть only_admin, К-ть пунктів для заповнення.
 	period (напр. '2025-Q4') можна передати з діалогу; якщо не вказано — nowdate()."""
+	# Перевірка прав доступу
+	if not frappe.has_permission("oiHromadaSurvey", "read"):
+		frappe.throw("Недостатньо прав для експорту шаблонів", frappe.PermissionError)
+
 	orgs = frappe.get_all(
 		"oiOrganization",
 		filters={"enabled": 1},
@@ -669,6 +818,9 @@ def export_all_org_templates(period: str | None = None):
 	)
 	if not orgs:
 		frappe.throw("Немає активних організацій для експорту.")
+
+	# Будуємо кеш шляхів груп для оптимізації (один раз для всіх організацій)
+	_build_group_paths_cache()
 
 	the_period = period or nowdate()
 	safe_period = str(the_period).replace("/", "-").replace("\\", "-").replace(" ", "_")
@@ -681,15 +833,24 @@ def export_all_org_templates(period: str | None = None):
 	for org in orgs:
 		rows = _fetch_leaf_rows_for_org(org)  # включає only_admin
 		total_count = len(rows)
+
+		# Пропускаємо організації без показників
+		if total_count == 0:
+			continue
+
 		admin_count = sum(1 for r in rows if cint(r.get("only_admin")))
 		fillable_count = total_count - admin_count
 
 		org_meta = _get_org_meta(org)
 
-		# Згенеруємо XLSX для організації (навіть якщо рядків 0 — отримаємо «порожній» шаблон з шапкою)
+		# Згенеруємо XLSX для організації
 		wb = Workbook()
 		_make_data_sheet(wb, org_meta, the_period, rows)
-		safe_title = org_meta["title"].replace("/", "-").replace("\\", "-")
+		# Обмежуємо довжину назви для уникнення помилки "File name too long"
+		safe_title = org_meta["title"].replace("/", "-").replace("\\", "-").replace(" ", "_")
+		# Максимум 80 символів для назви (+ Template_ + period + .xlsx ≈ 100 символів)
+		if len(safe_title) > 80:
+			safe_title = safe_title[:77] + "..."
 		fname = f"Template_{safe_title}_{safe_period}.xlsx"
 		fpath = os.path.join(tmpdir, fname)
 		wb.save(fpath)
@@ -785,6 +946,10 @@ def import_from_excel(file_url: str, org: str | None = None):
 	"""
 	from openpyxl import load_workbook
 
+	# Перевірка прав доступу
+	if not frappe.has_permission("oiHromadaSurvey", "write"):
+		frappe.throw("Недостатньо прав для імпорту даних", frappe.PermissionError)
+
 	# Отримати файл з системи
 	file_doc = frappe.get_doc("File", {"file_url": file_url})
 	file_path = file_doc.get_full_path()
@@ -802,108 +967,124 @@ def import_from_excel(file_url: str, org: str | None = None):
 	skipped = 0
 	errors = []
 	details = []
+	critical_error = None
 
-	# Починаємо з 5-го рядка (перші 4 - шапка)
-	for row_idx, row in enumerate(ws.iter_rows(min_row=5, values_only=True), start=5):
-		if not row or len(row) < 7:
-			continue
+	try:
+		# Починаємо з 5-го рядка (перші 4 - шапка)
+		for row_idx, row in enumerate(ws.iter_rows(min_row=5, values_only=True), start=5):
+			if not row or len(row) < 7:
+				continue
 
-		# Розпакування колонок (використовуємо тільки потрібні)
-		survey_id = row[1]  # B: ID
-		new_value = row[6]  # G: Значення для заповнення
+			# Розпакування колонок (використовуємо тільки потрібні)
+			survey_id = row[1]  # B: ID
+			new_value = row[6]  # G: Значення для заповнення
 
-		# Пропускаємо порожні рядки
-		if not survey_id or not new_value:
-			skipped += 1
-			continue
-
-		try:
-			# Отримуємо документ
-			if not frappe.db.exists("oiHromadaSurvey", survey_id):
-				errors.append(f"Рядок {row_idx}: Показник {survey_id} не знайдено")
+			# Пропускаємо порожні рядки
+			if not survey_id or not new_value:
 				skipped += 1
 				continue
 
-			survey = frappe.get_doc("oiHromadaSurvey", survey_id)
-
-			# Валідація організації (якщо передано)
-			if org and survey.master_info != org:
-				errors.append(f"Рядок {row_idx}: Показник {survey_id} не належить організації {org}")
-				skipped += 1
-				continue
-
-			# Пропускаємо only_admin записи
-			if cint(survey.only_admin):
-				skipped += 1
-				continue
-
-			# Перевіряємо тип і оновлюємо значення
-			value_changed = False
-
-			if survey.type == "Кількісні дані":
-				# Конвертуємо в ціле число
-				try:
-					new_int_value = int(float(new_value)) if new_value else 0
-				except (ValueError, TypeError):
-					errors.append(f"Рядок {row_idx}: Некоректне числове значення '{new_value}'")
+			try:
+				# Отримуємо документ
+				if not frappe.db.exists("oiHromadaSurvey", survey_id):
+					errors.append(f"Рядок {row_idx}: Показник {survey_id} не знайдено")
 					skipped += 1
 					continue
 
-				if survey.int_data != new_int_value:
-					old_val = survey.int_data
-					survey.int_data = new_int_value
-					value_changed = True
-					details.append(
-						{
-							"id": survey_id,
-							"title": survey.title,
-							"type": survey.type,
-							"old_value": old_val,
-							"new_value": new_int_value,
-						}
-					)
+				survey = frappe.get_doc("oiHromadaSurvey", survey_id)
 
-			elif survey.type == "Якісні дані":
-				# Конвертуємо "Так"/"Ні" в bool
-				new_bool_str = str(new_value).strip()
-				if new_bool_str == "Так":
-					new_bool_value = 1
-				elif new_bool_str == "Ні":
-					new_bool_value = 0
+				# Валідація організації (якщо передано)
+				if org and survey.master_info != org:
+					errors.append(f"Рядок {row_idx}: Показник {survey_id} не належить організації {org}")
+					skipped += 1
+					continue
+
+				# Пропускаємо only_admin записи
+				if cint(survey.only_admin):
+					skipped += 1
+					continue
+
+				# Перевіряємо тип і оновлюємо значення
+				value_changed = False
+
+				if survey.type == "Кількісні дані":
+					# Конвертуємо в ціле число
+					try:
+						new_int_value = int(float(new_value)) if new_value else 0
+					except (ValueError, TypeError):
+						errors.append(f"Рядок {row_idx}: Некоректне числове значення '{new_value}'")
+						skipped += 1
+						continue
+
+					if survey.int_data != new_int_value:
+						old_val = survey.int_data
+						survey.int_data = new_int_value
+						value_changed = True
+						details.append(
+							{
+								"id": survey_id,
+								"title": survey.title,
+								"type": survey.type,
+								"old_value": old_val,
+								"new_value": new_int_value,
+							}
+						)
+
+				elif survey.type == "Якісні дані":
+					# Конвертуємо "Так"/"Ні" в bool
+					new_bool_str = str(new_value).strip()
+					if new_bool_str == "Так":
+						new_bool_value = 1
+					elif new_bool_str == "Ні":
+						new_bool_value = 0
+					else:
+						errors.append(
+							f"Рядок {row_idx}: Некоректне якісне значення '{new_value}' (очікується 'Так' або 'Ні')"
+						)
+						skipped += 1
+						continue
+
+					if cint(survey.bool_data) != new_bool_value:
+						old_val = "Так" if cint(survey.bool_data) else "Ні"
+						survey.bool_data = new_bool_value
+						value_changed = True
+						details.append(
+							{
+								"id": survey_id,
+								"title": survey.title,
+								"type": survey.type,
+								"old_value": old_val,
+								"new_value": "Так" if new_bool_value else "Ні",
+							}
+						)
+
+				# Зберігаємо тільки якщо були зміни
+				if value_changed:
+					survey.save()
+					updated += 1
 				else:
-					errors.append(
-						f"Рядок {row_idx}: Некоректне якісне значення '{new_value}' (очікується 'Так' або 'Ні')"
-					)
 					skipped += 1
-					continue
 
-				if cint(survey.bool_data) != new_bool_value:
-					old_val = "Так" if cint(survey.bool_data) else "Ні"
-					survey.bool_data = new_bool_value
-					value_changed = True
-					details.append(
-						{
-							"id": survey_id,
-							"title": survey.title,
-							"type": survey.type,
-							"old_value": old_val,
-							"new_value": "Так" if new_bool_value else "Ні",
-						}
-					)
-
-			# Зберігаємо тільки якщо були зміни
-			if value_changed:
-				survey.save()
-				updated += 1
-			else:
+			except Exception as e:
+				errors.append(f"Рядок {row_idx}: Помилка обробки - {str(e)}")
 				skipped += 1
+				continue
 
-		except Exception as e:
-			errors.append(f"Рядок {row_idx}: Помилка обробки - {str(e)}")
-			skipped += 1
-			continue
+		# Commit тільки якщо немає критичних помилок
+		frappe.db.commit()
 
-	frappe.db.commit()
+	except Exception as e:
+		# Rollback при критичній помилці
+		frappe.db.rollback()
+		critical_error = str(e)
+		return {
+			"status": "error",
+			"message": f"Критична помилка імпорту: {critical_error}. Всі зміни скасовано.",
+			"updated": 0,
+			"skipped": skipped,
+			"errors": errors + [f"Критична помилка: {critical_error}"],
+			"details": [],
+		}
 
 	return {
 		"status": "success" if not errors or updated > 0 else "error",
@@ -930,6 +1111,10 @@ def generate_completion_report(period: str | None = None):
 	                "unfilled_orgs": int  # Кількість організацій що не заповнили
 	        }
 	"""
+	# Перевірка прав доступу
+	if not frappe.has_permission("oiHromadaSurvey", "read"):
+		frappe.throw("Недостатньо прав для генерації звіту", frappe.PermissionError)
+
 	the_period = period or nowdate()
 
 	# Отримати всі активні організації
