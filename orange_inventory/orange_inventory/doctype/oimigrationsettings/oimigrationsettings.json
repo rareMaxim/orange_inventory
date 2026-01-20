@@ -1,0 +1,174 @@
+{
+	"actions": [],
+	"allow_rename": 0,
+	"creation": "2025-01-19 12:00:00.000000",
+	"doctype": "DocType",
+	"engine": "InnoDB",
+	"field_order": [
+		"status_section",
+		"migration_status_html",
+		"employee_mapping_section",
+		"total_old_employees",
+		"mapped_employees",
+		"unmapped_employees",
+		"column_break_emp",
+		"auto_populate_employee_btn",
+		"organization_mapping_section",
+		"total_old_organizations",
+		"mapped_organizations",
+		"unmapped_organizations",
+		"column_break_org",
+		"auto_populate_organization_btn",
+		"migration_section",
+		"migration_info_html",
+		"column_break_mig",
+		"migrate_employee_btn",
+		"migrate_organization_btn",
+		"refresh_status_btn",
+		"logs_section",
+		"migration_log"
+	],
+	"fields": [
+		{
+			"fieldname": "status_section",
+			"fieldtype": "Section Break",
+			"label": "Статус міграції"
+		},
+		{
+			"fieldname": "migration_status_html",
+			"fieldtype": "HTML",
+			"label": "Статус"
+		},
+		{
+			"fieldname": "employee_mapping_section",
+			"fieldtype": "Section Break",
+			"label": "Mapping співробітників (oiEmployee → hromsEmployee)"
+		},
+		{
+			"fieldname": "total_old_employees",
+			"fieldtype": "Int",
+			"label": "Всього oiEmployee",
+			"read_only": 1
+		},
+		{
+			"fieldname": "mapped_employees",
+			"fieldtype": "Int",
+			"label": "Замаплено",
+			"read_only": 1
+		},
+		{
+			"fieldname": "unmapped_employees",
+			"fieldtype": "Int",
+			"label": "Без mapping",
+			"read_only": 1
+		},
+		{
+			"fieldname": "column_break_emp",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "auto_populate_employee_btn",
+			"fieldtype": "Button",
+			"label": "Автозаповнення Employee Mapping"
+		},
+		{
+			"fieldname": "organization_mapping_section",
+			"fieldtype": "Section Break",
+			"label": "Mapping організацій (oiOrganization → hromsOrgStructure)"
+		},
+		{
+			"fieldname": "total_old_organizations",
+			"fieldtype": "Int",
+			"label": "Всього oiOrganization",
+			"read_only": 1
+		},
+		{
+			"fieldname": "mapped_organizations",
+			"fieldtype": "Int",
+			"label": "Замаплено",
+			"read_only": 1
+		},
+		{
+			"fieldname": "unmapped_organizations",
+			"fieldtype": "Int",
+			"label": "Без mapping",
+			"read_only": 1
+		},
+		{
+			"fieldname": "column_break_org",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "auto_populate_organization_btn",
+			"fieldtype": "Button",
+			"label": "Автозаповнення Organization Mapping"
+		},
+		{
+			"fieldname": "migration_section",
+			"fieldtype": "Section Break",
+			"label": "Виконання міграції"
+		},
+		{
+			"fieldname": "migration_info_html",
+			"fieldtype": "HTML",
+			"label": "Інформація",
+			"options": "<div class=\"alert alert-warning\">\n<strong>⚠️ Увага!</strong> Перед міграцією переконайтесь, що:\n<ul>\n<li>Всі mapping записи створені та перевірені</li>\n<li>Зроблено backup бази даних</li>\n<li>Користувачі не працюють в системі</li>\n</ul>\n</div>"
+		},
+		{
+			"fieldname": "column_break_mig",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "migrate_employee_btn",
+			"fieldtype": "Button",
+			"label": "Мігрувати Employee посилання"
+		},
+		{
+			"fieldname": "migrate_organization_btn",
+			"fieldtype": "Button",
+			"label": "Мігрувати Organization посилання"
+		},
+		{
+			"fieldname": "refresh_status_btn",
+			"fieldtype": "Button",
+			"label": "Оновити статус",
+			"options": "refresh_status"
+		},
+		{
+			"fieldname": "logs_section",
+			"fieldtype": "Section Break",
+			"label": "Логи міграції"
+		},
+		{
+			"fieldname": "migration_log",
+			"fieldtype": "Code",
+			"label": "Лог",
+			"options": "Text",
+			"read_only": 1
+		}
+	],
+	"hide_toolbar": 1,
+	"issingle": 1,
+	"links": [],
+	"modified": "2025-01-19 12:00:00.000000",
+	"modified_by": "Administrator",
+	"module": "Orange Inventory",
+	"name": "oiMigrationSettings",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"create": 1,
+			"delete": 1,
+			"email": 1,
+			"print": 1,
+			"read": 1,
+			"role": "System Manager",
+			"share": 1,
+			"write": 1
+		}
+	],
+	"sort_field": "creation",
+	"sort_order": "DESC",
+	"states": [],
+	"track_changes": 0
+}

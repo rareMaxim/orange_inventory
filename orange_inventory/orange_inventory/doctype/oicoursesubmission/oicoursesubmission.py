@@ -41,9 +41,9 @@ def find_employee_by_name(last_name, first_name, patronymic=None):
 	# Шукаємо співробітника
 	for variant in full_name_variants:
 		employees = frappe.get_all(
-			"oiEmployee",
+			"hromsEmployee",
 			filters={"full_name": ["like", f"%{variant}%"]},
-			fields=["name", "full_name", "organization"],
+			fields=["name", "full_name", "department"],
 			limit=10,
 		)
 
@@ -52,9 +52,9 @@ def find_employee_by_name(last_name, first_name, patronymic=None):
 
 	# Якщо не знайшли точного співпадіння, шукаємо по прізвищу
 	employees = frappe.get_all(
-		"oiEmployee",
+		"hromsEmployee",
 		filters={"full_name": ["like", f"%{last_name}%"]},
-		fields=["name", "full_name", "organization"],
+		fields=["name", "full_name", "department"],
 		limit=10,
 	)
 

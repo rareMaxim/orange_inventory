@@ -107,7 +107,7 @@
    "fieldname": "responsible_person",
    "fieldtype": "Link",
    "label": "Відповідальна особа",
-   "options": "oiEmployee"
+   "options": "hromsEmployee"
   },
   {
    "fieldname": "умови_договору_section",

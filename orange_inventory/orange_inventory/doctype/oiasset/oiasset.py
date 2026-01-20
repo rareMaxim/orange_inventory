@@ -364,8 +364,9 @@ def split_asset_partial(source_asset_name, quantity_to_split, serial_numbers):
 
 
 def has_permission(doc, user):
-	organization = frappe.db.get_value("oiEmployee", {"user": user}, "organization")
-	if doc.current_owner == organization:
+	# Отримуємо department співробітника з hromsEmployee
+	department = frappe.db.get_value("hromsEmployee", {"user_id": user}, "department")
+	if doc.current_owner == department:
 		return True
 
 	return False
@@ -389,14 +390,14 @@ def get_permission_query_conditions(user):
 	if any(role in user_roles for role in privileged_roles):
 		return ""
 
-	# 3. Фільтрація по організації користувача
-	organization = frappe.db.get_value("oiEmployee", {"user": user}, "organization")
+	# 3. Фільтрація по department співробітника (hromsEmployee.department -> hromsOrgStructure)
+	department = frappe.db.get_value("hromsEmployee", {"user_id": user}, "department")
 
-	if organization:
+	if department:
 		# Використовуємо безпечний спосіб для SQL умови
-		return f"(`taboiAsset`.`current_owner` = {frappe.db.escape(organization)})"
+		return f"(`taboiAsset`.`current_owner` = {frappe.db.escape(department)})"
 	else:
-		# Якщо у користувача немає організації, не показувати нічого
+		# Якщо у користувача немає department, не показувати нічого
 		return "(`taboiAsset`.`current_owner` = 'N/A')"
 
 

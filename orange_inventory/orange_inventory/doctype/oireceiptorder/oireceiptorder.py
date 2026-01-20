@@ -24,7 +24,7 @@ class oiReceiptOrder(Document):
 		receipt_date: DF.Date
 		source_name: DF.DynamicLink | None
 		source_project: DF.Link | None
-		source_type: DF.Literal["oiDonor", "oiOrganization"]
+		source_type: DF.Literal["oiDonor", "hromsOrgStructure"]
 		to_organization: DF.Link | None
 	# end: auto-generated types
 
@@ -141,7 +141,7 @@ class oiReceiptOrder(Document):
 			"from_source_type": self.source_type,
 			"from_source_name": self.source_name,
 		}
-		if self.source_type == "oiOrganization":
+		if self.source_type == "hromsOrgStructure":
 			movement_data["from_organization"] = self.source_name
 
 		new_asset.append("movement_history", movement_data)

@@ -165,7 +165,7 @@ class oiServiceRequest(Document):
 		"""Перевірка даних перед збереженням"""
 		# Перевіряємо, що заявник належить до організації
 		if self.requester:
-			requester_org = frappe.db.get_value("oiEmployee", self.requester, "organization")
+			requester_org = frappe.db.get_value("hromsEmployee", self.requester, "department")
 			if requester_org:
 				self.requester_organization = requester_org
 
@@ -186,8 +186,8 @@ def get_permission_query_conditions(user):
 	if "System Manager" in frappe.get_roles(user):
 		return ""
 
-	user_employee = frappe.get_value("oiEmployee", {"user": user}, "name")
-	user_org = frappe.get_value("oiEmployee", user_employee, "organization")
+	user_employee = frappe.get_value("hromsEmployee", {"user_id": user}, "name")
+	user_org = frappe.get_value("hromsEmployee", user_employee, "department")
 
 	if user_org:
 		return f"""
@@ -203,7 +203,7 @@ def has_permission(doc, user, permission_type):
 	if "System Manager" in frappe.get_roles(user):
 		return True
 
-	user_employee = frappe.db.get_value("oiEmployee", {"user": user}, "name")
+	user_employee = frappe.db.get_value("hromsEmployee", {"user_id": user}, "name")
 
 	# Власник заявки або призначений виконавець може читати/редагувати
 	if doc.requester == user_employee or doc.assigned_to == user_employee:
@@ -211,7 +211,7 @@ def has_permission(doc, user, permission_type):
 
 	# Співробітники тієї ж організації можуть читати
 	if permission_type == "read":
-		user_org = frappe.db.get_value("oiEmployee", {"user": user}, "organization")
+		user_org = frappe.db.get_value("hromsEmployee", {"user_id": user}, "department")
 		if user_org and doc.requester_organization == user_org:
 			return True
 
@@ -225,7 +225,7 @@ def create_service_request_from_asset(asset_name, request_type, title, descripti
 	# asset = frappe.get_doc("oiAsset", asset_name)
 
 	# Отримуємо поточного користувача як співробітника
-	current_user_employee = frappe.db.get_value("oiEmployee", {"user": frappe.session.user}, "name")
+	current_user_employee = frappe.db.get_value("hromsEmployee", {"user_id": frappe.session.user}, "name")
 	if not current_user_employee:
 		frappe.throw(_("Ви не зареєстровані як співробітник"))
 

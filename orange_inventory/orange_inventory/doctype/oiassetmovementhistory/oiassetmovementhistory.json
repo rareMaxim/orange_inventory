@@ -33,7 +33,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "\u041a\u0443\u0434\u0438",
-   "options": "oiOrganization",
+   "options": "hromsOrgStructure",
    "read_only": 1
   },
   {
@@ -48,7 +48,7 @@
    "fieldname": "from_source_type",
    "fieldtype": "Select",
    "label": "\u0422\u0438\u043f \u0434\u0436\u0435\u0440\u0435\u043b\u0430 (\u0417\u0432\u0456\u0434\u043a\u0438)",
-   "options": "oiOrganization\noiDonor"
+   "options": "hromsOrgStructure\noiDonor"
   },
   {
    "fieldname": "from_source_name",

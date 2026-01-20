@@ -6,12 +6,11 @@ app_email = "maks4a@gmail.com"
 app_license = "mit"
 app_logo_url = "/assets/orange_inventory/images/oi-logo.webp"
 app_home = "/app/orange-inventory"
-# required_apps = []
 
 # Apps
 # ------------------
 
-# required_apps = []
+required_apps = ["hr_oms"]
 
 # Each item in the list will be shown as an app in the apps page
 add_to_apps_screen = [

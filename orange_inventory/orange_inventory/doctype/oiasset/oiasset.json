@@ -82,7 +82,7 @@
    "in_preview": 1,
    "label": "\u041c\u0430\u0442\u0435\u0440\u0456\u0430\u043b\u044c\u043d\u043e-\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0430 \u043e\u0441\u043e\u0431\u0430",
    "mandatory_depends_on": "eval:doc.status!=\"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\"",
-   "options": "oiEmployee",
+   "options": "hromsEmployee",
    "search_index": 1
   },
   {
@@ -134,14 +134,14 @@
    "precision": "2"
   },
   {
-   "fetch_from": "responsible_employee.organization",
+   "fetch_from": "responsible_employee.department",
    "fieldname": "current_owner",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
-   "options": "oiOrganization",
+   "options": "hromsOrgStructure",
    "search_index": 1
   },
   {
@@ -239,7 +239,7 @@
    "in_preview": 1,
    "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
    "mandatory_depends_on": "eval:doc.status==\"\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\"",
-   "options": "oiEmployee",
+   "options": "hromsEmployee",
    "search_index": 1
   },
   {

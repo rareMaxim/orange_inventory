@@ -65,7 +65,7 @@ frappe.listview_settings["oiHromadaSurvey"] = {
 						fieldtype: "Link",
 						fieldname: "org",
 						label: __("Розпорядник"),
-						options: "oiOrganization",
+						options: "hromsOrgStructure",
 						reqd: 1,
 					},
 					{
@@ -208,7 +208,7 @@ function show_import_dialog_listview(listview) {
 				label: __("Організація (опціонально)"),
 				fieldname: "organization",
 				fieldtype: "Link",
-				options: "oiOrganization",
+				options: "hromsOrgStructure",
 				description: __("Залиште порожнім для імпорту всіх організацій з файлу"),
 			},
 			{

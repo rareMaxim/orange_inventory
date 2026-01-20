@@ -124,19 +124,19 @@
    "in_list_view": 1,
    "in_preview": 1,
    "label": "\u0417\u0430\u044f\u0432\u043d\u0438\u043a",
-   "options": "oiEmployee",
+   "options": "hromsEmployee",
    "reqd": 1
   },
   {
-   "fetch_from": "requester.organization",
+   "fetch_from": "requester.department",
    "fieldname": "requester_organization",
    "fieldtype": "Link",
    "label": "\u041e\u0440\u0433\u0430\u043d\u0456\u0437\u0430\u0446\u0456\u044f \u0437\u0430\u044f\u0432\u043d\u0438\u043a\u0430",
-   "options": "oiOrganization",
+   "options": "hromsOrgStructure",
    "read_only": 1
   },
   {
-   "fetch_from": "requester.phone",
+   "fetch_from": "requester.mobile_phone",
    "fieldname": "requester_contact",
    "fieldtype": "Data",
    "label": "\u041a\u043e\u043d\u0442\u0430\u043a\u0442 \u0437\u0430\u044f\u0432\u043d\u0438\u043a\u0430",
@@ -152,7 +152,7 @@
    "in_list_view": 1,
    "in_preview": 1,
    "label": "\u041f\u0440\u0438\u0437\u043d\u0430\u0447\u0435\u043d\u043e",
-   "options": "oiEmployee"
+   "options": "hromsEmployee"
   },
   {
    "default": "0",

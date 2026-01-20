@@ -78,7 +78,7 @@
    "fieldname": "correspondent",
    "fieldtype": "Link",
    "label": "\u041a\u043e\u0440\u0435\u0441\u043f\u043e\u043d\u0434\u0435\u043d\u0442",
-   "options": "oiOrganization"
+   "options": "hromsOrgStructure"
   },
   {
    "fieldname": "external_number",
@@ -100,7 +100,7 @@
    "fieldname": "addressee",
    "fieldtype": "Link",
    "label": "\u0410\u0434\u0440\u0435\u0441\u0430\u0442",
-   "options": "oiOrganization"
+   "options": "hromsOrgStructure"
   },
   {
    "fieldname": "execution_section",
@@ -111,7 +111,7 @@
    "fieldname": "executor",
    "fieldtype": "Link",
    "label": "\u0412\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0438\u0439 \u0432\u0438\u043a\u043e\u043d\u0430\u0432\u0435\u0446\u044c",
-   "options": "oiEmployee"
+   "options": "hromsEmployee"
   },
   {
    "depends_on": "eval:doc.correspondence_type==\"\u0412\u0445\u0456\u0434\u043d\u0438\u0439\"",

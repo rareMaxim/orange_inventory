@@ -116,8 +116,8 @@ function set_default_values(frm) {
 	frappe.call({
 		method: "frappe.client.get_value",
 		args: {
-			doctype: "oiEmployee",
-			filters: { user: frappe.session.user },
+			doctype: "hromsEmployee",
+			filters: { user_id: frappe.session.user },
 			fieldname: "name",
 		},
 		callback: function (r) {
@@ -191,8 +191,8 @@ function assign_to_current_user(frm) {
 	frappe.call({
 		method: "frappe.client.get_value",
 		args: {
-			doctype: "oiEmployee",
-			filters: { user: frappe.session.user },
+			doctype: "hromsEmployee",
+			filters: { user_id: frappe.session.user },
 			fieldname: "name",
 		},
 		callback: function (r) {

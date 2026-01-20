@@ -79,9 +79,9 @@ def get_assets_by_decision(decision):
 	org_list = list(set([a.current_owner for a in assets if a.current_owner]))
 	if org_list:
 		orgs = frappe.get_all(
-			"oiOrganization", filters={"name": ("in", org_list)}, fields=["name", "organization_name"]
+			"hromsOrgStructure", filters={"name": ("in", org_list)}, fields=["name", "department_name"]
 		)
-		org_names = {o.name: o.organization_name for o in orgs}
+		org_names = {o.name: o.department_name for o in orgs}
 
 	# Отримуємо історію руху для кожного активу
 	for asset in assets:
@@ -136,7 +136,7 @@ def get_asset_movement_history(asset_name):
 	for h in history:
 		if h.to_organization:
 			org_names.add(h.to_organization)
-		if h.from_source_type == "oiOrganization" and h.from_source_name:
+		if h.from_source_type == "hromsOrgStructure" and h.from_source_name:
 			org_names.add(h.from_source_name)
 		if h.reference_appendix:
 			decision_names.add(h.reference_appendix)
@@ -145,11 +145,11 @@ def get_asset_movement_history(asset_name):
 	org_titles = {}
 	if org_names:
 		orgs = frappe.get_all(
-			"oiOrganization",
+			"hromsOrgStructure",
 			filters={"name": ("in", list(org_names))},
-			fields=["name", "organization_name"],
+			fields=["name", "department_name"],
 		)
-		org_titles = {o.name: o.organization_name for o in orgs}
+		org_titles = {o.name: o.department_name for o in orgs}
 
 	# Отримуємо назви донорів
 	donor_names = set()
@@ -177,7 +177,7 @@ def get_asset_movement_history(asset_name):
 	# Додаємо назви до історії
 	for h in history:
 		h["to_organization_name"] = org_titles.get(h.to_organization, h.to_organization)
-		if h.from_source_type == "oiOrganization":
+		if h.from_source_type == "hromsOrgStructure":
 			h["from_source_name"] = org_titles.get(h.from_source_name, h.from_source_name)
 		elif h.from_source_type == "oiDonor":
 			h["from_source_name"] = donor_titles.get(h.from_source_name, h.from_source_name)

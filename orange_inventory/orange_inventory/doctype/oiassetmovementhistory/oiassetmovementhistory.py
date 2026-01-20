@@ -16,7 +16,7 @@ class oiAssetMovementHistory(Document):
 
 		date: DF.Date | None
 		from_source_name: DF.DynamicLink | None
-		from_source_type: DF.Literal["oiOrganization", "oiDonor"]
+		from_source_type: DF.Literal["hromsOrgStructure", "oiDonor"]
 		movement_type: DF.Data | None
 		parent: DF.Data
 		parentfield: DF.Data

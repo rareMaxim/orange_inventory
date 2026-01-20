@@ -328,7 +328,7 @@ def get_overdue_reports(days_overdue: int = 0):
 	# Додати деталі організації
 	for report in reports:
 		org_data = frappe.db.get_value(
-			"oiOrganization", report.organization, ["organization_name", "email"], as_dict=True
+			"hromsOrgStructure", report.organization, ["department_name", "email"], as_dict=True
 		)
 		if org_data:
 			report.update(org_data)
@@ -351,12 +351,12 @@ def get_organizations_with_indicators(txt: str = ""):
 	query = """
 		SELECT DISTINCT
 			org.name as value,
-			org.organization_name as description,
+			org.department_name as description,
 			COUNT(survey.name) as indicator_count
-		FROM `taboiOrganization` org
+		FROM `tabhromsOrgStructure` org
 		INNER JOIN `taboiHromadaSurvey` survey
 			ON survey.master_info = org.name
-		WHERE org.enabled = 1
+		WHERE org.status = 'Активний'
 			AND survey.enabled = 1
 			AND survey.is_group = 0
 	"""
@@ -366,14 +366,13 @@ def get_organizations_with_indicators(txt: str = ""):
 		query += """
 			AND (
 				org.name LIKE %(txt)s
-				OR org.organization_name LIKE %(txt)s
-				OR org.abbreviation LIKE %(txt)s
+				OR org.department_name LIKE %(txt)s
 			)
 		"""
 
 	query += """
-		GROUP BY org.name, org.organization_name
-		ORDER BY org.organization_name
+		GROUP BY org.name, org.department_name
+		ORDER BY org.department_name
 	"""
 
 	results = frappe.db.sql(query, {"txt": f"%{txt}%"}, as_dict=True)
@@ -408,7 +407,7 @@ def send_reminder_emails(report_ids: list | str):
 	for report_id in report_ids:
 		try:
 			report = frappe.get_doc("oiPeriodicReport", report_id)
-			org = frappe.get_doc("oiOrganization", report.organization)
+			org = frappe.get_doc("hromsOrgStructure", report.organization)
 
 			if not org.email:
 				errors.append(f"{report_id}: Організація не має email")

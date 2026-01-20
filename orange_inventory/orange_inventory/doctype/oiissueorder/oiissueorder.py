@@ -51,7 +51,7 @@ class oiIssueOrder(Document):
 
 			if asset_data.current_owner != self.from_organization:
 				owner_name = frappe.db.get_value(
-					"oiOrganization", asset_data.current_owner, "organization_name"
+					"hromsOrgStructure", asset_data.current_owner, "department_name"
 				)
 				frappe.throw(
 					f"Помилка передачі активу **{asset_data.asset_name} ({item.asset})**. "
@@ -78,7 +78,7 @@ class oiIssueOrder(Document):
 					{
 						"date": self.issue_date,
 						"movement_type": "Передача",
-						"from_source_type": "oiOrganization",
+						"from_source_type": "hromsOrgStructure",
 						"from_source_name": self.from_organization,
 						"to_organization": self.to_organization,
 						"reference_appendix": self.decision,
@@ -106,7 +106,7 @@ class oiIssueOrder(Document):
 					{
 						"date": self.issue_date,
 						"movement_type": "Надходження (переміщення)",
-						"from_source_type": "oiOrganization",
+						"from_source_type": "hromsOrgStructure",
 						"from_source_name": self.from_organization,
 						"to_organization": self.to_organization,
 						"reference_appendix": self.decision,
@@ -121,7 +121,7 @@ class oiIssueOrder(Document):
 					{
 						"date": self.issue_date,
 						"movement_type": f"Передача частини ({item.qty} од.)",
-						"from_source_type": "oiOrganization",
+						"from_source_type": "hromsOrgStructure",
 						"from_source_name": self.from_organization,
 						"to_organization": self.to_organization,
 						"reference_appendix": self.decision,

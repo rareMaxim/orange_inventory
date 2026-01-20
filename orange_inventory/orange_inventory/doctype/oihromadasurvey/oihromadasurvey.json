@@ -166,7 +166,7 @@
    "fieldname": "master_info",
    "fieldtype": "Link",
    "label": "\u0420\u043e\u0437\u043f\u043e\u0440\u044f\u0434\u043d\u0438\u043a",
-   "options": "oiOrganization"
+   "options": "hromsOrgStructure"
   },
   {
    "fieldname": "section_break_gvab",

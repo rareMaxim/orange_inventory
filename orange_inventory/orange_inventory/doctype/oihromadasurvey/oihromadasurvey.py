@@ -694,14 +694,14 @@ def _get_org_meta(org: str) -> dict:
 	if not org:
 		return {"title": "", "abbreviation": "", "tax_code": "", "name": ""}
 	row = frappe.db.get_value(
-		"oiOrganization",
+		"hromsOrgStructure",
 		org,
-		["organization_name", "abbreviation", "tax_code", "name"],
+		["department_name", "abbreviation", "tax_code", "name"],
 		as_dict=True,
 	)
 	if not row:
 		return {"title": str(org), "abbreviation": "", "tax_code": "", "name": str(org)}
-	title = row.organization_name or row.abbreviation or row.name
+	title = row.department_name or row.abbreviation or row.name
 	return {
 		"title": title,
 		"abbreviation": row.abbreviation or "",
@@ -742,8 +742,8 @@ def export_org_template(org: str, period: str | None = None):
 	url = _save_bytes_as_private_file(
 		filename,
 		bio.getvalue(),
-		attached_to_doctype="oiOrganization",
-		attached_to_name=org,  # системне name (ORG-xxxxx)
+		attached_to_doctype="hromsOrgStructure",
+		attached_to_name=org,  # системне name (org-xxxxx)
 	)
 	return {"file_url": url}
 
@@ -812,7 +812,7 @@ def export_all_org_templates(period: str | None = None):
 		frappe.throw("Недостатньо прав для експорту шаблонів", frappe.PermissionError)
 
 	orgs = frappe.get_all(
-		"oiOrganization",
+		"hromsOrgStructure",
 		filters={"enabled": 1},
 		pluck="name",
 	)
@@ -1119,10 +1119,10 @@ def generate_completion_report(period: str | None = None):
 
 	# Отримати всі активні організації
 	orgs = frappe.get_all(
-		"oiOrganization",
+		"hromsOrgStructure",
 		filters={"enabled": 1},
-		fields=["name", "organization_name", "abbreviation"],
-		order_by="organization_name",
+		fields=["name", "department_name", "abbreviation"],
+		order_by="department_name",
 	)
 
 	if not orgs:
@@ -1134,7 +1134,7 @@ def generate_completion_report(period: str | None = None):
 
 	for org in orgs:
 		org_name = org.name
-		org_title = org.organization_name or org.abbreviation or org_name
+		org_title = org.department_name or org.abbreviation or org_name
 
 		# Отримати всі показники для організації (листи, не групи)
 		indicators = frappe.get_all(
