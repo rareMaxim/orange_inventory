@@ -8,7 +8,7 @@
 // });
 // qms_cherga / orange_inventory шлях підкоригуй під свій app
 frappe.ui.form.on("oiHromadaSurvey", {
-	onload(frm) {
+	onload() {
 		// update_value_display(frm);
 	},
 	refresh(frm) {
@@ -26,6 +26,27 @@ frappe.ui.form.on("oiHromadaSurvey", {
 			frm.add_custom_button(__("Показати Тенденцію"), function () {
 				show_value_trend_chart(frm);
 			});
+
+			// Кнопка синхронізації з hromada.gov.ua (якщо є mapping)
+			if (frm.doc.hromada_parameter_id && frm.doc.hromada_data_source === "community") {
+				frm.add_custom_button(
+					__("Синхронізувати з порталом"),
+					function () {
+						sync_single_to_portal(frm);
+					},
+					__("hromada.gov.ua")
+				);
+			}
+
+			// Показати інформацію про mapping
+			if (frm.doc.hromada_parameter_id) {
+				frm.dashboard.add_indicator(
+					__("Портал: {0}", [
+						frm.doc.hromada_parameter_code || frm.doc.hromada_parameter_id,
+					]),
+					frm.doc.hromada_data_source === "community" ? "green" : "blue"
+				);
+			}
 		}
 	},
 	type(frm) {
@@ -60,6 +81,34 @@ function update_value_display(frm) {
 	} else {
 		frm.set_value("value_display", "");
 	}
+}
+
+function sync_single_to_portal(frm) {
+	// Синхронізація одного показника з порталом
+	frappe.confirm(__("Відправити значення на портал hromada.gov.ua?"), () => {
+		frappe.call({
+			method: "orange_inventory.orange_inventory.doctype.oihromadasettings.hromada_sync.sync_to_portal",
+			freeze: true,
+			freeze_message: __("Відправка даних..."),
+			callback: function (r) {
+				if (r.message) {
+					if (r.message.status === "success") {
+						frappe.show_alert({
+							message: __("Дані успішно відправлено на портал"),
+							indicator: "green",
+						});
+						frm.reload_doc();
+					} else {
+						frappe.msgprint({
+							title: __("Помилка"),
+							message: r.message.error || __("Невідома помилка"),
+							indicator: "red",
+						});
+					}
+				}
+			},
+		});
+	});
 }
 
 function show_value_trend_chart(frm) {

@@ -1,0 +1,166 @@
+{
+ "actions": [],
+ "creation": "2025-01-27 12:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "api_section",
+  "api_base_url",
+  "api_token",
+  "column_break_api",
+  "community_id",
+  "last_sync_date",
+  "sync_section",
+  "sync_status_html",
+  "column_break_sync",
+  "fetch_parameters_btn",
+  "sync_to_portal_btn",
+  "mapping_section",
+  "total_parameters",
+  "mapped_parameters",
+  "unmapped_parameters",
+  "column_break_map",
+  "auto_map_btn",
+  "view_mapping_btn",
+  "logs_section",
+  "sync_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "api_section",
+   "fieldtype": "Section Break",
+   "label": "API hromada.gov.ua"
+  },
+  {
+   "default": "https://backend.hromada.gov.ua/api",
+   "fieldname": "api_base_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "API Base URL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "api_token",
+   "fieldtype": "Password",
+   "in_list_view": 1,
+   "label": "Bearer Token",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_api",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "ID \u0433\u0440\u043e\u043c\u0430\u0434\u0438 \u0437 \u043f\u043e\u0440\u0442\u0430\u043b\u0443 (\u0437\u0430\u043f\u043e\u0432\u043d\u044e\u0454\u0442\u044c\u0441\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e)",
+   "fieldname": "community_id",
+   "fieldtype": "Int",
+   "label": "Community ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_sync_date",
+   "fieldtype": "Datetime",
+   "label": "\u041e\u0441\u0442\u0430\u043d\u043d\u044f \u0441\u0438\u043d\u0445\u0440\u043e\u043d\u0456\u0437\u0430\u0446\u0456\u044f",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sync_section",
+   "fieldtype": "Section Break",
+   "label": "\u0421\u0438\u043d\u0445\u0440\u043e\u043d\u0456\u0437\u0430\u0446\u0456\u044f"
+  },
+  {
+   "fieldname": "sync_status_html",
+   "fieldtype": "HTML",
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0441\u0438\u043d\u0445\u0440\u043e\u043d\u0456\u0437\u0430\u0446\u0456\u0457"
+  },
+  {
+   "fieldname": "column_break_sync",
+   "fieldtype": "Column Break"
+  },
+  {
+   "button_color": "Info",
+   "fieldname": "fetch_parameters_btn",
+   "fieldtype": "Button",
+   "label": "\u041e\u0442\u0440\u0438\u043c\u0430\u0442\u0438 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0438 \u0437 \u043f\u043e\u0440\u0442\u0430\u043b\u0443"
+  },
+  {
+   "button_color": "Success",
+   "fieldname": "sync_to_portal_btn",
+   "fieldtype": "Button",
+   "label": "\u0412\u0456\u0434\u043f\u0440\u0430\u0432\u0438\u0442\u0438 \u0434\u0430\u043d\u0456 \u043d\u0430 \u043f\u043e\u0440\u0442\u0430\u043b"
+  },
+  {
+   "fieldname": "mapping_section",
+   "fieldtype": "Section Break",
+   "label": "Mapping \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0456\u0432"
+  },
+  {
+   "fieldname": "total_parameters",
+   "fieldtype": "Int",
+   "label": "\u0412\u0441\u044c\u043e\u0433\u043e \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0456\u0432 \u043d\u0430 \u043f\u043e\u0440\u0442\u0430\u043b\u0456",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mapped_parameters",
+   "fieldtype": "Int",
+   "label": "\u0417\u0430\u043c\u0430\u043f\u043b\u0435\u043d\u043e",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unmapped_parameters",
+   "fieldtype": "Int",
+   "label": "\u0411\u0435\u0437 mapping",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_map",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "auto_map_btn",
+   "fieldtype": "Button",
+   "label": "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u0438\u0439 mapping \u043f\u043e \u043a\u043e\u0434\u0443"
+  },
+  {
+   "fieldname": "view_mapping_btn",
+   "fieldtype": "Button",
+   "label": "\u041f\u0435\u0440\u0435\u0433\u043b\u044f\u043d\u0443\u0442\u0438 mapping"
+  },
+  {
+   "fieldname": "logs_section",
+   "fieldtype": "Section Break",
+   "label": "\u041b\u043e\u0433\u0438 \u0441\u0438\u043d\u0445\u0440\u043e\u043d\u0456\u0437\u0430\u0446\u0456\u0457"
+  },
+  {
+   "fieldname": "sync_log",
+   "fieldtype": "Code",
+   "label": "\u041b\u043e\u0433",
+   "options": "JSON",
+   "read_only": 1
+  }
+ ],
+ "hide_toolbar": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-01-27 19:29:58.202467",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiHromadaSettings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

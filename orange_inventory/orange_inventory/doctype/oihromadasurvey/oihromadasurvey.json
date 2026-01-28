@@ -22,6 +22,11 @@
   "master_info",
   "section_break_gvab",
   "description",
+  "hromada_section",
+  "hromada_parameter_id",
+  "hromada_parameter_code",
+  "hromada_data_source",
+  "hromada_last_sync",
   "history_tab",
   "value_history",
   "statistic_tab",
@@ -178,6 +183,40 @@
    "label": "Description"
   },
   {
+   "collapsible": 1,
+   "depends_on": "eval:doc.type!=\"Група\"",
+   "fieldname": "hromada_section",
+   "fieldtype": "Section Break",
+   "label": "Інтеграція hromada.gov.ua"
+  },
+  {
+   "fieldname": "hromada_parameter_id",
+   "fieldtype": "Int",
+   "label": "ID параметра на порталі",
+   "description": "Числовий ID параметра з API hromada.gov.ua",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hromada_parameter_code",
+   "fieldtype": "Data",
+   "label": "Код параметра на порталі",
+   "description": "Код параметра (A.1.1.1) з API hromada.gov.ua",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hromada_data_source",
+   "fieldtype": "Data",
+   "label": "Джерело даних",
+   "description": "community - заповнюється громадою, інші - автоматично з держреєстрів",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hromada_last_sync",
+   "fieldtype": "Datetime",
+   "label": "Остання синхронізація",
+   "read_only": 1
+  },
+  {
    "default": "\u0420\u0430\u0437 \u043d\u0430 \u043a\u0432\u0430\u0440\u0442\u0430\u043b",
    "fieldname": "frequency",
    "fieldtype": "Select",
@@ -215,7 +254,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2025-10-28 12:16:27.889650",
+ "modified": "2026-01-27 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHromadaSurvey",

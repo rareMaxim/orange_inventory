@@ -1,0 +1,48 @@
+{
+ "app": "orange_inventory",
+ "charts": [],
+ "content": "[{\"id\":\"42GV1KpxcJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">oiHromada</span>\",\"col\":12}},{\"id\":\"uKKJK_PH2p\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0406\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0456\u044f\",\"col\":3}},{\"id\":\"FnymDMDaiL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0438\",\"col\":3}}]",
+ "creation": "2026-01-27 18:21:33.538004",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "grid",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "oiHromada",
+ "link_type": "DocType",
+ "links": [],
+ "modified": "2026-01-27 18:25:06.154937",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiHromada",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 46.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0406\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0456\u044f",
+   "link_to": "oiHromadaSettings",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "doc_view": "List",
+   "label": "\u041f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0438",
+   "link_to": "oiHromadaSurvey",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "oiHromada",
+ "type": "Workspace"
+}
