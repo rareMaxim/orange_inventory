@@ -926,6 +926,100 @@ def export_all_org_templates(period: str | None = None):
 	return {"file_url": zip_url, "count": len(paths), "summary_rows": len(summary_rows)}
 
 
+def _parse_excel_header(ws) -> dict:
+	"""
+	Парсить заголовок Excel файлу для отримання організації та періоду.
+
+	Формат:
+	- Рядок 1: "Організація: Назва організації"
+	- Рядок 2: "Період: 2025-Q4 | ЄДРПОУ: 01993011"
+
+	Returns:
+	        dict: {"organization_name": str, "tax_code": str, "year": int, "quarter": str}
+	"""
+	import re
+
+	result = {
+		"organization_name": None,
+		"tax_code": None,
+		"year": None,
+		"quarter": None,
+	}
+
+	# Рядок 1: Організація
+	row1 = ws["A1"].value or ""
+	if "Організація:" in row1:
+		result["organization_name"] = row1.replace("Організація:", "").strip()
+
+	# Рядок 2: Період та ЄДРПОУ
+	row2 = ws["A2"].value or ""
+
+	# Парсимо ЄДРПОУ
+	edrpou_match = re.search(r"ЄДРПОУ:\s*(\d+)", row2)
+	if edrpou_match:
+		result["tax_code"] = edrpou_match.group(1)
+
+	# Парсимо період (формат: 2025-Q4 або 2025-Q1)
+	period_match = re.search(r"Період:\s*(\d{4})-?(Q\d)", row2)
+	if period_match:
+		result["year"] = int(period_match.group(1))
+		result["quarter"] = period_match.group(2)
+
+	return result
+
+
+def _find_organization_by_tax_code(tax_code: str) -> str | None:
+	"""Знаходить організацію по ЄДРПОУ."""
+	if not tax_code:
+		return None
+	return frappe.db.get_value("hromsOrgStructure", {"tax_code": tax_code}, "name")
+
+
+def _create_import_log(
+	organization: str | None,
+	year: int | None,
+	quarter: str | None,
+	file_url: str,
+	total_parameters: int,
+	details: list,
+) -> str | None:
+	"""
+	Створює запис в журналі імпорту.
+
+	Returns:
+	        str: ID створеного документа або None при помилці
+	"""
+	if not organization or not year or not quarter:
+		return None
+
+	try:
+		import_log = frappe.new_doc("oiHromadaImportLog")
+		import_log.organization = organization
+		import_log.year = year
+		import_log.quarter = quarter
+		import_log.file = file_url
+		import_log.total_parameters = total_parameters
+		import_log.status = "Імпортовано"
+
+		# Додаємо деталі змін
+		for change in details:
+			import_log.append(
+				"changes",
+				{
+					"survey": change.get("id"),
+					"parameter_code": change.get("id"),
+					"old_value": str(change.get("old_value", "")),
+					"new_value": str(change.get("new_value", "")),
+				},
+			)
+
+		import_log.insert(ignore_permissions=True)
+		return import_log.name
+	except Exception as e:
+		frappe.log_error(f"Помилка створення журналу імпорту: {e}", "Import Log Error")
+		return None
+
+
 @frappe.whitelist()
 def import_from_excel(file_url: str, org: str | None = None):
 	"""
@@ -941,7 +1035,8 @@ def import_from_excel(file_url: str, org: str | None = None):
 	                "updated": int,  # кількість оновлених записів
 	                "skipped": int,  # кількість пропущених
 	                "errors": list,  # список помилок
-	                "details": list  # детальна інформація про зміни
+	                "details": list,  # детальна інформація про зміни
+	                "import_log": str | None  # ID запису журналу імпорту
 	        }
 	"""
 	from openpyxl import load_workbook
@@ -963,15 +1058,25 @@ def import_from_excel(file_url: str, org: str | None = None):
 	except Exception as e:
 		frappe.throw(f"Помилка читання файлу Excel: {str(e)}")
 
+	# Парсимо заголовок для отримання організації та періоду
+	header_info = _parse_excel_header(ws)
+	detected_org = _find_organization_by_tax_code(header_info.get("tax_code"))
+
+	# Якщо org не передано, використовуємо виявлену організацію
+	if not org and detected_org:
+		org = detected_org
+
 	updated = 0
 	skipped = 0
 	errors = []
 	details = []
 	critical_error = None
+	total_rows = 0
 
 	try:
 		# Починаємо з 5-го рядка (перші 4 - шапка)
 		for row_idx, row in enumerate(ws.iter_rows(min_row=5, values_only=True), start=5):
+			total_rows += 1
 			if not row or len(row) < 7:
 				continue
 
@@ -1086,12 +1191,29 @@ def import_from_excel(file_url: str, org: str | None = None):
 			"details": [],
 		}
 
+	# Створюємо запис у журналі імпорту
+	import_log_id = None
+	if updated > 0 and detected_org:
+		import_log_id = _create_import_log(
+			organization=detected_org,
+			year=header_info.get("year"),
+			quarter=header_info.get("quarter"),
+			file_url=file_url,
+			total_parameters=total_rows,
+			details=details,
+		)
+
 	return {
 		"status": "success" if not errors or updated > 0 else "error",
 		"updated": updated,
 		"skipped": skipped,
 		"errors": errors,
 		"details": details,
+		"import_log": import_log_id,
+		"organization": detected_org,
+		"period": f"{header_info.get('year')}-{header_info.get('quarter')}"
+		if header_info.get("year")
+		else None,
 	}
 
 

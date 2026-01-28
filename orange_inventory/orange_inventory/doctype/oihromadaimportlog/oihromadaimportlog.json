@@ -1,0 +1,193 @@
+{
+	"actions": [],
+	"autoname": "format:IMP-{YYYY}-{####}",
+	"creation": "2026-01-28 12:00:00.000000",
+	"doctype": "DocType",
+	"editable_grid": 1,
+	"engine": "InnoDB",
+	"field_order": [
+		"main_section",
+		"organization",
+		"organization_name",
+		"tax_code",
+		"column_break_main",
+		"year",
+		"quarter",
+		"period_display",
+		"import_section",
+		"import_date",
+		"imported_by",
+		"column_break_import",
+		"file",
+		"status",
+		"statistics_section",
+		"total_parameters",
+		"total_changes",
+		"column_break_stats",
+		"sent_to_portal_date",
+		"changes_section",
+		"changes"
+	],
+	"fields": [
+		{
+			"fieldname": "main_section",
+			"fieldtype": "Section Break",
+			"label": "Організація та період"
+		},
+		{
+			"fieldname": "organization",
+			"fieldtype": "Link",
+			"in_list_view": 1,
+			"in_standard_filter": 1,
+			"label": "Організація",
+			"options": "hromsOrgStructure",
+			"reqd": 1
+		},
+		{
+			"fetch_from": "organization.department_name",
+			"fieldname": "organization_name",
+			"fieldtype": "Data",
+			"label": "Назва організації",
+			"read_only": 1
+		},
+		{
+			"fetch_from": "organization.tax_code",
+			"fieldname": "tax_code",
+			"fieldtype": "Data",
+			"label": "ЄДРПОУ",
+			"read_only": 1
+		},
+		{
+			"fieldname": "column_break_main",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "year",
+			"fieldtype": "Int",
+			"in_list_view": 1,
+			"in_standard_filter": 1,
+			"label": "Рік",
+			"reqd": 1
+		},
+		{
+			"fieldname": "quarter",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"in_standard_filter": 1,
+			"label": "Квартал",
+			"options": "\nQ1\nQ2\nQ3\nQ4",
+			"reqd": 1
+		},
+		{
+			"fieldname": "period_display",
+			"fieldtype": "Data",
+			"label": "Період",
+			"read_only": 1
+		},
+		{
+			"fieldname": "import_section",
+			"fieldtype": "Section Break",
+			"label": "Інформація про імпорт"
+		},
+		{
+			"default": "Now",
+			"fieldname": "import_date",
+			"fieldtype": "Datetime",
+			"in_list_view": 1,
+			"label": "Дата імпорту",
+			"read_only": 1
+		},
+		{
+			"fieldname": "imported_by",
+			"fieldtype": "Link",
+			"label": "Імпортував",
+			"options": "User",
+			"read_only": 1
+		},
+		{
+			"fieldname": "column_break_import",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "file",
+			"fieldtype": "Attach",
+			"label": "Файл"
+		},
+		{
+			"default": "Імпортовано",
+			"fieldname": "status",
+			"fieldtype": "Select",
+			"in_list_view": 1,
+			"in_standard_filter": 1,
+			"label": "Статус",
+			"options": "Імпортовано\nВідправлено на портал"
+		},
+		{
+			"fieldname": "statistics_section",
+			"fieldtype": "Section Break",
+			"label": "Статистика"
+		},
+		{
+			"default": "0",
+			"fieldname": "total_parameters",
+			"fieldtype": "Int",
+			"label": "Всього параметрів",
+			"read_only": 1
+		},
+		{
+			"default": "0",
+			"fieldname": "total_changes",
+			"fieldtype": "Int",
+			"label": "Кількість змін",
+			"read_only": 1
+		},
+		{
+			"fieldname": "column_break_stats",
+			"fieldtype": "Column Break"
+		},
+		{
+			"fieldname": "sent_to_portal_date",
+			"fieldtype": "Datetime",
+			"label": "Відправлено на портал",
+			"read_only": 1
+		},
+		{
+			"fieldname": "changes_section",
+			"fieldtype": "Section Break",
+			"label": "Деталі змін"
+		},
+		{
+			"fieldname": "changes",
+			"fieldtype": "Table",
+			"label": "Зміни",
+			"options": "oiHromadaImportLogItem"
+		}
+	],
+	"index_web_pages_for_search": 1,
+	"links": [],
+	"modified": "2026-01-28 12:00:00.000000",
+	"modified_by": "Administrator",
+	"module": "Orange Inventory",
+	"name": "oiHromadaImportLog",
+	"naming_rule": "Expression (old style)",
+	"owner": "Administrator",
+	"permissions": [
+		{
+			"create": 1,
+			"delete": 1,
+			"email": 1,
+			"export": 1,
+			"print": 1,
+			"read": 1,
+			"report": 1,
+			"role": "System Manager",
+			"share": 1,
+			"write": 1
+		}
+	],
+	"sort_field": "creation",
+	"sort_order": "DESC",
+	"states": [],
+	"title_field": "organization_name",
+	"track_changes": 1
+}

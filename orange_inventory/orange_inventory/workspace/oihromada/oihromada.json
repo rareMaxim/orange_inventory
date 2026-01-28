@@ -1,7 +1,7 @@
 {
  "app": "orange_inventory",
  "charts": [],
- "content": "[{\"id\":\"42GV1KpxcJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">oiHromada</span>\",\"col\":12}},{\"id\":\"uKKJK_PH2p\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0406\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0456\u044f\",\"col\":3}},{\"id\":\"FnymDMDaiL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0438\",\"col\":3}}]",
+ "content": "[{\"id\":\"42GV1KpxcJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">oiHromada</span>\",\"col\":12}},{\"id\":\"uKKJK_PH2p\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0406\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0456\u044f\",\"col\":3}},{\"id\":\"FnymDMDaiL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0438\",\"col\":3}},{\"id\":\"-rfOWU26R8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0416\u0443\u0440\u043d\u0430\u043b \u0437\u0430\u043f\u043e\u0432\u043d\u0435\u043d\u043d\u044f\",\"col\":3}}]",
  "creation": "2026-01-27 18:21:33.538004",
  "custom_blocks": [],
  "docstatus": 0,
@@ -15,7 +15,7 @@
  "label": "oiHromada",
  "link_type": "DocType",
  "links": [],
- "modified": "2026-01-27 18:25:06.154937",
+ "modified": "2026-01-28 11:22:01.754240",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiHromada",
@@ -39,6 +39,14 @@
    "doc_view": "List",
    "label": "\u041f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0438",
    "link_to": "oiHromadaSurvey",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0416\u0443\u0440\u043d\u0430\u043b \u0437\u0430\u043f\u043e\u0432\u043d\u0435\u043d\u043d\u044f",
+   "link_to": "oiHromadaImportLog",
    "stats_filter": "[]",
    "type": "DocType"
   }
