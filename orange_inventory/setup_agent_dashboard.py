@@ -62,6 +62,15 @@ def create_number_cards():
 			"show_percentage_stats": 0,
 			"filters_json": '[["oiAgent","asset","is","not set"]]',
 		},
+		{
+			"name": "Активні сповіщення",
+			"label": "Активні сповіщення",
+			"document_type": "oiAgentAlert",
+			"function": "Count",
+			"color": "#E53E3E",
+			"show_percentage_stats": 0,
+			"filters_json": '[["oiAgentAlert","status","=","Активне"]]',
+		},
 	]
 
 	for card_data in cards:
@@ -162,6 +171,7 @@ def create_dashboard():
 				{"card": "Активні агенти"},
 				{"card": "Офлайн агенти"},
 				{"card": "Непривʼязані агенти"},
+				{"card": "Активні сповіщення"},
 			],
 		}
 	)

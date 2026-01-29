@@ -197,6 +197,11 @@ def report_machine_data(static_data: str, dynamic_data: str | None = None):
 	if dynamic:
 		_save_snapshot(agent.name, dynamic)
 
+	# Зберігаємо дані про встановлене ПЗ
+	software_list = static.get("installed_software", [])
+	if software_list:
+		_save_software(agent.name, software_list)
+
 	frappe.db.commit()
 
 	return {
@@ -234,6 +239,88 @@ def _save_snapshot(agent_name: str, dynamic: dict):
 		snapshot.insert(ignore_permissions=True)
 	except Exception:
 		frappe.log_error("Не вдалося зберегти oiAgentSnapshot", "Agent API")
+
+
+def _save_software(agent_name: str, software_list: list):
+	"""
+	Зберігає/оновлює список встановленого ПЗ для агента.
+
+	Args:
+	        agent_name: ID агента
+	        software_list: список словників з даними про ПЗ
+	"""
+	if not software_list:
+		return
+
+	try:
+		# Отримуємо існуючий софт для цього агента
+		existing_software = {
+			row.software_name: row.name
+			for row in frappe.get_all(
+				"oiAgentSoftware", filters={"agent": agent_name}, fields=["name", "software_name"]
+			)
+		}
+
+		current_software_names = set()
+
+		for sw in software_list:
+			name = sw.get("name", "").strip()
+			if not name:
+				continue
+
+			current_software_names.add(name)
+			version = sw.get("version", "").strip()
+			publisher = sw.get("publisher", "").strip()
+			install_date = sw.get("install_date")  # YYYYMMDD format
+			install_location = sw.get("install_location", "").strip()
+
+			# Парсимо дату встановлення
+			parsed_date = None
+			if install_date and len(install_date) == 8:
+				try:
+					parsed_date = f"{install_date[:4]}-{install_date[4:6]}-{install_date[6:8]}"
+				except Exception:
+					pass
+
+			if name in existing_software:
+				# Оновлюємо існуючий запис
+				frappe.db.set_value(
+					"oiAgentSoftware",
+					existing_software[name],
+					{
+						"version": version,
+						"publisher": publisher,
+						"install_date": parsed_date,
+						"install_location": install_location,
+					},
+					update_modified=False,
+				)
+				# Перевіряємо compliance
+				doc = frappe.get_doc("oiAgentSoftware", existing_software[name])
+				doc.check_compliance()
+				doc.db_update()
+			else:
+				# Створюємо новий запис
+				doc = frappe.get_doc(
+					{
+						"doctype": "oiAgentSoftware",
+						"agent": agent_name,
+						"software_name": name,
+						"version": version,
+						"publisher": publisher,
+						"install_date": parsed_date,
+						"install_location": install_location,
+					}
+				)
+				doc.insert(ignore_permissions=True)
+
+		# Видаляємо софт який більше не встановлений
+		for sw_name, doc_name in existing_software.items():
+			if sw_name not in current_software_names:
+				frappe.delete_doc("oiAgentSoftware", doc_name, ignore_permissions=True)
+
+	except Exception:
+		frappe.log_error("Не вдалося зберегти oiAgentSoftware", "Agent API")
 
 
 @frappe.whitelist()

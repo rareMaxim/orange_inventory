@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-01-29 20:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "main_section",
+  "agent",
+  "software_name",
+  "version",
+  "column_break_main",
+  "publisher",
+  "install_date",
+  "install_location",
+  "analysis_section",
+  "catalog_entry",
+  "compliance_status",
+  "column_break_analysis",
+  "needs_update",
+  "is_outdated",
+  "last_checked"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_section",
+   "fieldtype": "Section Break",
+   "label": "Інформація про ПЗ"
+  },
+  {
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Агент",
+   "options": "oiAgent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "software_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Назва програми",
+   "reqd": 1
+  },
+  {
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Версія"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "publisher",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Видавець"
+  },
+  {
+   "fieldname": "install_date",
+   "fieldtype": "Date",
+   "label": "Дата встановлення"
+  },
+  {
+   "fieldname": "install_location",
+   "fieldtype": "Data",
+   "label": "Шлях встановлення"
+  },
+  {
+   "fieldname": "analysis_section",
+   "fieldtype": "Section Break",
+   "label": "Аналіз відповідності"
+  },
+  {
+   "fieldname": "catalog_entry",
+   "fieldtype": "Link",
+   "label": "Запис у каталозі",
+   "options": "oiSoftwareCatalog"
+  },
+  {
+   "default": "Не перевірено",
+   "fieldname": "compliance_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Статус відповідності",
+   "options": "Не перевірено\nДозволено\nЗаборонено\nНе в каталозі"
+  },
+  {
+   "fieldname": "column_break_analysis",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "needs_update",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Потребує оновлення"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_outdated",
+   "fieldtype": "Check",
+   "label": "Застаріла версія"
+  },
+  {
+   "fieldname": "last_checked",
+   "fieldtype": "Datetime",
+   "label": "Остання перевірка",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-29 20:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgentSoftware",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "role": "Agent Bot"
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "software_name",
+ "sort_order": "ASC",
+ "title_field": "software_name",
+ "track_changes": 0
+}

@@ -1,7 +1,7 @@
 {
  "app": "orange_inventory",
  "charts": [],
- "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">\u0420\u0435\u0454\u0441\u0442\u0440 \u0430\u043a\u0442\u0438\u0432\u0456\u0432</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u043a\u0442\u0438\u0432\u0438\",\"col\":3}},{\"id\":\"plzyUpT2iB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u0440\u0438\u0431\u0443\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440\",\"col\":3}},{\"id\":\"SMVm3FuNWX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0412\u0438\u0434\u0430\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440\",\"col\":3}},{\"id\":\"2eJ9Zmh4VB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u043a\u0442 \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"FaA3dqvCua\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438</b></span>\",\"col\":12}},{\"id\":\"nsigI_lGo9\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0414\u043e\u043d\u043e\u0440\u0438\",\"col\":4}},{\"id\":\"vhtKHJ8suq\",\"type\":\"card\",\"data\":{\"card_name\":\"\u041e\u041c\u0421\",\"col\":4}},{\"id\":\"2jUTj_BK7B\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0410\u043a\u0442\u0438\u0432\u0438\",\"col\":4}}]",
+ "content": "[{\"id\":\"0YfdMmHJVq\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 16px;\\\">\u0420\u0435\u0454\u0441\u0442\u0440 \u0430\u043a\u0442\u0438\u0432\u0456\u0432</span>\",\"col\":12}},{\"id\":\"Lqdpp5aDyq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u043a\u0442\u0438\u0432\u0438\",\"col\":3}},{\"id\":\"plzyUpT2iB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u0440\u0438\u0431\u0443\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440\",\"col\":3}},{\"id\":\"SMVm3FuNWX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0412\u0438\u0434\u0430\u0442\u043a\u043e\u0432\u0438\u0439 \u043e\u0440\u0434\u0435\u0440\",\"col\":3}},{\"id\":\"2eJ9Zmh4VB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u043a\u0442 \u0441\u043f\u0438\u0441\u0430\u043d\u043d\u044f\",\"col\":3}},{\"id\":\"4DjZ1QQeyB\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"AgentHeader\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u041c\u043e\u043d\u0456\u0442\u043e\u0440\u0438\u043d\u0433</b></span>\",\"col\":12}},{\"id\":\"AgentShortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u0433\u0435\u043d\u0442\u0438\",\"col\":3}},{\"id\":\"DashboardShortcut\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Agent Dashboard\",\"col\":3}},{\"id\":\"spacer2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"FaA3dqvCua\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438</b></span>\",\"col\":12}},{\"id\":\"nsigI_lGo9\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0414\u043e\u043d\u043e\u0440\u0438\",\"col\":4}},{\"id\":\"vhtKHJ8suq\",\"type\":\"card\",\"data\":{\"card_name\":\"\u041e\u041c\u0421\",\"col\":4}},{\"id\":\"2jUTj_BK7B\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0410\u043a\u0442\u0438\u0432\u0438\",\"col\":4}}]",
  "creation": "2024-04-30 10:55:44.202833",
  "custom_blocks": [],
  "docstatus": 0,
@@ -147,6 +147,20 @@
    "link_to": "oiIssueOrder",
    "stats_filter": "[]",
    "type": "DocType"
+  },
+  {
+   "color": "Yellow",
+   "doc_view": "List",
+   "label": "\u0410\u0433\u0435\u043d\u0442\u0438",
+   "link_to": "oiAgent",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "label": "Agent Dashboard",
+   "link_to": "Agent Monitoring",
+   "type": "Dashboard"
   }
  ],
  "title": "Orange Inventory",

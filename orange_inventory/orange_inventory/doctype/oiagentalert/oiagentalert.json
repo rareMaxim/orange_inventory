@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "autoname": "format:ALERT-{agent}-{creation}",
+ "creation": "2026-01-29 15:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "agent",
+  "alert_type",
+  "severity",
+  "column_break_main",
+  "status",
+  "resolved_at",
+  "details_section",
+  "message",
+  "value",
+  "threshold"
+ ],
+ "fields": [
+  {
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Агент",
+   "options": "oiAgent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "alert_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Тип сповіщення",
+   "options": "Офлайн\nВисоке CPU\nВисока RAM\nМало місця на диску\nПовернувся онлайн",
+   "reqd": 1
+  },
+  {
+   "default": "Warning",
+   "fieldname": "severity",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Важливість",
+   "options": "Info\nWarning\nCritical"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Активне",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Статус",
+   "options": "Активне\nВирішено\nПроігноровано"
+  },
+  {
+   "fieldname": "resolved_at",
+   "fieldtype": "Datetime",
+   "label": "Вирішено о",
+   "read_only": 1
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Деталі"
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Small Text",
+   "label": "Повідомлення"
+  },
+  {
+   "fieldname": "value",
+   "fieldtype": "Float",
+   "label": "Значення",
+   "precision": "2"
+  },
+  {
+   "fieldname": "threshold",
+   "fieldtype": "Float",
+   "label": "Поріг",
+   "precision": "2"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-29 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgentAlert",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Red",
+   "title": "Активне"
+  },
+  {
+   "color": "Green",
+   "title": "Вирішено"
+  },
+  {
+   "color": "Gray",
+   "title": "Проігноровано"
+  }
+ ],
+ "title_field": "alert_type",
+ "track_changes": 1
+}

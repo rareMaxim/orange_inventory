@@ -2,13 +2,20 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -16,6 +23,14 @@ import (
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/yusufpapurcu/wmi"
+	"golang.org/x/sys/windows/registry"
+)
+
+// --- КОНСТАНТИ ---
+const (
+	AppVersion   = "1.2"
+	TaskName     = "OrangeInventoryAgent"
+	TaskInterval = 15 // хвилин
 )
 
 // --- КОНФІГУРАЦІЯ ---
@@ -144,7 +159,11 @@ type Win32_PhysicalMemory struct {
 	Speed        uint32
 	Manufacturer string
 }
-type Win32_VideoController struct{ Name string }
+type Win32_VideoController struct {
+	Name                        string
+	CurrentHorizontalResolution uint32
+	CurrentVerticalResolution   uint32
+}
 
 type Win32_BIOS struct {
 	SerialNumber      string
@@ -175,11 +194,6 @@ type Win32_DiskDrive struct {
 	InterfaceType string
 }
 
-type Win32_DesktopMonitor struct {
-	Name         string
-	ScreenWidth  uint32
-	ScreenHeight uint32
-}
 
 type Win32_Product struct {
 	Name    string
@@ -210,6 +224,69 @@ type AntiVirusProduct struct {
 }
 
 // --- ФУНКЦІЇ ЗБОРУ ---
+
+// getInstalledSoftware отримує список ПЗ з реєстру Windows (швидкий метод)
+func getInstalledSoftware() []SoftwareInfo {
+	softwareList := []SoftwareInfo{}
+	seen := make(map[string]bool)
+
+	// Шляхи в реєстрі для встановленого ПЗ
+	regPaths := []struct {
+		root registry.Key
+		path string
+	}{
+		{registry.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall`},
+		{registry.LOCAL_MACHINE, `SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall`},
+		{registry.CURRENT_USER, `SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall`},
+	}
+
+	for _, rp := range regPaths {
+		key, err := registry.OpenKey(rp.root, rp.path, registry.READ)
+		if err != nil {
+			continue
+		}
+
+		subkeys, err := key.ReadSubKeyNames(-1)
+		key.Close()
+		if err != nil {
+			continue
+		}
+
+		for _, subkey := range subkeys {
+			subPath := rp.path + `\` + subkey
+			sk, err := registry.OpenKey(rp.root, subPath, registry.READ)
+			if err != nil {
+				continue
+			}
+
+			name, _, _ := sk.GetStringValue("DisplayName")
+			version, _, _ := sk.GetStringValue("DisplayVersion")
+			vendor, _, _ := sk.GetStringValue("Publisher")
+			systemComponent, _, _ := sk.GetIntegerValue("SystemComponent")
+			sk.Close()
+
+			// Пропускаємо системні компоненти та порожні імена
+			if name == "" || systemComponent == 1 {
+				continue
+			}
+
+			// Уникаємо дублікатів
+			key := name + "|" + version
+			if seen[key] {
+				continue
+			}
+			seen[key] = true
+
+			softwareList = append(softwareList, SoftwareInfo{
+				Name:    name,
+				Version: version,
+				Vendor:  vendor,
+			})
+		}
+	}
+
+	return softwareList
+}
 
 func getSystemType(code uint16) string {
 	types := map[uint16]string{
@@ -309,31 +386,22 @@ func getStaticInfo() StaticData {
 		})
 	}
 
-	// Monitors
-	var monitors []Win32_DesktopMonitor
-	wmi.Query("SELECT Name, ScreenWidth, ScreenHeight FROM Win32_DesktopMonitor", &monitors)
+	// Monitors (використовуємо VideoController для отримання роздільності)
+	var videoControllers []Win32_VideoController
+	wmi.Query("SELECT Name, CurrentHorizontalResolution, CurrentVerticalResolution FROM Win32_VideoController", &videoControllers)
 	monitorList := []MonitorInfo{}
-	for _, m := range monitors {
-		monitorList = append(monitorList, MonitorInfo{
-			Name:   m.Name,
-			Width:  m.ScreenWidth,
-			Height: m.ScreenHeight,
-		})
-	}
-
-	// Installed Software (може бути повільним)
-	var software []Win32_Product
-	wmi.Query("SELECT Name, Version, Vendor FROM Win32_Product", &software)
-	softwareList := []SoftwareInfo{}
-	for _, s := range software {
-		if s.Name != "" {
-			softwareList = append(softwareList, SoftwareInfo{
-				Name:    s.Name,
-				Version: s.Version,
-				Vendor:  s.Vendor,
+	for _, vc := range videoControllers {
+		if vc.CurrentHorizontalResolution > 0 {
+			monitorList = append(monitorList, MonitorInfo{
+				Name:   vc.Name,
+				Width:  vc.CurrentHorizontalResolution,
+				Height: vc.CurrentVerticalResolution,
 			})
 		}
 	}
+
+	// Installed Software (швидкий метод через реєстр)
+	softwareList := getInstalledSoftware()
 
 	// Printers
 	var printers []Win32_Printer
@@ -407,11 +475,15 @@ func getDynamicInfo() DynamicData {
 		}
 	}
 
-	// Отримання Користувача
-	users, _ := host.Users()
-	user := "None"
-	if len(users) > 0 {
-		user = users[0].User
+	// Отримання Користувача через WMI
+	type Win32_ComputerSystem struct {
+		UserName string
+	}
+	var compSystems []Win32_ComputerSystem
+	wmi.Query("SELECT UserName FROM Win32_ComputerSystem", &compSystems)
+	user := "Unknown"
+	if len(compSystems) > 0 && compSystems[0].UserName != "" {
+		user = compSystems[0].UserName
 	}
 
 	// Отримання Дисків
@@ -533,6 +605,20 @@ type ServerResponse struct {
 	Exception string `json:"exc,omitempty"`
 }
 
+// UpdateResponse представляє відповідь від сервера про оновлення
+type UpdateResponse struct {
+	Message struct {
+		UpdateAvailable bool   `json:"update_available"`
+		LatestVersion   string `json:"latest_version"`
+		IsMandatory     bool   `json:"is_mandatory"`
+		DownloadURL     string `json:"download_url"`
+		FileSize        int64  `json:"file_size"`
+		Checksum        string `json:"checksum"`
+		ReleaseNotes    string `json:"release_notes"`
+		Msg             string `json:"message"`
+	} `json:"message"`
+}
+
 // sendToServer відправляє дані на Frappe сервер
 func sendToServer(config *Config, static StaticData, dynamic DynamicData) error {
 	// Серіалізуємо дані в JSON
@@ -610,11 +696,351 @@ func sendToServer(config *Config, static StaticData, dynamic DynamicData) error 
 	return nil
 }
 
+// --- ФУНКЦІЇ ОНОВЛЕННЯ ---
+
+// checkForUpdate перевіряє наявність оновлень на сервері
+func checkForUpdate(config *Config) (*UpdateResponse, error) {
+	apiURL := config.ServerURL + "/api/method/orange_inventory.update_api.check_update"
+
+	// Формуємо запит
+	payload := map[string]string{
+		"current_version": AppVersion,
+	}
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "token "+config.APIKey+":"+config.APISecret)
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var updateResp UpdateResponse
+	if err := json.Unmarshal(respBody, &updateResp); err != nil {
+		return nil, err
+	}
+
+	return &updateResp, nil
+}
+
+// downloadUpdate завантажує нову версію агента
+func downloadUpdate(config *Config, downloadURL string, expectedChecksum string) (string, error) {
+	// Повний URL
+	fullURL := config.ServerURL + downloadURL
+
+	req, err := http.NewRequest("GET", fullURL, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Authorization", "token "+config.APIKey+":"+config.APISecret)
+
+	client := &http.Client{Timeout: 5 * time.Minute}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("сервер повернув статус %d", resp.StatusCode)
+	}
+
+	// Зберігаємо у тимчасовий файл
+	exePath, _ := getExePath()
+	tempPath := filepath.Join(filepath.Dir(exePath), "orange_agent_new.exe")
+
+	outFile, err := os.Create(tempPath)
+	if err != nil {
+		return "", fmt.Errorf("не вдалося створити файл: %w", err)
+	}
+
+	// Одночасно записуємо і рахуємо checksum
+	hasher := sha256.New()
+	writer := io.MultiWriter(outFile, hasher)
+
+	_, err = io.Copy(writer, resp.Body)
+	outFile.Close()
+	if err != nil {
+		os.Remove(tempPath)
+		return "", fmt.Errorf("помилка завантаження: %w", err)
+	}
+
+	// Перевіряємо checksum
+	actualChecksum := hex.EncodeToString(hasher.Sum(nil))
+	if expectedChecksum != "" && actualChecksum != expectedChecksum {
+		os.Remove(tempPath)
+		return "", fmt.Errorf("checksum не співпадає: очікувався %s, отримано %s", expectedChecksum, actualChecksum)
+	}
+
+	return tempPath, nil
+}
+
+// performUpdate виконує оновлення агента
+func performUpdate(newExePath string) error {
+	exePath, err := getExePath()
+	if err != nil {
+		return err
+	}
+
+	exeDir := filepath.Dir(exePath)
+	oldPath := filepath.Join(exeDir, "orange_agent_old.exe")
+	batPath := filepath.Join(exeDir, "update.bat")
+
+	// Створюємо batch скрипт для оновлення
+	// Batch скрипт виконується після завершення поточного процесу
+	batContent := fmt.Sprintf(`@echo off
+echo Оновлення Orange Inventory Agent...
+timeout /t 2 /nobreak >nul
+
+:: Видаляємо стару резервну копію
+if exist "%s" del /f /q "%s"
+
+:: Перейменовуємо поточний exe в old
+move /y "%s" "%s"
+
+:: Переміщуємо новий exe на місце поточного
+move /y "%s" "%s"
+
+:: Перезапускаємо завдання
+schtasks /end /tn "%s" >nul 2>&1
+schtasks /run /tn "%s"
+
+:: Видаляємо batch файл
+del /f /q "%s"
+`, oldPath, oldPath, exePath, oldPath, newExePath, exePath, TaskName, TaskName, batPath)
+
+	// Записуємо batch скрипт
+	if err := os.WriteFile(batPath, []byte(batContent), 0755); err != nil {
+		return fmt.Errorf("не вдалося створити update.bat: %w", err)
+	}
+
+	// Запускаємо batch скрипт у фоновому режимі
+	cmd := exec.Command("cmd", "/c", "start", "/b", "", batPath)
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("не вдалося запустити update.bat: %w", err)
+	}
+
+	log.Println("✓ Оновлення запущено. Агент буде перезапущено...")
+	return nil
+}
+
+// compareVersions порівнює дві версії
+// Повертає: 1 якщо v1 > v2, -1 якщо v1 < v2, 0 якщо рівні
+func compareVersions(v1, v2 string) int {
+	parse := func(v string) []int {
+		parts := strings.Split(strings.ReplaceAll(v, "-", "."), ".")
+		result := make([]int, 0, len(parts))
+		for _, p := range parts {
+			if n, err := strconv.Atoi(p); err == nil {
+				result = append(result, n)
+			}
+		}
+		return result
+	}
+
+	p1 := parse(v1)
+	p2 := parse(v2)
+
+	maxLen := len(p1)
+	if len(p2) > maxLen {
+		maxLen = len(p2)
+	}
+
+	for i := 0; i < maxLen; i++ {
+		var n1, n2 int
+		if i < len(p1) {
+			n1 = p1[i]
+		}
+		if i < len(p2) {
+			n2 = p2[i]
+		}
+
+		if n1 > n2 {
+			return 1
+		}
+		if n1 < n2 {
+			return -1
+		}
+	}
+
+	return 0
+}
+
+// --- ФУНКЦІЇ ВСТАНОВЛЕННЯ ---
+
+// isAdmin перевіряє чи запущено з правами адміністратора
+func isAdmin() bool {
+	_, err := os.Open("\\\\.\\PHYSICALDRIVE0")
+	return err == nil
+}
+
+// getExePath повертає повний шлях до executable
+func getExePath() (string, error) {
+	exe, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Abs(exe)
+}
+
+// installTask створює заплановане завдання Windows
+func installTask() error {
+	if !isAdmin() {
+		return fmt.Errorf("потрібні права адміністратора. Запустіть як Administrator")
+	}
+
+	exePath, err := getExePath()
+	if err != nil {
+		return fmt.Errorf("не вдалося отримати шлях до exe: %w", err)
+	}
+
+	// Перевіряємо наявність config.json
+	configPath := filepath.Join(filepath.Dir(exePath), "config.json")
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		return fmt.Errorf("config.json не знайдено. Створіть його перед встановленням")
+	}
+
+	// Видаляємо існуюче завдання
+	exec.Command("schtasks", "/delete", "/tn", TaskName, "/f").Run()
+
+	// Створюємо нове завдання
+	cmd := exec.Command("schtasks", "/create",
+		"/tn", TaskName,
+		"/tr", fmt.Sprintf("\"%s\"", exePath),
+		"/sc", "MINUTE",
+		"/mo", fmt.Sprintf("%d", TaskInterval),
+		"/ru", "SYSTEM",
+		"/rl", "HIGHEST",
+		"/f",
+	)
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("помилка створення завдання: %w\n%s", err, string(output))
+	}
+
+	// Запускаємо завдання одразу
+	exec.Command("schtasks", "/run", "/tn", TaskName).Run()
+
+	return nil
+}
+
+// uninstallTask видаляє заплановане завдання Windows
+func uninstallTask() error {
+	if !isAdmin() {
+		return fmt.Errorf("потрібні права адміністратора. Запустіть як Administrator")
+	}
+
+	// Зупиняємо завдання
+	exec.Command("schtasks", "/end", "/tn", TaskName).Run()
+
+	// Видаляємо завдання
+	cmd := exec.Command("schtasks", "/delete", "/tn", TaskName, "/f")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("помилка видалення завдання: %w\n%s", err, string(output))
+	}
+
+	return nil
+}
+
+// showStatus показує статус завдання
+func showStatus() {
+	cmd := exec.Command("schtasks", "/query", "/tn", TaskName, "/v", "/fo", "LIST")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Завдання '%s' не знайдено\n", TaskName)
+		return
+	}
+	fmt.Println(string(output))
+}
+
 // --- ГОЛОВНА ФУНКЦІЯ ---
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	log.Println("Orange Inventory Agent v1.0")
+	// Парсимо аргументи командного рядка
+	installFlag := flag.Bool("install", false, "Встановити як заплановане завдання Windows (кожні 15 хв)")
+	uninstallFlag := flag.Bool("uninstall", false, "Видалити заплановане завдання")
+	statusFlag := flag.Bool("status", false, "Показати статус завдання")
+	silentFlag := flag.Bool("silent", false, "Тихий режим (без виводу в консоль)")
+	versionFlag := flag.Bool("version", false, "Показати версію")
+	flag.Parse()
+
+	// Налаштування логування
+	if *silentFlag {
+		log.SetOutput(io.Discard)
+	} else {
+		log.SetFlags(log.LstdFlags | log.Lshortfile)
+	}
+
+	// Обробка команд
+	if *versionFlag {
+		fmt.Printf("Orange Inventory Agent v%s\n", AppVersion)
+		return
+	}
+
+	if *statusFlag {
+		showStatus()
+		return
+	}
+
+	if *installFlag {
+		fmt.Println("============================================")
+		fmt.Printf(" Orange Inventory Agent v%s - Install\n", AppVersion)
+		fmt.Println("============================================")
+		fmt.Println()
+
+		if err := installTask(); err != nil {
+			fmt.Printf("[ERROR] %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("[SUCCESS] Агент успішно встановлено!")
+		fmt.Println()
+		fmt.Printf("  Завдання:  %s\n", TaskName)
+		fmt.Printf("  Інтервал:  Кожні %d хвилин\n", TaskInterval)
+		fmt.Println("  Запуск:    Від імені SYSTEM")
+		fmt.Println()
+		fmt.Println("Команди:")
+		fmt.Println("  --status     Перевірити статус")
+		fmt.Println("  --uninstall  Видалити завдання")
+		return
+	}
+
+	if *uninstallFlag {
+		fmt.Println("============================================")
+		fmt.Printf(" Orange Inventory Agent v%s - Uninstall\n", AppVersion)
+		fmt.Println("============================================")
+		fmt.Println()
+
+		if err := uninstallTask(); err != nil {
+			fmt.Printf("[ERROR] %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("[SUCCESS] Агент успішно видалено!")
+		return
+	}
+
+	// --- ЗВИЧАЙНИЙ РЕЖИМ: ЗБІР ТА ВІДПРАВКА ДАНИХ ---
+
+	log.Printf("Orange Inventory Agent v%s", AppVersion)
 	log.Println("============================")
 
 	// Завантажуємо конфігурацію
@@ -652,6 +1078,37 @@ func main() {
 			os.Exit(1)
 		}
 		log.Println("✓ Дані успішно відправлено!")
+
+		// Перевіряємо оновлення
+		log.Println("\n=== ПЕРЕВІРКА ОНОВЛЕНЬ ===")
+		updateResp, err := checkForUpdate(config)
+		if err != nil {
+			log.Printf("⚠ Не вдалося перевірити оновлення: %v", err)
+		} else if updateResp.Message.UpdateAvailable {
+			log.Printf("📦 Доступна нова версія: %s (поточна: %s)", updateResp.Message.LatestVersion, AppVersion)
+			if updateResp.Message.ReleaseNotes != "" {
+				log.Printf("   Зміни: %s", updateResp.Message.ReleaseNotes)
+			}
+
+			// Завантажуємо оновлення
+			log.Println("⬇ Завантаження оновлення...")
+			newExePath, err := downloadUpdate(config, updateResp.Message.DownloadURL, updateResp.Message.Checksum)
+			if err != nil {
+				log.Printf("✗ Помилка завантаження: %v", err)
+			} else {
+				log.Println("✓ Завантажено успішно!")
+
+				// Виконуємо оновлення
+				if err := performUpdate(newExePath); err != nil {
+					log.Printf("✗ Помилка оновлення: %v", err)
+					os.Remove(newExePath)
+				}
+				// Виходимо, щоб batch скрипт міг замінити exe
+				os.Exit(0)
+			}
+		} else {
+			log.Printf("✓ Версія актуальна (%s)", AppVersion)
+		}
 	} else {
 		// Локальний вивід JSON для дебагу
 		log.Println("\n=== STATIC DATA JSON ===")

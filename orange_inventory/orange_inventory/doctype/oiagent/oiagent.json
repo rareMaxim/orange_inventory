@@ -176,6 +176,14 @@
   {
    "link_doctype": "oiAgentSnapshot",
    "link_fieldname": "agent"
+  },
+  {
+   "link_doctype": "oiAgentAlert",
+   "link_fieldname": "agent"
+  },
+  {
+   "link_doctype": "oiAgentSoftware",
+   "link_fieldname": "agent"
   }
  ],
  "modified": "2026-01-29 14:00:00.000000",

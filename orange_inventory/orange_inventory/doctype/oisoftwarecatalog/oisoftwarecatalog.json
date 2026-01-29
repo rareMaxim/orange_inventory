@@ -1,0 +1,160 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{software_name}",
+ "creation": "2026-01-29 20:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "main_section",
+  "software_name",
+  "publisher",
+  "category",
+  "column_break_main",
+  "is_allowed",
+  "is_required",
+  "settings_section",
+  "min_version",
+  "max_version",
+  "column_break_settings",
+  "license_type",
+  "max_installations",
+  "notes_section",
+  "description",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_section",
+   "fieldtype": "Section Break",
+   "label": "Основна інформація"
+  },
+  {
+   "fieldname": "software_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Назва програми",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "publisher",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Видавець"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Категорія",
+   "options": "\nОфісні програми\nБраузери\nАнтивірус/Безпека\nРозробка\nГрафіка/Дизайн\nМультимедіа\nСистемні утиліти\nКомунікація\nІнше"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_allowed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Дозволено"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_required",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Обов'язкове"
+  },
+  {
+   "fieldname": "settings_section",
+   "fieldtype": "Section Break",
+   "label": "Версії та ліцензування"
+  },
+  {
+   "description": "Мінімальна дозволена версія (для перевірки оновлень)",
+   "fieldname": "min_version",
+   "fieldtype": "Data",
+   "label": "Мінімальна версія"
+  },
+  {
+   "description": "Максимальна дозволена версія (якщо потрібно)",
+   "fieldname": "max_version",
+   "fieldtype": "Data",
+   "label": "Максимальна версія"
+  },
+  {
+   "fieldname": "column_break_settings",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "license_type",
+   "fieldtype": "Select",
+   "label": "Тип ліцензії",
+   "options": "\nБезкоштовна\nКомерційна\nOpen Source\nFreemium\nПідписка"
+  },
+  {
+   "description": "0 = без обмежень",
+   "fieldname": "max_installations",
+   "fieldtype": "Int",
+   "label": "Максимум встановлень"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Додаткова інформація"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Опис"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Примітки"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-29 20:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiSoftwareCatalog",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "show_title_field_in_link": 1,
+ "sort_field": "software_name",
+ "sort_order": "ASC",
+ "title_field": "software_name",
+ "track_changes": 1
+}

@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "autoname": "field:version",
+ "creation": "2026-01-29 21:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "main_section",
+  "version",
+  "is_latest",
+  "is_mandatory",
+  "column_break_main",
+  "release_date",
+  "min_version_to_update",
+  "file_section",
+  "agent_file",
+  "file_checksum",
+  "file_size",
+  "notes_section",
+  "release_notes",
+  "changelog"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_section",
+   "fieldtype": "Section Break",
+   "label": "Інформація про версію"
+  },
+  {
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Версія",
+   "reqd": 1,
+   "unique": 1,
+   "description": "Формат: X.Y.Z (наприклад: 1.2.0)"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_latest",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Актуальна версія",
+   "description": "Позначте для поточної версії яку отримують агенти"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Обов'язкове оновлення",
+   "description": "Якщо так - агенти оновляться примусово"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "release_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Дата релізу",
+   "default": "Today"
+  },
+  {
+   "fieldname": "min_version_to_update",
+   "fieldtype": "Data",
+   "label": "Мінімальна версія для оновлення",
+   "description": "Агенти з версією нижче цієї не зможуть оновитись автоматично"
+  },
+  {
+   "fieldname": "file_section",
+   "fieldtype": "Section Break",
+   "label": "Файл агента"
+  },
+  {
+   "fieldname": "agent_file",
+   "fieldtype": "Attach",
+   "label": "Файл агента (exe)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "file_checksum",
+   "fieldtype": "Data",
+   "label": "SHA256 Checksum",
+   "read_only": 1,
+   "description": "Обчислюється автоматично"
+  },
+  {
+   "fieldname": "file_size",
+   "fieldtype": "Int",
+   "label": "Розмір файлу (байт)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Примітки"
+  },
+  {
+   "fieldname": "release_notes",
+   "fieldtype": "Small Text",
+   "label": "Опис релізу"
+  },
+  {
+   "fieldname": "changelog",
+   "fieldtype": "Text",
+   "label": "Список змін"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-29 21:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgentRelease",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "version",
+ "sort_order": "DESC",
+ "title_field": "version",
+ "track_changes": 1
+}
