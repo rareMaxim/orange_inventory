@@ -215,13 +215,59 @@ def cleanup_old_alerts():
 	frappe.db.commit()
 
 
-def hourly():
-	"""Запускається щогодини."""
-	mark_offline_agents()
-	check_resource_alerts()
+def check_outdated_agents():
+	"""
+	Перевіряє агентів на застарілу версію.
+	Створює сповіщення якщо версія агента відрізняється від актуальної.
 
+	Запускається щогодини.
+	"""
+	from orange_inventory.orange_inventory.doctype.oiagentalert.oiagentalert import (
+		create_alert,
+		resolve_alerts,
+	)
 
-def daily():
-	"""Запускається щодня."""
-	cleanup_old_snapshots()
-	cleanup_old_alerts()
+	# Отримуємо актуальну версію агента
+	latest_version = frappe.db.get_value("oiAgentRelease", {"is_latest": 1}, "version")
+
+	if not latest_version:
+		return  # Немає релізів
+
+	# Знаходимо агентів з застарілою версією
+	outdated_agents = frappe.db.sql(
+		"""
+		SELECT name, hostname, agent_version
+		FROM `taboiAgent`
+		WHERE status = 'Активний'
+		AND agent_version IS NOT NULL
+		AND agent_version != ''
+		AND agent_version != %s
+		""",
+		latest_version,
+		as_dict=True,
+	)
+
+	for agent in outdated_agents:
+		create_alert(
+			agent_name=agent.name,
+			alert_type="Застаріла версія",
+			severity="Warning",
+			message=f"Агент {agent.hostname} має версію {agent.agent_version}, "
+			f"актуальна версія: {latest_version}",
+		)
+
+	# Вирішуємо алерти для агентів з актуальною версією
+	up_to_date_agents = frappe.db.sql(
+		"""
+		SELECT name
+		FROM `taboiAgent`
+		WHERE agent_version = %s
+		""",
+		latest_version,
+		as_dict=True,
+	)
+
+	for agent in up_to_date_agents:
+		resolve_alerts(agent.name, "Застаріла версія")
+
+	frappe.db.commit()

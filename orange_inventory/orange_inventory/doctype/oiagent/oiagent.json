@@ -9,6 +9,7 @@
   "agent_id",
   "hostname",
   "status",
+  "agent_version",
   "column_break_main",
   "asset",
   "last_seen",
@@ -58,6 +59,14 @@
    "in_standard_filter": 1,
    "label": "Статус",
    "options": "Активний\nНеактивний\nОфлайн"
+  },
+  {
+   "fieldname": "agent_version",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Версія агента",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_main",

@@ -147,6 +147,7 @@ def report_machine_data(static_data: str, dynamic_data: str | None = None):
 	agent.hostname = static.get("hostname")
 	agent.status = "Активний"
 	agent.last_seen = now_datetime()
+	agent.agent_version = static.get("agent_version")
 
 	os_platform = static.get("os_platform", "")
 	os_version = static.get("os_version", "")

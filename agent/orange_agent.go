@@ -28,7 +28,7 @@ import (
 
 // --- КОНСТАНТИ ---
 const (
-	AppVersion   = "1.2"
+	AppVersion   = "1.4"
 	TaskName     = "OrangeInventoryAgent"
 	TaskInterval = 15 // хвилин
 )
@@ -97,7 +97,37 @@ type PrinterInfo struct {
 	IsNetwork bool   `json:"is_network"`
 }
 
+type ServiceInfo struct {
+	Name        string `json:"name"`
+	DisplayName string `json:"display_name"`
+	State       string `json:"state"`
+	StartMode   string `json:"start_mode"`
+}
+
+type StartupInfo struct {
+	Name     string `json:"name"`
+	Command  string `json:"command"`
+	Location string `json:"location"`
+	User     string `json:"user"`
+}
+
+type ProcessInfo struct {
+	Name       string  `json:"name"`
+	PID        uint32  `json:"pid"`
+	CPUPercent float64 `json:"cpu_percent"`
+	MemoryMB   float64 `json:"memory_mb"`
+	User       string  `json:"user"`
+}
+
+type SecurityStatus struct {
+	FirewallEnabled  bool   `json:"firewall_enabled"`
+	BitLockerStatus  string `json:"bitlocker_status"`
+	UACEnabled       bool   `json:"uac_enabled"`
+	SecureBootEnabled bool  `json:"secure_boot_enabled"`
+}
+
 type StaticData struct {
+	AgentVersion    string              `json:"agent_version"`
 	Hostname        string              `json:"hostname"`
 	Platform        string              `json:"os_platform"`
 	OSVersion       string              `json:"os_version"`
@@ -139,16 +169,20 @@ type UpdateInfo struct {
 }
 
 type DynamicData struct {
-	Timestamp    int64          `json:"timestamp"`
-	Uptime       uint64         `json:"uptime_seconds"`
-	CurrentUser  string         `json:"current_user"`
-	IPAddresses  []string       `json:"ip_addresses"`
-	RAMUsage     float64        `json:"ram_usage_percent"`
-	CPUUsage     float64        `json:"cpu_usage_percent"`
-	Disks        []DiskStatus   `json:"disks"`
-	Battery      *BatteryInfo   `json:"battery,omitempty"`
-	Antivirus    []AntivirusInfo `json:"antivirus"`
-	RecentUpdates []UpdateInfo  `json:"recent_updates"`
+	Timestamp     int64           `json:"timestamp"`
+	Uptime        uint64          `json:"uptime_seconds"`
+	CurrentUser   string          `json:"current_user"`
+	IPAddresses   []string        `json:"ip_addresses"`
+	RAMUsage      float64         `json:"ram_usage_percent"`
+	CPUUsage      float64         `json:"cpu_usage_percent"`
+	Disks         []DiskStatus    `json:"disks"`
+	Battery       *BatteryInfo    `json:"battery,omitempty"`
+	Antivirus     []AntivirusInfo `json:"antivirus"`
+	RecentUpdates []UpdateInfo    `json:"recent_updates"`
+	Services      []ServiceInfo   `json:"services"`
+	TopProcesses  []ProcessInfo   `json:"top_processes"`
+	StartupItems  []StartupInfo   `json:"startup_items"`
+	Security      SecurityStatus  `json:"security"`
 }
 
 // --- WMI ДОПОМІЖНІ СТРУКТУРИ ---
@@ -219,8 +253,36 @@ type Win32_QuickFixEngineering struct {
 }
 
 type AntiVirusProduct struct {
-	DisplayName string
+	DisplayName  string
 	ProductState uint32
+}
+
+type Win32_Service struct {
+	Name        string
+	DisplayName string
+	State       string
+	StartMode   string
+}
+
+type Win32_StartupCommand struct {
+	Name     string
+	Command  string
+	Location string
+	User     string
+}
+
+type Win32_Process struct {
+	Name             string
+	ProcessId        uint32
+	WorkingSetSize   uint64
+}
+
+type Win32_EncryptableVolume struct {
+	ProtectionStatus uint32
+}
+
+type FirewallProfile struct {
+	Enabled uint32
 }
 
 // --- ФУНКЦІЇ ЗБОРУ ---
@@ -417,6 +479,7 @@ func getStaticInfo() StaticData {
 	}
 
 	return StaticData{
+		AgentVersion:    AppVersion,
 		Hostname:        hInfo.Hostname,
 		Platform:        hInfo.OS,
 		OSVersion:       hInfo.PlatformVersion,
@@ -540,6 +603,99 @@ func getDynamicInfo() DynamicData {
 		}
 	}
 
+	// Windows Services (важливі служби)
+	var services []Win32_Service
+	wmi.Query("SELECT Name, DisplayName, State, StartMode FROM Win32_Service WHERE StartMode='Auto' OR State='Running'", &services)
+	serviceList := []ServiceInfo{}
+	for _, s := range services {
+		serviceList = append(serviceList, ServiceInfo{
+			Name:        s.Name,
+			DisplayName: s.DisplayName,
+			State:       s.State,
+			StartMode:   s.StartMode,
+		})
+	}
+
+	// Startup Items (програми автозапуску)
+	var startups []Win32_StartupCommand
+	wmi.Query("SELECT Name, Command, Location, User FROM Win32_StartupCommand", &startups)
+	startupList := []StartupInfo{}
+	for _, s := range startups {
+		startupList = append(startupList, StartupInfo{
+			Name:     s.Name,
+			Command:  s.Command,
+			Location: s.Location,
+			User:     s.User,
+		})
+	}
+
+	// Top Processes (топ 10 по пам'яті)
+	var processes []Win32_Process
+	wmi.Query("SELECT Name, ProcessId, WorkingSetSize FROM Win32_Process", &processes)
+	processList := []ProcessInfo{}
+	// Сортуємо по пам'яті та беремо топ 10
+	for i, p := range processes {
+		if i >= 20 { // Обмежуємо для швидкості
+			break
+		}
+		memMB := float64(p.WorkingSetSize) / 1024 / 1024
+		if memMB > 50 { // Тільки процеси > 50MB
+			processList = append(processList, ProcessInfo{
+				Name:     p.Name,
+				PID:      p.ProcessId,
+				MemoryMB: memMB,
+			})
+		}
+	}
+
+	// Security Status
+	security := SecurityStatus{}
+
+	// Firewall status
+	var fwProfiles []FirewallProfile
+	wmi.QueryNamespace("SELECT Enabled FROM FirewallProduct", &fwProfiles, "root\\SecurityCenter2")
+	if len(fwProfiles) > 0 {
+		security.FirewallEnabled = fwProfiles[0].Enabled != 0
+	} else {
+		// Альтернативна перевірка через реєстр
+		key, err := registry.OpenKey(registry.LOCAL_MACHINE, `SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile`, registry.READ)
+		if err == nil {
+			val, _, err := key.GetIntegerValue("EnableFirewall")
+			key.Close()
+			if err == nil {
+				security.FirewallEnabled = val == 1
+			}
+		}
+	}
+
+	// BitLocker status (C: drive)
+	var volumes []Win32_EncryptableVolume
+	wmi.QueryNamespace("SELECT ProtectionStatus FROM Win32_EncryptableVolume WHERE DriveLetter='C:'", &volumes, "root\\CIMV2\\Security\\MicrosoftVolumeEncryption")
+	if len(volumes) > 0 {
+		switch volumes[0].ProtectionStatus {
+		case 0:
+			security.BitLockerStatus = "Off"
+		case 1:
+			security.BitLockerStatus = "On"
+		case 2:
+			security.BitLockerStatus = "Unknown"
+		default:
+			security.BitLockerStatus = "N/A"
+		}
+	} else {
+		security.BitLockerStatus = "Not Available"
+	}
+
+	// UAC status
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System`, registry.READ)
+	if err == nil {
+		val, _, err := key.GetIntegerValue("EnableLUA")
+		key.Close()
+		if err == nil {
+			security.UACEnabled = val == 1
+		}
+	}
+
 	return DynamicData{
 		Timestamp:     time.Now().Unix(),
 		Uptime:        hInfo.Uptime,
@@ -551,6 +707,10 @@ func getDynamicInfo() DynamicData {
 		Battery:       batteryInfo,
 		Antivirus:     antivirusList,
 		RecentUpdates: updateList,
+		Services:      serviceList,
+		TopProcesses:  processList,
+		StartupItems:  startupList,
+		Security:      security,
 	}
 }
 

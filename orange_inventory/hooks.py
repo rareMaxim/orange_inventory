@@ -154,6 +154,7 @@ scheduler_events = {
 	"hourly": [
 		"orange_inventory.tasks.mark_offline_agents",
 		"orange_inventory.tasks.check_resource_alerts",
+		"orange_inventory.tasks.check_outdated_agents",
 	],
 	"daily": [
 		"orange_inventory.tasks.cleanup_old_snapshots",
