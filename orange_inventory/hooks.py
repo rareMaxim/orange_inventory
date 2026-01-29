@@ -150,23 +150,10 @@ permission_query_conditions = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-# 	"all": [
-# 		"orange_inventory.tasks.all"
-# 	],
-# 	"daily": [
-# 		"orange_inventory.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"orange_inventory.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"orange_inventory.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"orange_inventory.tasks.monthly"
-# 	],
-# }
+scheduler_events = {
+	"hourly": ["orange_inventory.tasks.mark_offline_agents"],
+	"daily": ["orange_inventory.tasks.cleanup_old_snapshots"],
+}
 
 # Testing
 # -------

@@ -1,0 +1,221 @@
+{
+ "actions": [],
+ "autoname": "field:agent_id",
+ "creation": "2026-01-29 14:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "main_section",
+  "agent_id",
+  "hostname",
+  "status",
+  "column_break_main",
+  "asset",
+  "last_seen",
+  "first_seen",
+  "system_section",
+  "os",
+  "cpu_model",
+  "column_break_system",
+  "cpu_cores",
+  "ram_total_gb",
+  "hardware_section",
+  "system_manufacturer",
+  "system_model",
+  "system_type",
+  "column_break_hw",
+  "bios_serial",
+  "board_serial",
+  "raw_data_section",
+  "raw_data"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_section",
+   "fieldtype": "Section Break",
+   "label": "Основна інформація"
+  },
+  {
+   "fieldname": "agent_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Agent ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "hostname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Hostname"
+  },
+  {
+   "default": "Активний",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Статус",
+   "options": "Активний\nНеактивний\nОфлайн"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Прив'язаний актив",
+   "options": "oiAsset"
+  },
+  {
+   "fieldname": "last_seen",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Останній зв'язок",
+   "read_only": 1
+  },
+  {
+   "fieldname": "first_seen",
+   "fieldtype": "Datetime",
+   "label": "Перший зв'язок",
+   "read_only": 1
+  },
+  {
+   "fieldname": "system_section",
+   "fieldtype": "Section Break",
+   "label": "Система"
+  },
+  {
+   "fieldname": "os",
+   "fieldtype": "Data",
+   "label": "Операційна система",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cpu_model",
+   "fieldtype": "Data",
+   "label": "Модель CPU",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_system",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cpu_cores",
+   "fieldtype": "Int",
+   "label": "Ядер CPU",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ram_total_gb",
+   "fieldtype": "Float",
+   "label": "RAM (GB)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hardware_section",
+   "fieldtype": "Section Break",
+   "label": "Обладнання"
+  },
+  {
+   "fieldname": "system_manufacturer",
+   "fieldtype": "Data",
+   "label": "Виробник",
+   "read_only": 1
+  },
+  {
+   "fieldname": "system_model",
+   "fieldtype": "Data",
+   "label": "Модель",
+   "read_only": 1
+  },
+  {
+   "fieldname": "system_type",
+   "fieldtype": "Data",
+   "label": "Тип системи",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bios_serial",
+   "fieldtype": "Data",
+   "label": "BIOS Serial",
+   "read_only": 1
+  },
+  {
+   "fieldname": "board_serial",
+   "fieldtype": "Data",
+   "label": "Board Serial",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "raw_data_section",
+   "fieldtype": "Section Break",
+   "label": "Повні дані (JSON)"
+  },
+  {
+   "fieldname": "raw_data",
+   "fieldtype": "Code",
+   "label": "Raw Data",
+   "options": "JSON",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiAgentSnapshot",
+   "link_fieldname": "agent"
+  }
+ ],
+ "modified": "2026-01-29 14:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgent",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "role": "Agent Bot"
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "last_seen",
+ "sort_order": "DESC",
+ "title_field": "hostname",
+ "track_changes": 1
+}

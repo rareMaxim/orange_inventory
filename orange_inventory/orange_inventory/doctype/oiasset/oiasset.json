@@ -43,6 +43,19 @@
   "components",
   "network_tab",
   "network_ports_dashboard",
+  "agent_tab",
+  "agent_info_section",
+  "agent",
+  "agent_id",
+  "agent_hostname",
+  "agent_os",
+  "agent_last_seen",
+  "column_break_agent",
+  "agent_cpu_model",
+  "agent_cpu_cores",
+  "agent_ram_total_gb",
+  "agent_raw_data_section",
+  "agent_raw_data",
   "dev_tab",
   "image",
   "is_network_device",
@@ -236,6 +249,7 @@
   {
    "fieldname": "asset_user",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_preview": 1,
    "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
    "mandatory_depends_on": "eval:doc.status==\"\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\"",
@@ -250,6 +264,91 @@
   {
    "fieldname": "network_ports_dashboard",
    "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "agent_tab",
+   "fieldtype": "Tab Break",
+   "label": "Дані від агента"
+  },
+  {
+   "fieldname": "agent_info_section",
+   "fieldtype": "Section Break",
+   "label": "Інформація про систему"
+  },
+  {
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "label": "Агент",
+   "options": "oiAgent",
+   "description": "Виберіть агента, який прив'язаний до цього активу"
+  },
+  {
+   "fetch_from": "agent.agent_id",
+   "fieldname": "agent_id",
+   "fieldtype": "Data",
+   "label": "Agent ID",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.hostname",
+   "fieldname": "agent_hostname",
+   "fieldtype": "Data",
+   "label": "Hostname",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.os",
+   "fieldname": "agent_os",
+   "fieldtype": "Data",
+   "label": "Операційна система",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.last_seen",
+   "fieldname": "agent_last_seen",
+   "fieldtype": "Datetime",
+   "label": "Останній зв'язок з агентом",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_agent",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "agent.cpu_model",
+   "fieldname": "agent_cpu_model",
+   "fieldtype": "Data",
+   "label": "Модель CPU",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.cpu_cores",
+   "fieldname": "agent_cpu_cores",
+   "fieldtype": "Int",
+   "label": "Кількість ядер CPU",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.ram_total_gb",
+   "fieldname": "agent_ram_total_gb",
+   "fieldtype": "Float",
+   "label": "Загальна RAM (GB)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "agent_raw_data_section",
+   "fieldtype": "Section Break",
+   "label": "Повні дані агента",
+   "collapsible": 1
+  },
+  {
+   "fetch_from": "agent.raw_data",
+   "fieldname": "agent_raw_data",
+   "fieldtype": "Code",
+   "label": "JSON дані",
+   "options": "JSON",
+   "read_only": 1
   },
   {
    "fieldname": "dev_tab",
@@ -336,7 +435,7 @@
    "link_fieldname": "linked_asset"
   }
  ],
- "modified": "2025-11-25 16:31:36.586275",
+ "modified": "2026-01-28 14:16:13.732838",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAsset",
@@ -378,6 +477,12 @@
    "role": "Clerk",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "write": 1,
+   "role": "Agent Bot"
   }
  ],
  "row_format": "Dynamic",

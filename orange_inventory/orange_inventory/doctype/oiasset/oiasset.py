@@ -74,6 +74,23 @@ class oiAsset(Document):
 
 	def on_update(self):
 		self.create_network_ports_from_model()
+		self.sync_agent_link()
+
+	def sync_agent_link(self):
+		"""Синхронізує зв'язок з агентом у обидва боки."""
+		# Отримуємо попереднє значення agent (до збереження)
+		old_agent = self.get_doc_before_save()
+		old_agent_name = old_agent.agent if old_agent else None
+
+		# Якщо агент змінився
+		if self.agent != old_agent_name:
+			# Якщо був старий агент - очищаємо його asset поле
+			if old_agent_name:
+				frappe.db.set_value("oiAgent", old_agent_name, "asset", None)
+
+			# Якщо є новий агент - встановлюємо asset
+			if self.agent:
+				frappe.db.set_value("oiAgent", self.agent, "asset", self.name)
 
 	def update_inventory_status(self):
 		"""Оновлює статус інвентаризації на основі дати останньої інвентаризації"""
