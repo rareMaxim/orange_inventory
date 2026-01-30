@@ -204,10 +204,14 @@ echo [%%date%% %%time%%] Update completed successfully >> "%%LOG_FILE%%"
 	if err := os.WriteFile(batPath, []byte(batContent), 0755); err != nil {
 		return fmt.Errorf("не вдалося створити update.bat: %w", err)
 	}
-
+	// Отримуємо шлях до системного cmd.exe
+    comSpec := os.Getenv("COMSPEC")
+    if comSpec == "" {
+        comSpec = "C:\\Windows\\System32\\cmd.exe" // fallback, якщо змінна порожня
+    }
 	// Запускаємо batch скрипт у фоновому режимі через cmd /c start
 	// /min - мінімізоване вікно, /b - без нового вікна
-	cmd := exec.Command("cmd", "/c", "start", "/min", "", "cmd", "/c", batPath)
+	cmd := exec.Command(comSpec, "/c", "start", "/min", "", "cmd", "/c", batPath)
 	cmd.Dir = exeDir
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("не вдалося запустити update.bat: %w", err)
