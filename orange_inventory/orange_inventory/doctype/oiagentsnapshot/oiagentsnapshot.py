@@ -13,14 +13,14 @@ class oiAgentSnapshot(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		asset: DF.Link
-		cpu_usage: DF.Float | None
+		agent: DF.Link
+		cpu_usage: DF.Percent
 		current_user: DF.Data | None
 		disk_usage: DF.Code | None
 		ip_addresses: DF.Code | None
-		ram_usage: DF.Float | None
+		ram_usage: DF.Percent
 		timestamp: DF.Datetime
-		uptime_seconds: DF.Int | None
+		uptime_seconds: DF.Int
 	# end: auto-generated types
 
 	pass

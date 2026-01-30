@@ -68,7 +68,7 @@ def build(target_os: str = "windows", target_arch: str = "amd64"):
 	env["CGO_ENABLED"] = "0"
 
 	result = subprocess.run(
-		["go", "build", "-ldflags=-s -w", "-o", output_path, "orange_agent.go"],
+		["go", "build", "-ldflags=-s -w", "-o", output_path, "."],
 		cwd=agent_dir,
 		capture_output=True,
 		text=True,

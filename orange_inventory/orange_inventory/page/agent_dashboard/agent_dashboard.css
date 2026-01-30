@@ -1,0 +1,59 @@
+.agent-dashboard-container {
+	padding: 20px;
+}
+
+.dashboard-loading {
+	text-align: center;
+	padding: 60px 20px;
+}
+
+.dashboard-loading .spinner-border {
+	width: 3rem;
+	height: 3rem;
+}
+
+.stat-card {
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stat-card .card-body {
+	padding: 1rem 1.25rem;
+}
+
+.stat-card h3 {
+	font-size: 2rem;
+	font-weight: 600;
+}
+
+.progress {
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.table-danger {
+	background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+.table-warning {
+	background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.badge {
+	font-weight: 500;
+}
+
+.badge-success { background-color: #28a745; }
+.badge-danger { background-color: #dc3545; }
+.badge-warning { background-color: #ffc107; color: #212529; }
+.badge-secondary { background-color: #6c757d; }
+
+@media (max-width: 768px) {
+	.stat-card h3 {
+		font-size: 1.5rem;
+	}
+}

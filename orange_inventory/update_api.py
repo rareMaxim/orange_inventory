@@ -12,6 +12,11 @@ Endpoints:
 import frappe
 
 
+def _log(message: str):
+	"""Логує повідомлення в agent_update.log."""
+	frappe.logger("agent_update").info(message)
+
+
 @frappe.whitelist()
 def check_update(current_version: str):
 	"""
@@ -31,6 +36,11 @@ def check_update(current_version: str):
 	                "release_notes": "..."
 	        }
 	"""
+	# Логуємо запит
+	user = frappe.session.user
+	ip = frappe.local.request_ip if hasattr(frappe.local, "request_ip") else "unknown"
+	_log(f"check_update: user={user}, ip={ip}, current_version={current_version}")
+
 	# Отримуємо актуальну версію
 	latest = frappe.db.get_value(
 		"oiAgentRelease",
@@ -49,10 +59,12 @@ def check_update(current_version: str):
 	)
 
 	if not latest:
+		_log("check_update: no releases available")
 		return {"update_available": False, "message": "Немає доступних версій"}
 
 	# Порівнюємо версії
 	if not _is_newer_version(latest.version, current_version):
+		_log(f"check_update: version {current_version} is up to date")
 		return {
 			"update_available": False,
 			"latest_version": latest.version,
@@ -62,6 +74,7 @@ def check_update(current_version: str):
 	# Перевіряємо мінімальну версію для оновлення
 	if latest.min_version_to_update:
 		if _is_newer_version(latest.min_version_to_update, current_version):
+			_log(f"check_update: version {current_version} too old for auto-update")
 			return {
 				"update_available": False,
 				"latest_version": latest.version,
@@ -71,6 +84,8 @@ def check_update(current_version: str):
 
 	# Формуємо URL для завантаження
 	download_url = f"/api/method/orange_inventory.update_api.download_agent?version={latest.version}"
+
+	_log(f"check_update: update available {current_version} -> {latest.version}")
 
 	return {
 		"update_available": True,
@@ -94,29 +109,44 @@ def download_agent(version: str = None):
 	Returns:
 	        Файл агента для завантаження
 	"""
-	if version:
-		release = frappe.get_doc("oiAgentRelease", version)
-	else:
-		# Отримуємо останню версію
-		latest_name = frappe.db.get_value("oiAgentRelease", {"is_latest": 1}, "name")
-		if not latest_name:
-			frappe.throw("Немає доступних версій агента")
-		release = frappe.get_doc("oiAgentRelease", latest_name)
+	user = frappe.session.user
+	ip = frappe.local.request_ip if hasattr(frappe.local, "request_ip") else "unknown"
+	_log(f"download_agent: user={user}, ip={ip}, version={version}")
 
-	if not release.agent_file:
-		frappe.throw("Файл агента не знайдено")
+	try:
+		if version:
+			release = frappe.get_doc("oiAgentRelease", version)
+		else:
+			# Отримуємо останню версію
+			latest_name = frappe.db.get_value("oiAgentRelease", {"is_latest": 1}, "name")
+			if not latest_name:
+				_log("download_agent: no releases available")
+				frappe.throw("Немає доступних версій агента")
+			release = frappe.get_doc("oiAgentRelease", latest_name)
 
-	# Отримуємо файл
-	file_doc = frappe.get_doc("File", {"file_url": release.agent_file})
-	file_path = file_doc.get_full_path()
+		if not release.agent_file:
+			_log(f"download_agent: no file for version {release.version}")
+			frappe.throw("Файл агента не знайдено")
 
-	# Відправляємо файл
-	with open(file_path, "rb") as f:
-		content = f.read()
+		# Отримуємо файл
+		file_doc = frappe.get_doc("File", {"file_url": release.agent_file})
+		file_path = file_doc.get_full_path()
 
-	frappe.local.response.filename = f"orange_agent_{release.version}.exe"
-	frappe.local.response.filecontent = content
-	frappe.local.response.type = "download"
+		_log(f"download_agent: sending file {file_path} for version {release.version}")
+
+		# Відправляємо файл
+		with open(file_path, "rb") as f:
+			content = f.read()
+
+		_log(f"download_agent: success, size={len(content)} bytes")
+
+		frappe.local.response.filename = f"orange_agent_{release.version}.exe"
+		frappe.local.response.filecontent = content
+		frappe.local.response.type = "download"
+
+	except Exception as e:
+		_log(f"download_agent: ERROR - {e!s}")
+		raise
 
 
 def _is_newer_version(v1: str, v2: str) -> bool:

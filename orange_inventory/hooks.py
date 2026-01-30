@@ -12,6 +12,12 @@ app_home = "/app/orange-inventory"
 
 required_apps = ["hr_oms"]
 
+# Fixtures
+# --------
+fixtures = [
+	{"dt": "oiAlertRule", "filters": [["enabled", "=", 1]]},
+]
+
 # Each item in the list will be shown as an app in the apps page
 add_to_apps_screen = [
 	{
@@ -151,6 +157,16 @@ permission_query_conditions = {
 # ---------------
 
 scheduler_events = {
+	"cron": {
+		# Перевірка алертів кожні 5 хвилин (використовує правила з oiAlertRule)
+		"*/5 * * * *": [
+			"orange_inventory.alert_engine.check_all_alerts",
+		],
+		# Авто-вирішення алертів кожні 10 хвилин
+		"*/10 * * * *": [
+			"orange_inventory.alert_engine.auto_resolve_alerts",
+		],
+	},
 	"hourly": [
 		"orange_inventory.tasks.mark_offline_agents",
 		"orange_inventory.tasks.check_resource_alerts",

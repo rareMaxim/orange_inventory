@@ -1,0 +1,188 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:group_name",
+ "creation": "2026-01-30 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "group_name",
+  "parent_group",
+  "description",
+  "column_break_main",
+  "color",
+  "icon",
+  "is_active",
+  "settings_section",
+  "default_location",
+  "responsible_user",
+  "column_break_settings",
+  "alert_email_recipients",
+  "stats_section",
+  "agent_count",
+  "asset_count",
+  "lft",
+  "rgt",
+  "old_parent"
+ ],
+ "fields": [
+  {
+   "fieldname": "group_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Назва групи",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "parent_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Батьківська група",
+   "options": "oiAssetGroup"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Опис"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "#5e64ff",
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Колір"
+  },
+  {
+   "default": "folder",
+   "fieldname": "icon",
+   "fieldtype": "Icon",
+   "label": "Іконка"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Активна"
+  },
+  {
+   "fieldname": "settings_section",
+   "fieldtype": "Section Break",
+   "label": "Налаштування"
+  },
+  {
+   "fieldname": "default_location",
+   "fieldtype": "Link",
+   "label": "Локація за замовчуванням",
+   "options": "oiLocation"
+  },
+  {
+   "fieldname": "responsible_user",
+   "fieldtype": "Link",
+   "label": "Відповідальний",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_settings",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Email адреси для сповіщень про алерти в цій групі (через кому)",
+   "fieldname": "alert_email_recipients",
+   "fieldtype": "Small Text",
+   "label": "Email для алертів"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "stats_section",
+   "fieldtype": "Section Break",
+   "label": "Статистика"
+  },
+  {
+   "fieldname": "agent_count",
+   "fieldtype": "Int",
+   "label": "Кількість агентів",
+   "read_only": 1
+  },
+  {
+   "fieldname": "asset_count",
+   "fieldtype": "Int",
+   "label": "Кількість активів",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Old Parent",
+   "no_copy": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_tree": 1,
+ "links": [
+  {
+   "link_doctype": "oiAgent",
+   "link_fieldname": "asset_group"
+  },
+  {
+   "link_doctype": "oiAsset",
+   "link_fieldname": "asset_group"
+  }
+ ],
+ "modified": "2026-01-30 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAssetGroup",
+ "naming_rule": "By fieldname",
+ "nsm_parent_field": "parent_group",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

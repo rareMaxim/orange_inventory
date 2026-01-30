@@ -12,6 +12,7 @@
   "agent_version",
   "column_break_main",
   "asset",
+  "asset_group",
   "last_seen",
   "first_seen",
   "system_section",
@@ -79,6 +80,13 @@
    "in_standard_filter": 1,
    "label": "Прив'язаний актив",
    "options": "oiAsset"
+  },
+  {
+   "fieldname": "asset_group",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Група",
+   "options": "oiAssetGroup"
   },
   {
    "fieldname": "last_seen",

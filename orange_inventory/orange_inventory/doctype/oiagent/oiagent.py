@@ -6,6 +6,9 @@ from frappe.model.document import Document
 
 
 class oiAgent(Document):
+	# Поля, які не відстежуються у версіях/коментарях
+	_version_ignore_fields = ["last_seen"]
+
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -31,6 +34,26 @@ class oiAgent(Document):
 		system_model: DF.Data | None
 		system_type: DF.Data | None
 	# end: auto-generated types
+
+	def save_version(self):
+		"""Зберігає версію документа, виключаючи певні поля з відстеження."""
+		old_doc = self.get_doc_before_save()
+		if old_doc and self._version_ignore_fields:
+			# Тимчасово встановлюємо старі значення для ігнорованих полів
+			saved_values = {}
+			for field in self._version_ignore_fields:
+				if hasattr(self, field):
+					saved_values[field] = getattr(self, field)
+					setattr(self, field, getattr(old_doc, field, None))
+
+			# Викликаємо оригінальний метод
+			super().save_version()
+
+			# Відновлюємо значення
+			for field, value in saved_values.items():
+				setattr(self, field, value)
+		else:
+			super().save_version()
 
 	def on_update(self):
 		"""Синхронізує зв'язок з активом у обидва боки."""

@@ -11,11 +11,47 @@ API для приймання даних від агентів монітори�
 3. Збереження snapshot динамічних даних
 """
 
+import gzip
 import hashlib
 import json
 
 import frappe
 from frappe.utils import now_datetime
+
+
+def _decompress_gzip(data: bytes) -> bytes:
+	"""Розпаковує gzip дані."""
+	try:
+		return gzip.decompress(data)
+	except Exception:
+		return data
+
+
+def _get_request_data() -> dict:
+	"""
+	Отримує дані запиту з підтримкою gzip.
+	Повертає словник з static_data та dynamic_data.
+	"""
+	request = frappe.request
+
+	# Перевіряємо чи є Content-Encoding: gzip
+	content_encoding = request.headers.get("Content-Encoding", "").lower()
+
+	if content_encoding == "gzip":
+		# Розпаковуємо gzip
+		raw_data = request.get_data()
+		decompressed = _decompress_gzip(raw_data)
+		try:
+			data = json.loads(decompressed)
+			return {"static_data": data.get("static_data"), "dynamic_data": data.get("dynamic_data")}
+		except json.JSONDecodeError:
+			frappe.throw("Невалідний JSON після gzip декомпресії", frappe.ValidationError)
+
+	# Звичайний запит - використовуємо form_dict
+	return {
+		"static_data": frappe.form_dict.get("static_data"),
+		"dynamic_data": frappe.form_dict.get("dynamic_data"),
+	}
 
 
 def _generate_agent_id(static: dict) -> str:
@@ -66,9 +102,10 @@ def _get_valid_serial(static: dict) -> str | None:
 
 
 @frappe.whitelist()
-def report_machine_data(static_data: str, dynamic_data: str | None = None):
+def report_machine_data(static_data: str | None = None, dynamic_data: str | None = None):
 	"""
 	Приймає дані від агента моніторингу.
+	Підтримує gzip стиснення (Content-Encoding: gzip).
 
 	Логіка роботи:
 	1. Генерує agent_id на основі hostname + серійних номерів
@@ -110,6 +147,11 @@ def report_machine_data(static_data: str, dynamic_data: str | None = None):
 	                "message": "..."
 	        }
 	"""
+	# Отримуємо дані з підтримкою gzip
+	request_data = _get_request_data()
+	static_data = request_data.get("static_data") or static_data
+	dynamic_data = request_data.get("dynamic_data") or dynamic_data
+
 	# Парсимо JSON дані
 	try:
 		static = json.loads(static_data)
@@ -271,7 +313,8 @@ def _save_software(agent_name: str, software_list: list):
 
 			current_software_names.add(name)
 			version = sw.get("version", "").strip()
-			publisher = sw.get("publisher", "").strip()
+			# Go agent sends "vendor", support both field names
+			publisher = (sw.get("publisher") or sw.get("vendor") or "").strip()
 			install_date = sw.get("install_date")  # YYYYMMDD format
 			install_location = sw.get("install_location", "").strip()
 

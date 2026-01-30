@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "autoname": "field:rule_name",
+ "creation": "2026-01-30 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "rule_name",
+  "alert_type",
+  "column_break_main",
+  "severity",
+  "description",
+  "conditions_section",
+  "metric",
+  "operator",
+  "threshold_value",
+  "column_break_conditions",
+  "duration_minutes",
+  "cooldown_minutes",
+  "notification_section",
+  "send_email",
+  "email_recipients",
+  "column_break_notif",
+  "send_system_notification",
+  "notification_users"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Активне"
+  },
+  {
+   "fieldname": "rule_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Назва правила",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "alert_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Тип сповіщення",
+   "options": "Офлайн\nВисоке CPU\nВисока RAM\nМало місця на диску\nЗастаріла версія",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Warning",
+   "fieldname": "severity",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Важливість",
+   "options": "Info\nWarning\nCritical",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Опис"
+  },
+  {
+   "fieldname": "conditions_section",
+   "fieldtype": "Section Break",
+   "label": "Умови спрацювання"
+  },
+  {
+   "fieldname": "metric",
+   "fieldtype": "Select",
+   "label": "Метрика",
+   "options": "cpu_usage_percent\nram_usage_percent\ndisk_usage_percent\nagent_offline_minutes\nagent_version",
+   "reqd": 1
+  },
+  {
+   "default": ">",
+   "fieldname": "operator",
+   "fieldtype": "Select",
+   "label": "Оператор",
+   "options": ">\n>=\n<\n<=\n=\n!=",
+   "reqd": 1
+  },
+  {
+   "fieldname": "threshold_value",
+   "fieldtype": "Float",
+   "label": "Порогове значення",
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_conditions",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "Скільки хвилин умова має бути істинною перед створенням алерту (0 = одразу)",
+   "fieldname": "duration_minutes",
+   "fieldtype": "Int",
+   "label": "Тривалість (хв)"
+  },
+  {
+   "default": "60",
+   "description": "Мінімальний час між повторними алертами для того ж агента",
+   "fieldname": "cooldown_minutes",
+   "fieldtype": "Int",
+   "label": "Cooldown (хв)"
+  },
+  {
+   "fieldname": "notification_section",
+   "fieldtype": "Section Break",
+   "label": "Сповіщення"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_email",
+   "fieldtype": "Check",
+   "label": "Надсилати Email"
+  },
+  {
+   "depends_on": "eval:doc.send_email",
+   "description": "Список email через кому",
+   "fieldname": "email_recipients",
+   "fieldtype": "Small Text",
+   "label": "Email отримувачі"
+  },
+  {
+   "fieldname": "column_break_notif",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "send_system_notification",
+   "fieldtype": "Check",
+   "label": "Системне сповіщення"
+  },
+  {
+   "depends_on": "eval:doc.send_system_notification",
+   "description": "Користувачі які отримають сповіщення",
+   "fieldname": "notification_users",
+   "fieldtype": "Table MultiSelect",
+   "label": "Користувачі",
+   "options": "Has Role"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-30 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAlertRule",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
