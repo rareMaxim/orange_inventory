@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -104,19 +103,6 @@ func sendWithRetry(config *Config, staticJSON, dynamicJSON string) error {
 	return fmt.Errorf("всі %d спроб невдалі: %w", MaxRetries, lastErr)
 }
 
-// compressGzip стискає дані за допомогою gzip
-func compressGzip(data []byte) ([]byte, error) {
-	var buf bytes.Buffer
-	gz := gzip.NewWriter(&buf)
-	if _, err := gz.Write(data); err != nil {
-		return nil, err
-	}
-	if err := gz.Close(); err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
 // doSendRequest виконує один HTTP запит
 func doSendRequest(config *Config, staticJSON, dynamicJSON string) error {
 	// Формуємо payload для Frappe API
@@ -129,31 +115,17 @@ func doSendRequest(config *Config, staticJSON, dynamicJSON string) error {
 		return fmt.Errorf("помилка формування payload: %w", err)
 	}
 
-	// Стискаємо payload gzip
-	originalSize := len(body)
-	compressedBody, err := compressGzip(body)
-	if err != nil {
-		// Якщо стиснення не вдалось - відправляємо без стиснення
-		log.Printf("⚠ Помилка стиснення, відправляємо без gzip: %v", err)
-		compressedBody = body
-	}
-	compressedSize := len(compressedBody)
-	compressionRatio := float64(originalSize-compressedSize) / float64(originalSize) * 100
-
-	log.Printf("📦 Стиснення: %d → %d байт (%.1f%% економії)", originalSize, compressedSize, compressionRatio)
-
 	// Формуємо URL для API
 	apiURL := config.ServerURL + "/api/method/orange_inventory.agent_api.report_machine_data"
 
 	// Створюємо HTTP запит
-	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(compressedBody))
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(body))
 	if err != nil {
 		return fmt.Errorf("помилка створення запиту: %w", err)
 	}
 
 	// Встановлюємо заголовки
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Content-Encoding", "gzip")
 	req.Header.Set("Authorization", "token "+config.APIKey+":"+config.APISecret)
 	req.Header.Set("Accept", "application/json")
 
