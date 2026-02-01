@@ -148,6 +148,12 @@ func runAgent() {
 			log.Println("✓ Дані успішно відправлено!")
 		}
 
+		// Синхронізуємо політики блокування ПЗ
+		log.Println("\n=== ПОЛІТИКИ БЛОКУВАННЯ ===")
+		if err := syncBlockedSoftware(config); err != nil {
+			log.Printf("⚠ Помилка синхронізації політик: %v", err)
+		}
+
 		// Перевіряємо оновлення
 		checkAndUpdate(config)
 	} else {

@@ -13,6 +13,10 @@
   "column_break_main",
   "is_allowed",
   "is_required",
+  "enforcement_section",
+  "enforce_block",
+  "executable_names",
+  "block_reason",
   "settings_section",
   "min_version",
   "max_version",
@@ -70,6 +74,35 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Обов'язкове"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:!doc.is_allowed",
+   "depends_on": "eval:!doc.is_allowed",
+   "fieldname": "enforcement_section",
+   "fieldtype": "Section Break",
+   "label": "Блокування"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:!doc.is_allowed",
+   "description": "Активно блокувати запуск через Windows Policy",
+   "fieldname": "enforce_block",
+   "fieldtype": "Check",
+   "label": "Примусово блокувати"
+  },
+  {
+   "depends_on": "enforce_block",
+   "description": "Імена виконуваних файлів через кому (напр: telegram.exe, discord.exe)",
+   "fieldname": "executable_names",
+   "fieldtype": "Small Text",
+   "label": "Виконувані файли"
+  },
+  {
+   "depends_on": "enforce_block",
+   "fieldname": "block_reason",
+   "fieldtype": "Data",
+   "label": "Причина блокування"
   },
   {
    "fieldname": "settings_section",

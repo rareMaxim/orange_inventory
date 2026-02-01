@@ -404,3 +404,54 @@ def get_asset_by_serial(serial_no: str):
 	"""
 	asset_name = frappe.db.get_value("oiAsset", {"serial_no": serial_no}, "name")
 	return {"exists": bool(asset_name), "asset_name": asset_name}
+
+
+@frappe.whitelist()
+def get_blocked_software():
+	"""
+	Повертає список заблокованого ПЗ для enforcement на агентах.
+
+	Returns:
+	        dict: {
+	                "blocked": [
+	                        {
+	                                "name": "Telegram",
+	                                "executables": ["telegram.exe"],
+	                                "reason": "Заборонено політикою компанії"
+	                        }
+	                ],
+	                "version": "hash для перевірки змін"
+	        }
+	"""
+	blocked_list = []
+
+	# Отримуємо всі заборонені програми з enforce_block=1
+	blocked = frappe.get_all(
+		"oiSoftwareCatalog",
+		filters={"is_allowed": 0, "enforce_block": 1},
+		fields=["software_name", "executable_names", "block_reason"],
+	)
+
+	for item in blocked:
+		if not item.executable_names:
+			continue
+
+		# Парсимо список виконуваних файлів
+		executables = [exe.strip().lower() for exe in item.executable_names.split(",") if exe.strip()]
+
+		if executables:
+			blocked_list.append(
+				{
+					"name": item.software_name,
+					"executables": executables,
+					"reason": item.block_reason or "Заборонено політикою",
+				}
+			)
+
+	# Генеруємо версію для кешування
+	import hashlib
+
+	version_string = json.dumps(blocked_list, sort_keys=True)
+	version_hash = hashlib.md5(version_string.encode()).hexdigest()[:8]
+
+	return {"blocked": blocked_list, "version": version_hash, "count": len(blocked_list)}
