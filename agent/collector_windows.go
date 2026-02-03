@@ -1,3 +1,6 @@
+//go:build windows
+// +build windows
+
 package main
 
 import (
@@ -12,7 +15,7 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
-// --- ФУНКЦІЇ ЗБОРУ ДАНИХ ---
+// --- ФУНКЦІЇ ЗБОРУ ДАНИХ (Windows) ---
 
 // getInstalledSoftware отримує список ПЗ з реєстру Windows (швидкий метод)
 func getInstalledSoftware() []SoftwareInfo {

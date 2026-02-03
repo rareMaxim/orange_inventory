@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "autoname": "field:template_name",
+ "creation": "2026-02-03 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "template_name",
+  "description",
+  "column_break_main",
+  "command_type",
+  "risk_level",
+  "requires_approval",
+  "command_section",
+  "command_template",
+  "allowed_parameters",
+  "restrictions_section",
+  "max_timeout_seconds",
+  "allowed_roles"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Активний"
+  },
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Назва шаблону",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Опис"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "command_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Тип команди",
+   "options": "PowerShell\nCMD\nRestart Service\nReboot\nShutdown",
+   "reqd": 1
+  },
+  {
+   "default": "Low",
+   "fieldname": "risk_level",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Рівень ризику",
+   "options": "Low\nMedium\nHigh\nCritical"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.risk_level == 'High' || doc.risk_level == 'Critical'",
+   "description": "Команди з високим ризиком потребують схвалення іншого адміністратора",
+   "fieldname": "requires_approval",
+   "fieldtype": "Check",
+   "label": "Потребує схвалення"
+  },
+  {
+   "fieldname": "command_section",
+   "fieldtype": "Section Break",
+   "label": "Шаблон команди"
+  },
+  {
+   "description": "Використовуйте {param_name} для параметрів. Приклад: Get-Service -Name \"{service_name}\"",
+   "fieldname": "command_template",
+   "fieldtype": "Code",
+   "label": "Шаблон команди",
+   "options": "PowerShell",
+   "reqd": 1
+  },
+  {
+   "description": "JSON з описом дозволених параметрів. Приклад: {\"service_name\": {\"type\": \"string\", \"pattern\": \"^[a-zA-Z0-9_-]+$\"}}",
+   "fieldname": "allowed_parameters",
+   "fieldtype": "Code",
+   "label": "Дозволені параметри",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "restrictions_section",
+   "fieldtype": "Section Break",
+   "label": "Обмеження"
+  },
+  {
+   "default": "300",
+   "fieldname": "max_timeout_seconds",
+   "fieldtype": "Int",
+   "label": "Макс. таймаут (сек)"
+  },
+  {
+   "description": "Ролі які можуть використовувати цей шаблон (через кому). Порожньо = всі з правами на oiAgentCommand",
+   "fieldname": "allowed_roles",
+   "fieldtype": "Small Text",
+   "label": "Дозволені ролі"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-03 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiCommandTemplate",
+ "naming_rule": "By fieldance",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Maintenance Manager"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

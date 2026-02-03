@@ -1,3 +1,6 @@
+//go:build windows
+// +build windows
+
 package main
 
 import (
@@ -7,7 +10,7 @@ import (
 	"path/filepath"
 )
 
-// --- ФУНКЦІЇ ВСТАНОВЛЕННЯ ---
+// --- ФУНКЦІЇ ВСТАНОВЛЕННЯ (Windows) ---
 
 // isAdmin перевіряє чи запущено з правами адміністратора
 func isAdmin() bool {

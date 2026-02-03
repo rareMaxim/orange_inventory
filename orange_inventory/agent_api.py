@@ -277,6 +277,7 @@ def _save_snapshot(agent_name: str, dynamic: dict):
 				"ip_addresses": json.dumps(dynamic.get("ip_addresses", []), ensure_ascii=False),
 				"disk_usage": json.dumps(dynamic.get("disks", []), ensure_ascii=False),
 				"uptime_seconds": dynamic.get("uptime_seconds"),
+				"services_status": json.dumps(dynamic.get("services", []), ensure_ascii=False),
 			}
 		)
 		snapshot.insert(ignore_permissions=True)
@@ -455,3 +456,149 @@ def get_blocked_software():
 	version_hash = hashlib.md5(version_string.encode()).hexdigest()[:8]
 
 	return {"blocked": blocked_list, "version": version_hash, "count": len(blocked_list)}
+
+
+@frappe.whitelist()
+def get_pending_commands(agent_id: str):
+	"""
+	Повертає список команд для виконання агентом.
+
+	Безпекові перевірки:
+	- Перевірка терміну дії команди
+	- Перевірка схвалення для команд високого ризику
+	- HMAC підпис для верифікації агентом
+
+	Args:
+	        agent_id: ідентифікатор агента
+
+	Returns:
+	        dict: {
+	                "commands": [
+	                        {
+	                                "id": "CMD-...",
+	                                "type": "PowerShell",
+	                                "command": "...",
+	                                "timeout": 60,
+	                                "signature": "hmac-sha256",
+	                                "expires_at": "2026-02-03 12:00:00"
+	                        }
+	                ]
+	        }
+	"""
+	# Знаходимо агента
+	agent_name = frappe.db.get_value("oiAgent", {"agent_id": agent_id}, "name")
+	if not agent_name:
+		return {"commands": [], "error": "Агент не знайдено"}
+
+	# Отримуємо команди в статусі Pending
+	commands = frappe.get_all(
+		"oiAgentCommand",
+		filters={"agent": agent_name, "status": "Pending"},
+		fields=[
+			"name",
+			"command_type",
+			"command",
+			"arguments",
+			"timeout_seconds",
+			"signature",
+			"expires_at",
+			"command_template",
+			"approved_by_user",
+		],
+		order_by="creation asc",
+	)
+
+	result = []
+	now = now_datetime()
+
+	for cmd in commands:
+		# Перевіряємо термін дії
+		if cmd.expires_at and cmd.expires_at < now:
+			# Команда протермінована - позначаємо як Cancelled
+			frappe.db.set_value(
+				"oiAgentCommand", cmd.name, {"status": "Cancelled", "error_output": "Команда протермінована"}
+			)
+			continue
+
+		# Перевіряємо схвалення для шаблонів що його потребують
+		if cmd.command_template:
+			requires_approval = frappe.db.get_value(
+				"oiCommandTemplate", cmd.command_template, "requires_approval"
+			)
+			if requires_approval and not cmd.approved_by_user:
+				# Пропускаємо - команда потребує схвалення
+				continue
+
+		# Оновлюємо статус на Sent
+		frappe.db.set_value("oiAgentCommand", cmd.name, "status", "Sent")
+
+		# Парсимо аргументи
+		arguments = None
+		if cmd.arguments:
+			try:
+				arguments = json.loads(cmd.arguments)
+			except json.JSONDecodeError:
+				arguments = None
+
+		result.append(
+			{
+				"id": cmd.name,
+				"type": cmd.command_type,
+				"command": cmd.command,
+				"arguments": arguments,
+				"timeout": cmd.timeout_seconds or 60,
+				"signature": cmd.signature,
+				"expires_at": str(cmd.expires_at) if cmd.expires_at else None,
+			}
+		)
+
+	frappe.db.commit()
+
+	return {"commands": result}
+
+
+@frappe.whitelist()
+def report_command_result(
+	command_id: str,
+	status: str,
+	exit_code: int = None,
+	output: str = None,
+	error_output: str = None,
+):
+	"""
+	Повідомляє результат виконання команди.
+
+	Args:
+	        command_id: ID команди
+	        status: статус (Completed, Failed, Timeout)
+	        exit_code: код виходу
+	        output: stdout
+	        error_output: stderr
+
+	Returns:
+	        dict: {"status": "success"}
+	"""
+	if not frappe.db.exists("oiAgentCommand", command_id):
+		return {"status": "error", "message": "Команду не знайдено"}
+
+	# Валідація статусу
+	valid_statuses = ["Running", "Completed", "Failed", "Timeout"]
+	if status not in valid_statuses:
+		return {"status": "error", "message": f"Невалідний статус: {status}"}
+
+	# Оновлюємо команду
+	frappe.db.set_value(
+		"oiAgentCommand",
+		command_id,
+		{
+			"status": status,
+			"exit_code": exit_code,
+			"output": (output or "")[:65000],  # Обмежуємо розмір
+			"error_output": (error_output or "")[:65000],
+			"executed_at": now_datetime() if status in ["Completed", "Failed", "Timeout"] else None,
+		},
+	)
+
+	frappe.db.commit()
+
+	return {"status": "success"}

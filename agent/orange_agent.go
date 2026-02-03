@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -154,6 +156,11 @@ func runAgent() {
 			log.Printf("⚠ Помилка синхронізації політик: %v", err)
 		}
 
+		// Обробляємо віддалені команди
+		log.Println("\n=== ВІДДАЛЕНІ КОМАНДИ ===")
+		agentID := generateAgentID(static)
+		processCommands(config, agentID)
+
 		// Перевіряємо оновлення
 		checkAndUpdate(config)
 	} else {
@@ -199,6 +206,20 @@ func checkAndUpdate(config *Config) {
 
 	// Виходимо, щоб batch скрипт міг замінити exe
 	os.Exit(0)
+}
+
+// generateAgentID генерує унікальний agent_id (має співпадати з логікою на сервері)
+func generateAgentID(static StaticData) string {
+	hostname := static.Hostname
+	boardSerial := static.BoardSerial
+	biosSerial := static.BIOS.SerialNumber
+
+	// Комбінуємо дані для хешу
+	uniqueString := fmt.Sprintf("%s:%s:%s", hostname, boardSerial, biosSerial)
+	hash := md5.Sum([]byte(uniqueString))
+	hashPart := hex.EncodeToString(hash[:])[:8]
+
+	return fmt.Sprintf("%s-%s", hostname, hashPart)
 }
 
 // printLocalData виводить дані локально для дебагу

@@ -1,3 +1,6 @@
+//go:build windows
+// +build windows
+
 package main
 
 import (
@@ -279,10 +282,15 @@ func syncBlockedSoftware(config *Config) error {
 	log.Printf("📥 Отримано %d заблокованих програм", response.Message.Count)
 
 	if response.Message.Count == 0 {
-		// Немає заблокованих - очищаємо правила
+		// Немає заблокованих - очищаємо всі правила
+		log.Println("🔓 Знімаємо всі блокування...")
 		if err := clearAllBlockRules(); err != nil {
 			log.Printf("⚠ Помилка очищення правил: %v", err)
+		} else {
+			log.Println("✓ Всі блокування знято")
 		}
+		// Оновлюємо Group Policy щоб зміни застосувались
+		refreshGroupPolicy()
 	} else {
 		// Застосовуємо політики
 		if err := applyBlockPolicies(response.Message.Blocked); err != nil {

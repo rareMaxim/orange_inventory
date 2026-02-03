@@ -160,11 +160,13 @@ scheduler_events = {
 	"cron": {
 		# Перевірка алертів кожні 5 хвилин (використовує правила з oiAlertRule)
 		"*/5 * * * *": [
-			"orange_inventory.alert_engine.check_all_alerts",
+			"orange_inventory.orange_inventory.alert_engine.check_all_alerts",
+			"orange_inventory.orange_inventory.service_monitor.check_services",
 		],
 		# Авто-вирішення алертів кожні 10 хвилин
 		"*/10 * * * *": [
-			"orange_inventory.alert_engine.auto_resolve_alerts",
+			"orange_inventory.orange_inventory.alert_engine.auto_resolve_alerts",
+			"orange_inventory.orange_inventory.service_monitor.auto_resolve_service_alerts",
 		],
 	},
 	"hourly": [

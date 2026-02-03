@@ -1,0 +1,222 @@
+{
+ "actions": [],
+ "autoname": "format:CMD-{agent}-{creation}",
+ "creation": "2026-02-01 11:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "agent",
+  "command_template",
+  "command_type",
+  "status",
+  "column_break_main",
+  "created_by_user",
+  "approved_by_user",
+  "executed_at",
+  "security_section",
+  "expires_at",
+  "signature",
+  "command_section",
+  "command",
+  "arguments",
+  "timeout_seconds",
+  "result_section",
+  "exit_code",
+  "output",
+  "error_output"
+ ],
+ "fields": [
+  {
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Агент",
+   "options": "oiAgent",
+   "reqd": 1
+  },
+  {
+   "description": "Оберіть шаблон команди (рекомендовано) або Custom для довільної команди",
+   "fieldname": "command_template",
+   "fieldtype": "Link",
+   "label": "Шаблон команди",
+   "options": "oiCommandTemplate"
+  },
+  {
+   "fieldname": "command_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Тип команди",
+   "options": "PowerShell\nCMD\nRestart Service\nReboot\nShutdown\nCustom",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Статус",
+   "options": "Pending\nSent\nRunning\nCompleted\nFailed\nTimeout\nCancelled"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "created_by_user",
+   "fieldtype": "Link",
+   "label": "Створив",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "executed_at",
+   "fieldtype": "Datetime",
+   "label": "Виконано о",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.command_template && frappe.db.get_value('oiCommandTemplate', doc.command_template, 'requires_approval')",
+   "fieldname": "approved_by_user",
+   "fieldtype": "Link",
+   "label": "Схвалив",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "security_section",
+   "fieldtype": "Section Break",
+   "label": "Безпека"
+  },
+  {
+   "description": "Команда не буде виконана після цього часу",
+   "fieldname": "expires_at",
+   "fieldtype": "Datetime",
+   "label": "Дійсна до"
+  },
+  {
+   "description": "HMAC-SHA256 підпис для верифікації агентом",
+   "fieldname": "signature",
+   "fieldtype": "Data",
+   "label": "Підпис",
+   "read_only": 1
+  },
+  {
+   "fieldname": "command_section",
+   "fieldtype": "Section Break",
+   "label": "Команда"
+  },
+  {
+   "description": "Команда для виконання (PowerShell/CMD скрипт або ім'я служби)",
+   "fieldname": "command",
+   "fieldtype": "Code",
+   "label": "Команда",
+   "options": "PowerShell",
+   "reqd": 1
+  },
+  {
+   "description": "Додаткові аргументи (JSON)",
+   "fieldname": "arguments",
+   "fieldtype": "Code",
+   "label": "Аргументи",
+   "options": "JSON"
+  },
+  {
+   "default": "60",
+   "description": "Максимальний час виконання (секунди)",
+   "fieldname": "timeout_seconds",
+   "fieldtype": "Int",
+   "label": "Таймаут (сек)"
+  },
+  {
+   "fieldname": "result_section",
+   "fieldtype": "Section Break",
+   "label": "Результат"
+  },
+  {
+   "fieldname": "exit_code",
+   "fieldtype": "Int",
+   "label": "Код виходу",
+   "read_only": 1
+  },
+  {
+   "fieldname": "output",
+   "fieldtype": "Code",
+   "label": "Вивід (stdout)",
+   "options": "Text",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_output",
+   "fieldtype": "Code",
+   "label": "Помилки (stderr)",
+   "options": "Text",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-01 11:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgentCommand",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Yellow",
+   "title": "Pending"
+  },
+  {
+   "color": "Blue",
+   "title": "Sent"
+  },
+  {
+   "color": "Orange",
+   "title": "Running"
+  },
+  {
+   "color": "Green",
+   "title": "Completed"
+  },
+  {
+   "color": "Red",
+   "title": "Failed"
+  },
+  {
+   "color": "Gray",
+   "title": "Timeout"
+  },
+  {
+   "color": "Gray",
+   "title": "Cancelled"
+  }
+ ],
+ "title_field": "command_type",
+ "track_changes": 1
+}

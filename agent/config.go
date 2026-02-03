@@ -10,9 +10,10 @@ import (
 
 // Config містить налаштування для підключення до сервера
 type Config struct {
-	ServerURL string `json:"server_url"` // URL Frappe сервера (наприклад: https://your-site.com)
-	APIKey    string `json:"api_key"`    // API ключ користувача
-	APISecret string `json:"api_secret"` // API секрет користувача
+	ServerURL         string `json:"server_url"`          // URL Frappe сервера (наприклад: https://your-site.com)
+	APIKey            string `json:"api_key"`             // API ключ користувача
+	APISecret         string `json:"api_secret"`          // API секрет користувача
+	CommandSigningKey string `json:"command_signing_key"` // Ключ для верифікації підписів команд (опціонально)
 }
 
 // loadConfig завантажує конфігурацію з файлу config.json

@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "autoname": "format:{service_name}",
+ "creation": "2026-02-01 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "service_name",
+  "display_name",
+  "column_break_main",
+  "alert_on_stop",
+  "auto_restart",
+  "settings_section",
+  "agent_group",
+  "specific_agents",
+  "column_break_settings",
+  "expected_state",
+  "check_interval_minutes",
+  "notes_section",
+  "description"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Активно"
+  },
+  {
+   "fieldname": "service_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Ім'я служби",
+   "reqd": 1,
+   "unique": 1,
+   "description": "Системне ім'я служби (напр: wuauserv, Spooler)"
+  },
+  {
+   "fieldname": "display_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Назва для відображення",
+   "description": "Зрозуміла назва служби"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "alert_on_stop",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Алерт при зупинці",
+   "description": "Створити алерт якщо служба зупиниться"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_restart",
+   "fieldtype": "Check",
+   "label": "Автоперезапуск",
+   "description": "Спробувати перезапустити службу автоматично (потребує прав адміністратора)"
+  },
+  {
+   "fieldname": "settings_section",
+   "fieldtype": "Section Break",
+   "label": "Налаштування"
+  },
+  {
+   "fieldname": "agent_group",
+   "fieldtype": "Link",
+   "label": "Група агентів",
+   "options": "oiAssetGroup",
+   "description": "Моніторити тільки агентів з цієї групи (порожнє = всі)"
+  },
+  {
+   "fieldname": "specific_agents",
+   "fieldtype": "Table MultiSelect",
+   "label": "Конкретні агенти",
+   "options": "oiAgent",
+   "description": "Або виберіть конкретних агентів для моніторингу"
+  },
+  {
+   "fieldname": "column_break_settings",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Running",
+   "fieldname": "expected_state",
+   "fieldtype": "Select",
+   "label": "Очікуваний стан",
+   "options": "Running\nStopped"
+  },
+  {
+   "default": "15",
+   "fieldname": "check_interval_minutes",
+   "fieldtype": "Int",
+   "label": "Інтервал перевірки (хв)",
+   "description": "Мінімальний час між алертами для цієї служби"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Примітки"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Опис"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-01 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiServiceMonitor",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "show_title_field_in_link": 1,
+ "sort_field": "service_name",
+ "sort_order": "ASC",
+ "title_field": "service_name",
+ "track_changes": 1
+}

@@ -1,0 +1,91 @@
+{
+ "actions": [],
+ "creation": "2026-02-03 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_section",
+  "company_name",
+  "default_location",
+  "column_break_general",
+  "auto_link_agents",
+  "security_section",
+  "command_signing_key",
+  "regenerate_key_button",
+  "security_info"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_section",
+   "fieldtype": "Section Break",
+   "label": "Загальні налаштування"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "label": "Назва компанії"
+  },
+  {
+   "fieldname": "default_location",
+   "fieldtype": "Link",
+   "label": "Локація за замовчуванням",
+   "options": "oiLocation"
+  },
+  {
+   "fieldname": "column_break_general",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "Автоматично прив'язувати агентів до активів по серійному номеру",
+   "fieldname": "auto_link_agents",
+   "fieldtype": "Check",
+   "label": "Авто-прив'язка агентів"
+  },
+  {
+   "fieldname": "security_section",
+   "fieldtype": "Section Break",
+   "label": "Безпека команд"
+  },
+  {
+   "description": "HMAC-SHA256 ключ для підпису команд. Має співпадати з ключем в config.json агента.",
+   "fieldname": "command_signing_key",
+   "fieldtype": "Password",
+   "label": "Ключ підпису команд"
+  },
+  {
+   "fieldname": "regenerate_key_button",
+   "fieldtype": "Button",
+   "label": "Згенерувати новий ключ"
+  },
+  {
+   "fieldname": "security_info",
+   "fieldtype": "HTML",
+   "label": "security_info",
+   "options": "<div class=\"alert alert-warning\">\n<strong>Важливо:</strong> Після зміни ключа підпису, потрібно оновити <code>command_signing_key</code> у файлі <code>config.json</code> на всіх агентах.\n</div>"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-02-03 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "Orange Inventory Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
