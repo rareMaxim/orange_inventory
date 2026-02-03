@@ -10,13 +10,16 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 // --- КОНСТАНТИ ---
 const (
-	AppVersion   = "1.9"
-	TaskName     = "OrangeInventoryAgent"
-	TaskInterval = 15 // хвилин
+	AppVersion          = "1.11.0"
+	TaskName            = "OrangeInventoryAgent"
+	TaskNameCommands    = "OrangeInventoryAgent_Commands"
+	TaskInterval        = 15 // хвилин (повний збір)
+	CommandPollInterval = 1  // хвилин (перевірка команд)
 )
 
 // --- ГОЛОВНА ФУНКЦІЯ ---
@@ -28,6 +31,7 @@ func main() {
 	statusFlag := flag.Bool("status", false, "Показати статус завдання")
 	silentFlag := flag.Bool("silent", false, "Тихий режим (без виводу в консоль)")
 	versionFlag := flag.Bool("version", false, "Показати версію")
+	commandsOnlyFlag := flag.Bool("commands-only", false, "Тільки перевірка команд (без збору даних)")
 	flag.Parse()
 
 	// Налаштування логування
@@ -98,6 +102,12 @@ func main() {
 		return
 	}
 
+	// --- РЕЖИМ ТІЛЬКИ КОМАНДИ (легкий polling) ---
+	if *commandsOnlyFlag {
+		runCommandsOnly()
+		return
+	}
+
 	// --- ЗВИЧАЙНИЙ РЕЖИМ: ЗБІР ТА ВІДПРАВКА ДАНИХ ---
 	runAgent()
 }
@@ -151,15 +161,26 @@ func runAgent() {
 		}
 
 		// Синхронізуємо політики блокування ПЗ
-		log.Println("\n=== ПОЛІТИКИ БЛОКУВАННЯ ===")
+		log.Println("\n=== ПОЛІТИКИ БЛОКУВАННЯ ПЗ ===")
 		if err := syncBlockedSoftware(config); err != nil {
-			log.Printf("⚠ Помилка синхронізації політик: %v", err)
+			log.Printf("⚠ Помилка синхронізації політик ПЗ: %v", err)
 		}
 
-		// Обробляємо віддалені команди
+		// Синхронізуємо блокування доменів
+		log.Println("\n=== БЛОКУВАННЯ ДОМЕНІВ ===")
+		if err := syncBlockedDomains(config); err != nil {
+			log.Printf("⚠ Помилка синхронізації блокувань доменів: %v", err)
+		}
+
+		// Обробляємо віддалені команди (з lock для уникнення конфліктів)
 		log.Println("\n=== ВІДДАЛЕНІ КОМАНДИ ===")
-		agentID := generateAgentID(static)
-		processCommands(config, agentID)
+		if acquireLock("commands") {
+			agentID := generateAgentID(static)
+			processCommands(config, agentID)
+			releaseLock("commands")
+		} else {
+			log.Println("⚠ Команди обробляються іншим процесом, пропускаємо")
+		}
 
 		// Перевіряємо оновлення
 		checkAndUpdate(config)
@@ -220,6 +241,68 @@ func generateAgentID(static StaticData) string {
 	hashPart := hex.EncodeToString(hash[:])[:8]
 
 	return fmt.Sprintf("%s-%s", hostname, hashPart)
+}
+
+// runCommandsOnly - легкий режим тільки для перевірки команд
+func runCommandsOnly() {
+	// Перевіряємо lock щоб не конфліктувати з повним запуском
+	if !acquireLock("commands") {
+		log.Println("⚠ Інший процес вже працює, пропускаємо")
+		return
+	}
+	defer releaseLock("commands")
+
+	config, err := loadConfig()
+	if err != nil {
+		log.Printf("⚠ Конфігурацію не знайдено: %v", err)
+		return
+	}
+
+	// Отримуємо мінімальні дані для agent_id
+	static := getMinimalStaticInfo()
+	agentID := generateAgentID(static)
+
+	// Обробляємо команди
+	processCommands(config, agentID)
+}
+
+// acquireLock намагається отримати lock
+func acquireLock(name string) bool {
+	exePath, _ := getExePath()
+	lockPath := filepath.Join(filepath.Dir(exePath), fmt.Sprintf(".%s.lock", name))
+
+	// Перевіряємо чи існує lock файл
+	if info, err := os.Stat(lockPath); err == nil {
+		// Lock існує - перевіряємо чи не застарів (більше 5 хвилин)
+		if time.Since(info.ModTime()) > 5*time.Minute {
+			// Застарілий lock - видаляємо
+			os.Remove(lockPath)
+		} else {
+			return false
+		}
+	}
+
+	// Створюємо lock файл
+	f, err := os.Create(lockPath)
+	if err != nil {
+		return false
+	}
+	f.Close()
+	return true
+}
+
+// releaseLock звільняє lock
+func releaseLock(name string) {
+	exePath, _ := getExePath()
+	lockPath := filepath.Join(filepath.Dir(exePath), fmt.Sprintf(".%s.lock", name))
+	os.Remove(lockPath)
+}
+
+// getMinimalStaticInfo отримує дані для agent_id
+// TODO: оптимізувати щоб не збирати всі дані
+func getMinimalStaticInfo() StaticData {
+	// Поки що використовуємо повний збір - можна оптимізувати пізніше
+	return getStaticInfo()
 }
 
 // printLocalData виводить дані локально для дебагу

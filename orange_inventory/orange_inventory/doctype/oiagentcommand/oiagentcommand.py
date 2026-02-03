@@ -48,7 +48,12 @@ def get_command_signing_key() -> str:
 	Отримує секретний ключ для підпису команд з налаштувань.
 	"""
 	try:
-		key = frappe.db.get_single_value("Orange Inventory Settings", "command_signing_key")
+		# Password field потребує спеціального методу для отримання
+		from frappe.utils.password import get_decrypted_password
+
+		key = get_decrypted_password(
+			"Orange Inventory Settings", "Orange Inventory Settings", "command_signing_key"
+		)
 		if key:
 			return key
 	except Exception:
@@ -61,7 +66,23 @@ def get_command_signing_key() -> str:
 	return hashlib.sha256(frappe.local.conf.get("secret_key", "default").encode()).hexdigest()
 
 
-def sign_command(command_id: str, agent_id: str, command: str, expires_at: str) -> str:
+def normalize_datetime_for_signature(dt) -> str:
+	"""
+	Нормалізує datetime до стандартного формату для підпису.
+	Формат: YYYY-MM-DD HH:MM:SS (без мікросекунд)
+	"""
+	if not dt:
+		return ""
+	if isinstance(dt, str):
+		# Якщо це вже рядок - обрізаємо мікросекунди
+		if "." in dt:
+			return dt.split(".")[0]
+		return dt
+	# datetime object
+	return dt.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def sign_command(command_id: str, agent_id: str, command: str, expires_at) -> str:
 	"""
 	Створює HMAC-SHA256 підпис для команди.
 
@@ -69,13 +90,15 @@ def sign_command(command_id: str, agent_id: str, command: str, expires_at: str) 
 	    command_id: ID команди
 	    agent_id: ID агента
 	    command: текст команди
-	    expires_at: час закінчення дії
+	    expires_at: час закінчення дії (datetime або str)
 
 	Returns:
 	    str: hex-encoded HMAC signature
 	"""
 	key = get_command_signing_key()
-	message = f"{command_id}:{agent_id}:{command}:{expires_at}"
+	# Нормалізуємо expires_at для консистентності
+	normalized_expires = normalize_datetime_for_signature(expires_at)
+	message = f"{command_id}:{agent_id}:{command}:{normalized_expires}"
 	signature = hmac.new(key.encode(), message.encode(), hashlib.sha256).hexdigest()
 	return signature
 
@@ -88,6 +111,32 @@ class oiAgentCommand(Document):
 		# Встановлюємо термін дії за замовчуванням (1 година)
 		if not self.expires_at:
 			self.expires_at = now_datetime() + timedelta(hours=1)
+
+	def before_validate(self):
+		"""Заповнюємо поля з шаблону ДО перевірки обов'язкових полів."""
+		if self.command_template:
+			self.fill_from_template()
+
+	def fill_from_template(self):
+		"""Заповнює команду та тип з шаблону."""
+		template = frappe.get_doc("oiCommandTemplate", self.command_template)
+
+		# Встановлюємо тип команди з шаблону
+		self.command_type = template.command_type
+
+		# Якщо є аргументи - рендеримо команду з шаблону
+		if self.arguments:
+			try:
+				params = json.loads(self.arguments)
+				self.command = template.render_command(params)
+			except json.JSONDecodeError:
+				frappe.throw("Невалідний JSON в аргументах")
+		else:
+			self.command = template.command_template
+
+		# Встановлюємо таймаут з шаблону якщо не вказано
+		if not self.timeout_seconds or self.timeout_seconds > template.max_timeout_seconds:
+			self.timeout_seconds = template.max_timeout_seconds
 
 	def validate(self):
 		self.validate_permissions()
@@ -119,29 +168,15 @@ class oiAgentCommand(Document):
 				frappe.throw(
 					"Тільки System Manager може створювати custom команди. " "Використовуйте шаблон команди."
 				)
+			# Перевіряємо що команда заповнена для custom
+			if not self.command:
+				frappe.throw("Для custom команди потрібно вказати команду")
 			return
 
 		template = frappe.get_doc("oiCommandTemplate", self.command_template)
 
 		if not template.enabled:
 			frappe.throw(f"Шаблон '{self.command_template}' вимкнено")
-
-		# Встановлюємо тип команди з шаблону
-		self.command_type = template.command_type
-
-		# Якщо є аргументи - рендеримо команду з шаблону
-		if self.arguments:
-			try:
-				params = json.loads(self.arguments)
-				self.command = template.render_command(params)
-			except json.JSONDecodeError:
-				frappe.throw("Невалідний JSON в аргументах")
-		else:
-			self.command = template.command_template
-
-		# Встановлюємо таймаут з шаблону якщо не вказано
-		if not self.timeout_seconds or self.timeout_seconds > template.max_timeout_seconds:
-			self.timeout_seconds = template.max_timeout_seconds
 
 	def validate_command_safety(self):
 		"""Перевіряє команду на небезпечні патерни."""
@@ -192,9 +227,17 @@ class oiAgentCommand(Document):
 				frappe.throw("Ця команда потребує схвалення іншим адміністратором перед виконанням")
 
 	def before_save(self):
-		"""Генеруємо підпис перед збереженням."""
-		if self.status == "Pending" and not self.signature:
+		"""Генеруємо підпис перед збереженням (тільки для існуючих документів)."""
+		# Для нових документів підпис генерується в after_insert
+		# бо self.name ще не встановлено
+		if not self.is_new() and self.status == "Pending" and not self.signature:
 			self.generate_signature()
+
+	def after_insert(self):
+		"""Генеруємо підпис після створення документа (коли вже є name)."""
+		if self.status == "Pending":
+			self.generate_signature()
+			self.db_set("signature", self.signature, update_modified=False)
 
 	def generate_signature(self):
 		"""Генерує HMAC підпис для команди."""
@@ -203,9 +246,8 @@ class oiAgentCommand(Document):
 		if not agent_id:
 			return
 
-		expires_str = str(self.expires_at) if self.expires_at else ""
-
-		self.signature = sign_command(self.name or "new", agent_id, self.command, expires_str)
+		# Передаємо expires_at напряму - sign_command нормалізує його
+		self.signature = sign_command(self.name or "new", agent_id, self.command, self.expires_at)
 
 	def on_update(self):
 		"""Логування змін."""
@@ -228,6 +270,33 @@ class oiAgentCommand(Document):
 				"content": f"Статус змінено на <b>{self.status}</b> користувачем {frappe.session.user}",
 			}
 		).insert(ignore_permissions=True)
+
+	@frappe.whitelist()
+	def regenerate_signature(self):
+		"""Перегенерує підпис команди (для виправлення невалідних підписів)."""
+		self.generate_signature()
+		self.db_set("signature", self.signature, update_modified=False)
+		return {"status": "success", "signature": self.signature}
+
+	@frappe.whitelist()
+	def debug_signature(self):
+		"""Показує дані що використовуються для підпису (для діагностики)."""
+		agent_id = frappe.db.get_value("oiAgent", self.agent, "agent_id")
+		expires_normalized = normalize_datetime_for_signature(self.expires_at)
+		message = f"{self.name}:{agent_id}:{self.command}:{expires_normalized}"
+		key = get_command_signing_key()
+
+		return {
+			"command_id": self.name,
+			"agent_id": agent_id,
+			"command_length": len(self.command) if self.command else 0,
+			"expires_at_normalized": expires_normalized,
+			"message_for_signing": message,
+			"current_signature": self.signature,
+			"key_configured": bool(key),
+			"key_prefix": key[:8] + "..." if key and len(key) >= 8 else "NOT SET",
+			"key_length": len(key) if key else 0,
+		}
 
 	@frappe.whitelist()
 	def approve(self):

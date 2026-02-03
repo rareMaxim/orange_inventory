@@ -27,7 +27,7 @@ func getExePath() (string, error) {
 	return filepath.Abs(exe)
 }
 
-// installTask створює заплановане завдання Windows
+// installTask створює заплановані завдання Windows
 func installTask() error {
 	if !isAdmin() {
 		return fmt.Errorf("потрібні права адміністратора. Запустіть як Administrator")
@@ -44,13 +44,15 @@ func installTask() error {
 		return fmt.Errorf("config.json не знайдено. Створіть його перед встановленням")
 	}
 
-	// Видаляємо існуюче завдання
+	// Видаляємо існуючі завдання
 	exec.Command("schtasks", "/delete", "/tn", TaskName, "/f").Run()
+	exec.Command("schtasks", "/delete", "/tn", TaskNameCommands, "/f").Run()
 
-	// Створюємо нове завдання
+	// 1. Створюємо завдання для повного збору даних (кожні 15 хв)
+	fmt.Printf("Створення завдання '%s' (кожні %d хв)...\n", TaskName, TaskInterval)
 	cmd := exec.Command("schtasks", "/create",
 		"/tn", TaskName,
-		"/tr", fmt.Sprintf("\"%s\"", exePath),
+		"/tr", fmt.Sprintf("\"%s\" --silent", exePath),
 		"/sc", "MINUTE",
 		"/mo", fmt.Sprintf("%d", TaskInterval),
 		"/ru", "SYSTEM",
@@ -63,38 +65,77 @@ func installTask() error {
 		return fmt.Errorf("помилка створення завдання: %w\n%s", err, string(output))
 	}
 
-	// Запускаємо завдання одразу
+	// 2. Створюємо завдання для перевірки команд (кожну хвилину)
+	fmt.Printf("Створення завдання '%s' (кожні %d хв)...\n", TaskNameCommands, CommandPollInterval)
+	cmd = exec.Command("schtasks", "/create",
+		"/tn", TaskNameCommands,
+		"/tr", fmt.Sprintf("\"%s\" --commands-only --silent", exePath),
+		"/sc", "MINUTE",
+		"/mo", fmt.Sprintf("%d", CommandPollInterval),
+		"/ru", "SYSTEM",
+		"/rl", "HIGHEST",
+		"/f",
+	)
+
+	output, err = cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("помилка створення завдання команд: %w\n%s", err, string(output))
+	}
+
+	// Запускаємо повний збір одразу
 	exec.Command("schtasks", "/run", "/tn", TaskName).Run()
 
 	return nil
 }
 
-// uninstallTask видаляє заплановане завдання Windows
+// uninstallTask видаляє заплановані завдання Windows
 func uninstallTask() error {
 	if !isAdmin() {
 		return fmt.Errorf("потрібні права адміністратора. Запустіть як Administrator")
 	}
 
-	// Зупиняємо завдання
+	// Зупиняємо та видаляємо обидва завдання
 	exec.Command("schtasks", "/end", "/tn", TaskName).Run()
+	exec.Command("schtasks", "/end", "/tn", TaskNameCommands).Run()
 
-	// Видаляємо завдання
+	// Видаляємо основне завдання
 	cmd := exec.Command("schtasks", "/delete", "/tn", TaskName, "/f")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("помилка видалення завдання: %w\n%s", err, string(output))
+		fmt.Printf("⚠ Не вдалося видалити '%s': %s\n", TaskName, string(output))
+	} else {
+		fmt.Printf("✓ Видалено '%s'\n", TaskName)
+	}
+
+	// Видаляємо завдання команд
+	cmd = exec.Command("schtasks", "/delete", "/tn", TaskNameCommands, "/f")
+	output, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("⚠ Не вдалося видалити '%s': %s\n", TaskNameCommands, string(output))
+	} else {
+		fmt.Printf("✓ Видалено '%s'\n", TaskNameCommands)
 	}
 
 	return nil
 }
 
-// showStatus показує статус завдання
+// showStatus показує статус завдань
 func showStatus() {
+	fmt.Println("=== Основне завдання (збір даних) ===")
 	cmd := exec.Command("schtasks", "/query", "/tn", TaskName, "/v", "/fo", "LIST")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Завдання '%s' не знайдено\n", TaskName)
-		return
+		fmt.Printf("Завдання '%s' не знайдено\n\n", TaskName)
+	} else {
+		fmt.Println(string(output))
 	}
-	fmt.Println(string(output))
+
+	fmt.Println("=== Завдання команд (polling) ===")
+	cmd = exec.Command("schtasks", "/query", "/tn", TaskNameCommands, "/v", "/fo", "LIST")
+	output, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Завдання '%s' не знайдено\n", TaskNameCommands)
+	} else {
+		fmt.Println(string(output))
+	}
 }

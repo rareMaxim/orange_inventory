@@ -262,6 +262,58 @@ func refreshGroupPolicy() {
 	}
 }
 
+// killBlockedProcesses завершує запущені заблоковані процеси
+// Це backup метод коли SRP не працює (Windows Home, Windows 11)
+func killBlockedProcesses(blocked []BlockedSoftware) int {
+	killedCount := 0
+
+	for _, item := range blocked {
+		for _, exe := range item.Executables {
+			// tasklist не чутливий до регістру, але вивід може містити будь-який регістр
+			// Використовуємо case-insensitive пошук
+			checkCmd := exec.Command("tasklist", "/FI", fmt.Sprintf("IMAGENAME eq %s", exe), "/FO", "CSV", "/NH")
+			output, err := checkCmd.Output()
+			if err != nil {
+				continue
+			}
+
+			// Якщо процес знайдено (вивід не порожній і не містить "INFO: No tasks")
+			outputStr := strings.ToLower(string(output))
+			exeLower := strings.ToLower(exe)
+			if strings.Contains(outputStr, exeLower) && !strings.Contains(outputStr, "no tasks") {
+				// Завершуємо процес (taskkill не чутливий до регістру)
+				killCmd := exec.Command("taskkill", "/F", "/IM", exe)
+				if err := killCmd.Run(); err != nil {
+					log.Printf("⚠ Не вдалося завершити %s: %v", exe, err)
+				} else {
+					log.Printf("🔪 Завершено процес: %s (%s)", exe, item.Reason)
+					killedCount++
+				}
+			}
+		}
+	}
+
+	return killedCount
+}
+
+// isWindowsHome перевіряє чи це Windows Home (де SRP не працює)
+func isWindowsHome() bool {
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows NT\CurrentVersion`, registry.READ)
+	if err != nil {
+		return false
+	}
+	defer key.Close()
+
+	edition, _, err := key.GetStringValue("EditionID")
+	if err != nil {
+		return false
+	}
+
+	edition = strings.ToLower(edition)
+	// Home, HomeBasic, HomePremium, CoreSingleLanguage, Core
+	return strings.Contains(edition, "home") || strings.Contains(edition, "core")
+}
+
 // syncBlockedSoftware синхронізує список заблокованого ПЗ з сервером
 func syncBlockedSoftware(config *Config) error {
 	log.Println("🔄 Перевірка заблокованого ПЗ...")
@@ -276,10 +328,23 @@ func syncBlockedSoftware(config *Config) error {
 	currentVersion := getCurrentPolicyVersion()
 	if currentVersion == response.Message.Version && currentVersion != "" {
 		log.Printf("✓ Політики актуальні (версія: %s)", currentVersion)
+
+		// Навіть якщо політики актуальні - перевіряємо та завершуємо запущені заблоковані процеси
+		if response.Message.Count > 0 {
+			if killed := killBlockedProcesses(response.Message.Blocked); killed > 0 {
+				log.Printf("🔪 Завершено %d заблокованих процесів", killed)
+			}
+		}
 		return nil
 	}
 
 	log.Printf("📥 Отримано %d заблокованих програм", response.Message.Count)
+
+	// Визначаємо метод блокування
+	useProcessKill := isWindowsHome()
+	if useProcessKill {
+		log.Println("⚠ Windows Home виявлено - SRP не підтримується, використовуємо завершення процесів")
+	}
 
 	if response.Message.Count == 0 {
 		// Немає заблокованих - очищаємо всі правила
@@ -292,9 +357,14 @@ func syncBlockedSoftware(config *Config) error {
 		// Оновлюємо Group Policy щоб зміни застосувались
 		refreshGroupPolicy()
 	} else {
-		// Застосовуємо політики
+		// Застосовуємо політики SRP (навіть на Home - для майбутньої сумісності)
 		if err := applyBlockPolicies(response.Message.Blocked); err != nil {
-			return fmt.Errorf("помилка застосування політик: %w", err)
+			log.Printf("⚠ Помилка застосування SRP політик: %v", err)
+		}
+
+		// ЗАВЖДИ завершуємо запущені заблоковані процеси (працює на всіх версіях Windows)
+		if killed := killBlockedProcesses(response.Message.Blocked); killed > 0 {
+			log.Printf("🔪 Завершено %d заблокованих процесів", killed)
 		}
 	}
 

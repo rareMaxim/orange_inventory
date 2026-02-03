@@ -128,5 +128,57 @@
     "allowed_parameters": "{}",
     "max_timeout_seconds": 300,
     "allowed_roles": ""
+  },
+  {
+    "doctype": "oiCommandTemplate",
+    "template_name": "Встановити Wazuh Agent",
+    "description": "Завантаження та встановлення Wazuh Agent з автоматичною реєстрацією на сервері",
+    "enabled": 1,
+    "command_type": "PowerShell",
+    "risk_level": "High",
+    "requires_approval": 1,
+    "command_template": "$WazuhVersion = '{wazuh_version}'; $WazuhManager = '{wazuh_manager}'; $AgentName = if('{agent_name}' -eq '') { $env:COMPUTERNAME } else { '{agent_name}' }; $RegistrationPassword = '{registration_password}'; Write-Host \"Installing Wazuh Agent $WazuhVersion...\"; $InstallerPath = \"$env:TEMP\\wazuh-agent.msi\"; Invoke-WebRequest -Uri \"https://packages.wazuh.com/4.x/windows/wazuh-agent-$WazuhVersion-1.msi\" -OutFile $InstallerPath; $MsiArgs = @('/i', $InstallerPath, '/q', \"WAZUH_MANAGER=$WazuhManager\", \"WAZUH_AGENT_NAME=$AgentName\"); if($RegistrationPassword -ne '') { $MsiArgs += \"WAZUH_REGISTRATION_PASSWORD=$RegistrationPassword\" }; Start-Process msiexec.exe -ArgumentList $MsiArgs -Wait -NoNewWindow; Start-Service WazuhSvc; Get-Service WazuhSvc | Select-Object Name, Status; Remove-Item $InstallerPath -Force",
+    "allowed_parameters": "{\"wazuh_version\": {\"type\": \"string\", \"pattern\": \"^[0-9]+\\\\.[0-9]+\\\\.[0-9]+$\", \"max_length\": 20}, \"wazuh_manager\": {\"type\": \"string\", \"pattern\": \"^[a-zA-Z0-9][a-zA-Z0-9._-]*$\", \"max_length\": 256}, \"agent_name\": {\"type\": \"string\", \"pattern\": \"^[a-zA-Z0-9_-]*$\", \"max_length\": 128}, \"registration_password\": {\"type\": \"string\", \"pattern\": \"^[a-zA-Z0-9_!@#$%^&*()-]*$\", \"max_length\": 128}}",
+    "max_timeout_seconds": 600,
+    "allowed_roles": "System Manager"
+  },
+  {
+    "doctype": "oiCommandTemplate",
+    "template_name": "Статус Wazuh Agent",
+    "description": "Перевірка стану служби Wazuh Agent та з'єднання з менеджером",
+    "enabled": 1,
+    "command_type": "PowerShell",
+    "risk_level": "Low",
+    "requires_approval": 0,
+    "command_template": "$service = Get-Service WazuhSvc -ErrorAction SilentlyContinue; if($service) { Write-Host \"Service Status: $($service.Status)\"; $config = Get-Content 'C:\\Program Files (x86)\\ossec-agent\\ossec.conf' -ErrorAction SilentlyContinue | Select-String -Pattern '<address>' | ForEach-Object { $_.Line.Trim() }; Write-Host \"Manager Config: $config\"; $agentInfo = & 'C:\\Program Files (x86)\\ossec-agent\\agent-control.exe' -i 2>$null; Write-Host $agentInfo } else { Write-Host 'Wazuh Agent not installed' }",
+    "allowed_parameters": "{}",
+    "max_timeout_seconds": 30,
+    "allowed_roles": ""
+  },
+  {
+    "doctype": "oiCommandTemplate",
+    "template_name": "Перезапуск Wazuh Agent",
+    "description": "Перезапуск служби Wazuh Agent",
+    "enabled": 1,
+    "command_type": "PowerShell",
+    "risk_level": "Medium",
+    "requires_approval": 0,
+    "command_template": "Restart-Service WazuhSvc -Force; Start-Sleep -Seconds 3; Get-Service WazuhSvc | Select-Object Name, Status",
+    "allowed_parameters": "{}",
+    "max_timeout_seconds": 60,
+    "allowed_roles": "System Manager, Maintenance Manager"
+  },
+  {
+    "doctype": "oiCommandTemplate",
+    "template_name": "Видалити Wazuh Agent",
+    "description": "Повне видалення Wazuh Agent з системи",
+    "enabled": 1,
+    "command_type": "PowerShell",
+    "risk_level": "High",
+    "requires_approval": 1,
+    "command_template": "Stop-Service WazuhSvc -Force -ErrorAction SilentlyContinue; $app = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -like '*Wazuh*' }; if($app) { $app.Uninstall() | Out-Null; Write-Host 'Wazuh Agent uninstalled successfully' } else { Write-Host 'Wazuh Agent not found' }",
+    "allowed_parameters": "{}",
+    "max_timeout_seconds": 300,
+    "allowed_roles": "System Manager"
   }
 ]

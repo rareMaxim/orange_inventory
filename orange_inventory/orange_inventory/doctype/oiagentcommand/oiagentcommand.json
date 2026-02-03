@@ -49,7 +49,7 @@
    "in_standard_filter": 1,
    "label": "Тип команди",
    "options": "PowerShell\nCMD\nRestart Service\nReboot\nShutdown\nCustom",
-   "reqd": 1
+   "mandatory_depends_on": "eval:!doc.command_template"
   },
   {
    "default": "Pending",
@@ -110,12 +110,12 @@
    "label": "Команда"
   },
   {
-   "description": "Команда для виконання (PowerShell/CMD скрипт або ім'я служби)",
+   "description": "Команда для виконання (заповнюється автоматично з шаблону або вручну)",
    "fieldname": "command",
    "fieldtype": "Code",
    "label": "Команда",
    "options": "PowerShell",
-   "reqd": 1
+   "mandatory_depends_on": "eval:!doc.command_template"
   },
   {
    "description": "Додаткові аргументи (JSON)",

@@ -128,6 +128,7 @@ type StaticData struct {
 	Hostname        string               `json:"hostname"`
 	Platform        string               `json:"os_platform"`
 	OSVersion       string               `json:"os_version"`
+	OSEdition       string               `json:"os_edition"` // Home, Pro, Enterprise, etc.
 	CPUModel        string               `json:"cpu_model"`
 	CPUCores        int                  `json:"cpu_cores"`
 	TotalRAM        uint64               `json:"total_ram_bytes"`

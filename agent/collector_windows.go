@@ -17,6 +17,39 @@ import (
 
 // --- ФУНКЦІЇ ЗБОРУ ДАНИХ (Windows) ---
 
+// getWindowsEdition отримує редакцію Windows (Home, Pro, Enterprise, etc.)
+func getWindowsEdition() string {
+	// Спробуємо через реєстр - найнадійніший метод
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows NT\CurrentVersion`, registry.READ)
+	if err == nil {
+		defer key.Close()
+
+		// Спочатку EditionID (коротка назва: Home, Pro, Enterprise)
+		edition, _, err := key.GetStringValue("EditionID")
+		if err == nil && edition != "" {
+			return edition
+		}
+
+		// Або ProductName (повна назва)
+		productName, _, err := key.GetStringValue("ProductName")
+		if err == nil && productName != "" {
+			return productName
+		}
+	}
+
+	// Fallback через WMI
+	type Win32_OS struct {
+		Caption string
+	}
+	var osInfo []Win32_OS
+	wmi.Query("SELECT Caption FROM Win32_OperatingSystem", &osInfo)
+	if len(osInfo) > 0 {
+		return osInfo[0].Caption
+	}
+
+	return "Unknown"
+}
+
 // getInstalledSoftware отримує список ПЗ з реєстру Windows (швидкий метод)
 func getInstalledSoftware() []SoftwareInfo {
 	softwareList := []SoftwareInfo{}
@@ -229,11 +262,15 @@ func getStaticInfo() StaticData {
 		})
 	}
 
+	// Windows Edition
+	osEdition := getWindowsEdition()
+
 	return StaticData{
 		AgentVersion:    AppVersion,
 		Hostname:        hInfo.Hostname,
 		Platform:        hInfo.OS,
 		OSVersion:       hInfo.PlatformVersion,
+		OSEdition:       osEdition,
 		CPUModel:        cpuInfo[0].ModelName,
 		CPUCores:        len(cpuInfo),
 		TotalRAM:        vmStat.Total,

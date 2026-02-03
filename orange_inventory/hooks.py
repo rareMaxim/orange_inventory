@@ -16,6 +16,7 @@ required_apps = ["hr_oms"]
 # --------
 fixtures = [
 	{"dt": "oiAlertRule", "filters": [["enabled", "=", 1]]},
+	{"dt": "oiCommandTemplate", "filters": [["enabled", "=", 1]]},
 ]
 
 # Each item in the list will be shown as an app in the apps page
@@ -91,7 +92,7 @@ app_include_js = ["/assets/orange_inventory/js/utils.js", "/assets/orange_invent
 # ------------
 
 # before_install = "orange_inventory.install.before_install"
-# after_install = "orange_inventory.install.after_install"
+after_install = "orange_inventory.setup.after_install"
 
 # Uninstallation
 # ------------

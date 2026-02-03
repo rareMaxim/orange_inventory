@@ -154,6 +154,7 @@ func getStaticInfo() StaticData {
 		Hostname:        hInfo.Hostname,
 		Platform:        hInfo.OS,
 		OSVersion:       hInfo.PlatformVersion,
+		OSEdition:       "", // Linux не має редакцій як Windows
 		CPUModel:        cpuModel,
 		CPUCores:        len(cpuInfo),
 		TotalRAM:        vmStat.Total,

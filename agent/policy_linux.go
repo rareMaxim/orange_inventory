@@ -19,3 +19,14 @@ func syncBlockedSoftware(config *Config) error {
 	// - LD_PRELOAD tricks
 	return nil
 }
+
+// syncBlockedDomains на Linux - заглушка
+// TODO: Реалізувати блокування через /etc/hosts та iptables
+func syncBlockedDomains(config *Config) error {
+	log.Println("ℹ Блокування доменів на Linux - заплановано")
+	// TODO: Реалізувати блокування через:
+	// - /etc/hosts
+	// - iptables/nftables
+	// - dnsmasq
+	return nil
+}

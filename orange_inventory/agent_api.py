@@ -195,6 +195,9 @@ def report_machine_data(static_data: str | None = None, dynamic_data: str | None
 	os_version = static.get("os_version", "")
 	agent.os = f"{os_platform} {os_version}".strip()
 
+	# Редакція ОС (Home, Pro, Enterprise)
+	agent.os_edition = static.get("os_edition", "")
+
 	agent.cpu_model = static.get("cpu_model")
 	agent.cpu_cores = static.get("cpu_cores")
 
@@ -540,6 +543,14 @@ def get_pending_commands(agent_id: str):
 			except json.JSONDecodeError:
 				arguments = None
 
+		# Нормалізуємо expires_at (без мікросекунд) для співпадіння з підписом
+		expires_at_str = None
+		if cmd.expires_at:
+			if isinstance(cmd.expires_at, str):
+				expires_at_str = cmd.expires_at.split(".")[0] if "." in cmd.expires_at else cmd.expires_at
+			else:
+				expires_at_str = cmd.expires_at.strftime("%Y-%m-%d %H:%M:%S")
+
 		result.append(
 			{
 				"id": cmd.name,
@@ -548,7 +559,7 @@ def get_pending_commands(agent_id: str):
 				"arguments": arguments,
 				"timeout": cmd.timeout_seconds or 60,
 				"signature": cmd.signature,
-				"expires_at": str(cmd.expires_at) if cmd.expires_at else None,
+				"expires_at": expires_at_str,
 			}
 		)
 
@@ -602,3 +613,50 @@ def report_command_result(
 	frappe.db.commit()
 
 	return {"status": "success"}
+
+
+@frappe.whitelist()
+def get_blocked_domains():
+	"""
+	Повертає список заблокованих доменів для enforcement на агентах.
+
+	Returns:
+	        dict: {
+	                "domains": [
+	                        {
+	                                "domain": "facebook.com",
+	                                "method": "hosts",
+	                                "redirect_ip": "0.0.0.0",
+	                                "include_subdomains": true,
+	                                "reason": "Соціальні мережі заборонені"
+	                        }
+	                ],
+	                "version": "hash для перевірки змін",
+	                "count": 1
+	        }
+	"""
+	domains_list = []
+
+	# Отримуємо всі увімкнені заблоковані домени
+	blocked = frappe.get_all(
+		"oiBlockedDomain",
+		filters={"enabled": 1},
+		fields=["domain", "block_method", "redirect_ip", "include_subdomains", "reason"],
+	)
+
+	for item in blocked:
+		domains_list.append(
+			{
+				"domain": item.domain,
+				"method": item.block_method,
+				"redirect_ip": item.redirect_ip or "0.0.0.0",
+				"include_subdomains": bool(item.include_subdomains),
+				"reason": item.reason or "Заборонено політикою",
+			}
+		)
+
+	# Генеруємо версію для кешування
+	version_string = json.dumps(domains_list, sort_keys=True)
+	version_hash = hashlib.md5(version_string.encode()).hexdigest()[:8]
+
+	return {"domains": domains_list, "version": version_hash, "count": len(domains_list)}

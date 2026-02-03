@@ -1,0 +1,80 @@
+{
+ "app": "orange_inventory",
+ "charts": [],
+ "content": "[{\"id\":\"p4YKrORM7T\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">\u041c\u043e\u043d\u0456\u0442\u043e\u0440\u0438\u043d\u0433 \u0430\u0433\u0435\u043d\u0442\u0456\u0432</span>\",\"col\":12}},{\"id\":\"-QvHCHIvzj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0410\u0433\u0435\u043d\u0442\u0438\",\"col\":3}},{\"id\":\"I1vAT3krv9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0421\u043f\u043e\u0432\u0456\u0449\u0435\u043d\u043d\u044f\",\"col\":3}},{\"id\":\"Xvq88twxWI\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0417\u043d\u0456\u043c\u043a\u0438\",\"col\":3}},{\"id\":\"GGGrC5389H\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041f\u0417 \u043d\u0430 \u0430\u0433\u0435\u043d\u0442\u0430\u0445\",\"col\":3}},{\"id\":\"r9LqKo2jOp\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0420\u0435\u043b\u0456\u0437\u0438 \u0430\u0433\u0435\u043d\u0442\u0430\",\"col\":3}},{\"id\":\"bR1pfI3tQw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0414\u0430\u0448\u0431\u043e\u0430\u0440\u0434\",\"col\":3}}]",
+ "creation": "2026-02-03 22:34:14.515266",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "microchip",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "oiAgentMonitoring",
+ "link_type": "DocType",
+ "links": [],
+ "modified": "2026-02-03 22:45:26.687911",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgentMonitoring",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 47.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0410\u0433\u0435\u043d\u0442\u0438",
+   "link_to": "oiAgent",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0421\u043f\u043e\u0432\u0456\u0449\u0435\u043d\u043d\u044f",
+   "link_to": "oiAgentAlert",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0414\u0430\u0448\u0431\u043e\u0430\u0440\u0434",
+   "link_to": "agent-dashboard",
+   "type": "Page"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0417\u043d\u0456\u043c\u043a\u0438",
+   "link_to": "oiAgentSnapshot",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u041f\u0417 \u043d\u0430 \u0430\u0433\u0435\u043d\u0442\u0430\u0445",
+   "link_to": "oiAgentSoftware",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0420\u0435\u043b\u0456\u0437\u0438 \u0430\u0433\u0435\u043d\u0442\u0430",
+   "link_to": "oiAgentRelease",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "oiAgentMonitoring",
+ "type": "Workspace"
+}

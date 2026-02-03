@@ -17,6 +17,7 @@
   "first_seen",
   "system_section",
   "os",
+  "os_edition",
   "cpu_model",
   "column_break_system",
   "cpu_cores",
@@ -110,6 +111,13 @@
    "fieldname": "os",
    "fieldtype": "Data",
    "label": "Операційна система",
+   "read_only": 1
+  },
+  {
+   "fieldname": "os_edition",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Редакція ОС",
    "read_only": 1
   },
   {

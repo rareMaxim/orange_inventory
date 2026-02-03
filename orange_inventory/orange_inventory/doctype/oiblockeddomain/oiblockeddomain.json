@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "autoname": "field:domain",
+ "creation": "2026-02-03 20:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "domain",
+  "enabled",
+  "column_break_main",
+  "block_method",
+  "reason",
+  "details_section",
+  "include_subdomains",
+  "redirect_ip",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "domain",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Домен",
+   "reqd": 1,
+   "unique": 1,
+   "description": "Домен для блокування (напр. facebook.com)"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Увімкнено"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "hosts",
+   "fieldname": "block_method",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Метод блокування",
+   "options": "hosts\nfirewall\nboth",
+   "description": "hosts - через файл hosts, firewall - через брандмауер Windows, both - обидва методи"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Причина блокування"
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Додаткові налаштування"
+  },
+  {
+   "default": "1",
+   "fieldname": "include_subdomains",
+   "fieldtype": "Check",
+   "label": "Включати субдомени",
+   "description": "Блокувати також www.domain.com та інші субдомени"
+  },
+  {
+   "default": "0.0.0.0",
+   "fieldname": "redirect_ip",
+   "fieldtype": "Data",
+   "label": "IP для перенаправлення",
+   "description": "IP адреса для hosts file (0.0.0.0 або 127.0.0.1)"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Примітки"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-03 20:00:00",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiBlockedDomain",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
