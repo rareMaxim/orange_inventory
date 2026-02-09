@@ -367,8 +367,19 @@ def _save_software(agent_name: str, software_list: list):
 			if sw_name not in current_software_names:
 				frappe.delete_doc("oiAgentSoftware", doc_name, ignore_permissions=True)
 
+		# Оновлюємо лічильники встановлень у каталозі
+		_update_catalog_counts()
+
 	except Exception:
 		frappe.log_error("Не вдалося зберегти oiAgentSoftware", "Agent API")
+
+
+def _update_catalog_counts():
+	"""Оновлює лічильники встановлень для всіх записів каталогу."""
+	catalog_entries = frappe.get_all("oiSoftwareCatalog", fields=["name"])
+	for entry in catalog_entries:
+		doc = frappe.get_doc("oiSoftwareCatalog", entry.name)
+		doc.update_installations_count()
 
 
 @frappe.whitelist()
@@ -411,9 +422,10 @@ def get_asset_by_serial(serial_no: str):
 
 
 @frappe.whitelist()
-def get_blocked_software():
+def get_blocked_software(agent_id=None):
 	"""
 	Повертає список заблокованого ПЗ для enforcement на агентах.
+	Якщо agent_id передано — фільтрує по групах/агентах.
 
 	Returns:
 	        dict: {
@@ -429,16 +441,29 @@ def get_blocked_software():
 	"""
 	blocked_list = []
 
+	# Визначаємо agent_name та групу якщо передано agent_id
+	agent_name = None
+	agent_group = None
+	if agent_id:
+		agent_data = frappe.get_value("oiAgent", {"agent_id": agent_id}, ["name", "asset_group"])
+		if agent_data:
+			agent_name, agent_group = agent_data
+
 	# Отримуємо всі заборонені програми з enforce_block=1
 	blocked = frappe.get_all(
 		"oiSoftwareCatalog",
 		filters={"is_allowed": 0, "enforce_block": 1},
-		fields=["software_name", "executable_names", "block_reason"],
+		fields=["name", "software_name", "executable_names", "block_reason"],
 	)
 
 	for item in blocked:
 		if not item.executable_names:
 			continue
+
+		# Перевіряємо область застосування якщо agent_id передано
+		if agent_id and agent_name:
+			if not _is_rule_applicable(item.name, "oiSoftwareCatalog", agent_name, agent_group):
+				continue
 
 		# Парсимо список виконуваних файлів
 		executables = [exe.strip().lower() for exe in item.executable_names.split(",") if exe.strip()]
@@ -452,13 +477,45 @@ def get_blocked_software():
 				}
 			)
 
-	# Генеруємо версію для кешування
+	# Генеруємо версію для кешування (включаємо agent_id для унікальності)
 	import hashlib
 
-	version_string = json.dumps(blocked_list, sort_keys=True)
-	version_hash = hashlib.md5(version_string.encode()).hexdigest()[:8]
+	version_input = json.dumps(blocked_list, sort_keys=True) + (agent_id or "")
+	version_hash = hashlib.md5(version_input.encode()).hexdigest()[:8]
 
 	return {"blocked": blocked_list, "version": version_hash, "count": len(blocked_list)}
+
+
+def _is_rule_applicable(rule_name, parenttype, agent_name, agent_group):
+	"""
+	Перевіряє чи правило блокування застосовується до конкретного агента.
+	Якщо таблиці apply_to_groups і apply_to_agents порожні — правило глобальне (для всіх).
+	"""
+	# Перевіряємо чи є записи в child tables
+	has_groups = frappe.db.exists("oiBlockRuleGroup", {"parent": rule_name, "parenttype": parenttype})
+	has_agents = frappe.db.exists("oiBlockRuleAgent", {"parent": rule_name, "parenttype": parenttype})
+
+	# Якщо обидві таблиці порожні — глобальне правило
+	if not has_groups and not has_agents:
+		return True
+
+	# Перевіряємо чи агент є в списку
+	if has_agents and frappe.db.exists(
+		"oiBlockRuleAgent", {"parent": rule_name, "parenttype": parenttype, "agent": agent_name}
+	):
+		return True
+
+	# Перевіряємо чи група агента є в списку
+	if (
+		has_groups
+		and agent_group
+		and frappe.db.exists(
+			"oiBlockRuleGroup", {"parent": rule_name, "parenttype": parenttype, "group": agent_group}
+		)
+	):
+		return True
+
+	return False
 
 
 @frappe.whitelist()
@@ -616,9 +673,10 @@ def report_command_result(
 
 
 @frappe.whitelist()
-def get_blocked_domains():
+def get_blocked_domains(agent_id=None):
 	"""
 	Повертає список заблокованих доменів для enforcement на агентах.
+	Якщо agent_id передано — фільтрує по групах/агентах.
 
 	Returns:
 	        dict: {
@@ -637,14 +695,27 @@ def get_blocked_domains():
 	"""
 	domains_list = []
 
+	# Визначаємо agent_name та групу якщо передано agent_id
+	agent_name = None
+	agent_group = None
+	if agent_id:
+		agent_data = frappe.get_value("oiAgent", {"agent_id": agent_id}, ["name", "asset_group"])
+		if agent_data:
+			agent_name, agent_group = agent_data
+
 	# Отримуємо всі увімкнені заблоковані домени
 	blocked = frappe.get_all(
 		"oiBlockedDomain",
 		filters={"enabled": 1},
-		fields=["domain", "block_method", "redirect_ip", "include_subdomains", "reason"],
+		fields=["name", "domain", "block_method", "redirect_ip", "include_subdomains", "reason"],
 	)
 
 	for item in blocked:
+		# Перевіряємо область застосування якщо agent_id передано
+		if agent_id and agent_name:
+			if not _is_rule_applicable(item.name, "oiBlockedDomain", agent_name, agent_group):
+				continue
+
 		domains_list.append(
 			{
 				"domain": item.domain,
@@ -655,8 +726,8 @@ def get_blocked_domains():
 			}
 		)
 
-	# Генеруємо версію для кешування
-	version_string = json.dumps(domains_list, sort_keys=True)
-	version_hash = hashlib.md5(version_string.encode()).hexdigest()[:8]
+	# Генеруємо версію для кешування (включаємо agent_id для унікальності)
+	version_input = json.dumps(domains_list, sort_keys=True) + (agent_id or "")
+	version_hash = hashlib.md5(version_input.encode()).hexdigest()[:8]
 
 	return {"domains": domains_list, "version": version_hash, "count": len(domains_list)}

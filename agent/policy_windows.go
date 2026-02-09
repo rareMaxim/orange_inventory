@@ -52,15 +52,19 @@ const (
 const AppFirewallRulePrefix = "OrangeInv_AppBlock_"
 
 // fetchBlockedSoftware отримує список заблокованого ПЗ з сервера
-func fetchBlockedSoftware(config *Config) (*BlockedResponse, error) {
+func fetchBlockedSoftware(config *Config, agentID string) (*BlockedResponse, error) {
 	apiURL := config.ServerURL + "/api/method/orange_inventory.agent_api.get_blocked_software"
 
-	req, err := http.NewRequest("GET", apiURL, nil)
+	payload := map[string]string{"agent_id": agentID}
+	body, _ := json.Marshal(payload)
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, fmt.Errorf("помилка створення запиту: %w", err)
 	}
 
 	req.Header.Set("Authorization", "token "+config.APIKey+":"+config.APISecret)
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
 	client := &http.Client{Timeout: 30 * time.Second}
@@ -581,11 +585,11 @@ func isWindowsHome() bool {
 }
 
 // syncBlockedSoftware синхронізує список заблокованого ПЗ з сервером
-func syncBlockedSoftware(config *Config) error {
+func syncBlockedSoftware(config *Config, agentID string) error {
 	log.Println("🔄 Перевірка заблокованого ПЗ...")
 
 	// Отримуємо список з сервера
-	response, err := fetchBlockedSoftware(config)
+	response, err := fetchBlockedSoftware(config, agentID)
 	if err != nil {
 		return fmt.Errorf("помилка отримання списку: %w", err)
 	}

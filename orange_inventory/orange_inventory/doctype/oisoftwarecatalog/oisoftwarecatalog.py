@@ -11,6 +11,10 @@ class oiSoftwareCatalog(Document):
 		if self.software_name:
 			self.software_name = self.software_name.strip()
 
-	def get_installations_count(self) -> int:
-		"""Повертає кількість встановлень цього ПЗ на агентах."""
-		return frappe.db.count("oiAgentSoftware", filters={"catalog_entry": self.name})
+	def update_installations_count(self):
+		"""Оновлює кількість встановлень цього ПЗ на агентах."""
+		count = frappe.db.count("oiAgentSoftware", filters={"catalog_entry": self.name})
+		if self.installations_count != count:
+			frappe.db.set_value(
+				"oiSoftwareCatalog", self.name, "installations_count", count, update_modified=False
+			)

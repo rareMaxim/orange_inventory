@@ -160,22 +160,24 @@ func runAgent() {
 			log.Println("✓ Дані успішно відправлено!")
 		}
 
+		// Генеруємо agentID для ідентифікації при синхронізації
+		agentID := generateAgentID(static)
+
 		// Синхронізуємо політики блокування ПЗ
 		log.Println("\n=== ПОЛІТИКИ БЛОКУВАННЯ ПЗ ===")
-		if err := syncBlockedSoftware(config); err != nil {
+		if err := syncBlockedSoftware(config, agentID); err != nil {
 			log.Printf("⚠ Помилка синхронізації політик ПЗ: %v", err)
 		}
 
 		// Синхронізуємо блокування доменів
 		log.Println("\n=== БЛОКУВАННЯ ДОМЕНІВ ===")
-		if err := syncBlockedDomains(config); err != nil {
+		if err := syncBlockedDomains(config, agentID); err != nil {
 			log.Printf("⚠ Помилка синхронізації блокувань доменів: %v", err)
 		}
 
 		// Обробляємо віддалені команди (з lock для уникнення конфліктів)
 		log.Println("\n=== ВІДДАЛЕНІ КОМАНДИ ===")
 		if acquireLock("commands") {
-			agentID := generateAgentID(static)
 			processCommands(config, agentID)
 			releaseLock("commands")
 		} else {

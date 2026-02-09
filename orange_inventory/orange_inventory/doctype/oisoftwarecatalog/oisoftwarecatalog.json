@@ -13,6 +13,7 @@
   "column_break_main",
   "is_allowed",
   "is_required",
+  "installations_count",
   "enforcement_section",
   "enforce_block",
   "executable_names",
@@ -23,6 +24,10 @@
   "column_break_settings",
   "license_type",
   "max_installations",
+  "scope_section",
+  "apply_to_groups",
+  "column_break_scope",
+  "apply_to_agents",
   "notes_section",
   "description",
   "notes"
@@ -74,6 +79,14 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Обов'язкове"
+  },
+  {
+   "fieldname": "installations_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Встановлень",
+   "read_only": 1,
+   "description": "Кількість агентів з цим ПЗ"
   },
   {
    "collapsible": 1,
@@ -138,6 +151,30 @@
    "label": "Максимум встановлень"
   },
   {
+   "collapsible": 1,
+   "depends_on": "enforce_block",
+   "description": "Якщо не вказано жодної групи чи агента — правило діє для ВСІХ",
+   "fieldname": "scope_section",
+   "fieldtype": "Section Break",
+   "label": "Область застосування"
+  },
+  {
+   "fieldname": "apply_to_groups",
+   "fieldtype": "Table",
+   "label": "Застосувати до груп",
+   "options": "oiBlockRuleGroup"
+  },
+  {
+   "fieldname": "column_break_scope",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "apply_to_agents",
+   "fieldtype": "Table",
+   "label": "Застосувати до агентів",
+   "options": "oiBlockRuleAgent"
+  },
+  {
    "fieldname": "notes_section",
    "fieldtype": "Section Break",
    "label": "Додаткова інформація"
@@ -154,7 +191,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
+ "links": [
+  {
+   "group": "Встановлення",
+   "link_doctype": "oiAgentSoftware",
+   "link_fieldname": "catalog_entry"
+  }
+ ],
  "modified": "2026-01-29 20:00:00.000000",
  "modified_by": "Administrator",
  "module": "Orange Inventory",

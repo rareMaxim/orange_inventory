@@ -5,6 +5,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -47,15 +48,19 @@ const (
 )
 
 // fetchBlockedDomains отримує список заблокованих доменів з сервера
-func fetchBlockedDomains(config *Config) (*BlockedDomainsResponse, error) {
+func fetchBlockedDomains(config *Config, agentID string) (*BlockedDomainsResponse, error) {
 	apiURL := config.ServerURL + "/api/method/orange_inventory.agent_api.get_blocked_domains"
 
-	req, err := http.NewRequest("GET", apiURL, nil)
+	payload := map[string]string{"agent_id": agentID}
+	body, _ := json.Marshal(payload)
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, fmt.Errorf("помилка створення запиту: %w", err)
 	}
 
 	req.Header.Set("Authorization", "token "+config.APIKey+":"+config.APISecret)
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 
 	client := &http.Client{Timeout: 30 * time.Second}
@@ -352,11 +357,11 @@ func applyDomainBlocking(domains []BlockedDomain) error {
 }
 
 // syncBlockedDomains синхронізує список заблокованих доменів з сервером
-func syncBlockedDomains(config *Config) error {
+func syncBlockedDomains(config *Config, agentID string) error {
 	log.Println("🔄 Перевірка заблокованих доменів...")
 
 	// Отримуємо список з сервера
-	response, err := fetchBlockedDomains(config)
+	response, err := fetchBlockedDomains(config, agentID)
 	if err != nil {
 		return fmt.Errorf("помилка отримання списку: %w", err)
 	}

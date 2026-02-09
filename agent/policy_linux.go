@@ -10,7 +10,7 @@ import (
 // syncBlockedSoftware на Linux - заглушка
 // Linux не має вбудованої підтримки Software Restriction Policies як Windows
 // Для блокування ПЗ на Linux потрібні інші механізми (AppArmor, SELinux, тощо)
-func syncBlockedSoftware(config *Config) error {
+func syncBlockedSoftware(config *Config, agentID string) error {
 	log.Println("ℹ Блокування ПЗ не підтримується на Linux")
 	// TODO: Реалізувати блокування через:
 	// - AppArmor profiles
@@ -22,7 +22,7 @@ func syncBlockedSoftware(config *Config) error {
 
 // syncBlockedDomains на Linux - заглушка
 // TODO: Реалізувати блокування через /etc/hosts та iptables
-func syncBlockedDomains(config *Config) error {
+func syncBlockedDomains(config *Config, agentID string) error {
 	log.Println("ℹ Блокування доменів на Linux - заплановано")
 	// TODO: Реалізувати блокування через:
 	// - /etc/hosts

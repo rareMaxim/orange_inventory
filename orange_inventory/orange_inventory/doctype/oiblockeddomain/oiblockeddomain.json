@@ -13,6 +13,10 @@
   "details_section",
   "include_subdomains",
   "redirect_ip",
+  "scope_section",
+  "apply_to_groups",
+  "column_break_scope",
+  "apply_to_agents",
   "notes"
  ],
  "fields": [
@@ -71,6 +75,29 @@
    "fieldtype": "Data",
    "label": "IP для перенаправлення",
    "description": "IP адреса для hosts file (0.0.0.0 або 127.0.0.1)"
+  },
+  {
+   "collapsible": 1,
+   "description": "Якщо не вказано жодної групи чи агента — правило діє для ВСІХ",
+   "fieldname": "scope_section",
+   "fieldtype": "Section Break",
+   "label": "Область застосування"
+  },
+  {
+   "fieldname": "apply_to_groups",
+   "fieldtype": "Table",
+   "label": "Застосувати до груп",
+   "options": "oiBlockRuleGroup"
+  },
+  {
+   "fieldname": "column_break_scope",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "apply_to_agents",
+   "fieldtype": "Table",
+   "label": "Застосувати до агентів",
+   "options": "oiBlockRuleAgent"
   },
   {
    "fieldname": "notes",
