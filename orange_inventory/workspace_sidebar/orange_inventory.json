@@ -694,6 +694,7 @@
   {
    "child": 0,
    "collapsible": 1,
+   "icon": "setting",
    "indent": 0,
    "keep_closed": 1,
    "label": "\u041d\u0430\u043b\u0430\u0448\u0442\u0443\u0432\u0430\u043d\u043d\u044f",
@@ -746,15 +747,16 @@
    "label": "\u041c\u0430\u043f\u043f\u0456\u043d\u0433 \u0441\u043f\u0456\u0432\u0440\u043e\u0431\u0456\u0442\u043d\u0438\u043a\u0456\u0432",
    "link_to": "oiEmployeeMapping",
    "link_type": "DocType",
+   "navigate_to_tab": "",
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-02-09 12:00:00.000000",
+ "modified": "2026-02-09 23:20:28.872865",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "Orange Inventory",
  "owner": "Administrator",
- "standard": 0,
+ "standard": 1,
  "title": "Orange Inventory"
 }

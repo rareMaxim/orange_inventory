@@ -1,7 +1,7 @@
 {
  "aggregate_function_based_on": "",
  "creation": "2025-08-06 15:14:15.995828",
- "currency": "UAH",
+ "currency": "",
  "docstatus": 0,
  "doctype": "Number Card",
  "document_type": "oiAsset",
@@ -12,7 +12,7 @@
  "is_public": 0,
  "is_standard": 1,
  "label": "\u0410\u043a\u0442\u0438\u0432\u0438 \u0432 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457",
- "modified": "2025-08-06 15:14:15.995828",
+ "modified": "2026-02-09 23:25:00.757277",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "\u0410\u043a\u0442\u0438\u0432\u0438 \u0432 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457",
@@ -21,6 +21,6 @@
  "report_function": "Sum",
  "show_full_number": 0,
  "show_percentage_stats": 1,
- "stats_time_interval": "Daily",
+ "stats_time_interval": "Monthly",
  "type": "Document Type"
 }
