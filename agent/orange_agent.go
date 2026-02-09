@@ -15,7 +15,7 @@ import (
 
 // --- КОНСТАНТИ ---
 const (
-	AppVersion          = "1.11.0"
+	AppVersion          = "1.11.1"
 	TaskName            = "OrangeInventoryAgent"
 	TaskNameCommands    = "OrangeInventoryAgent_Commands"
 	TaskInterval        = 15 // хвилин (повний збір)

@@ -87,6 +87,8 @@ func getInstalledSoftware() []SoftwareInfo {
 			name, _, _ := sk.GetStringValue("DisplayName")
 			version, _, _ := sk.GetStringValue("DisplayVersion")
 			vendor, _, _ := sk.GetStringValue("Publisher")
+			installLocation, _, _ := sk.GetStringValue("InstallLocation")
+			installDate, _, _ := sk.GetStringValue("InstallDate")
 			systemComponent, _, _ := sk.GetIntegerValue("SystemComponent")
 			sk.Close()
 
@@ -103,9 +105,11 @@ func getInstalledSoftware() []SoftwareInfo {
 			seen[key] = true
 
 			softwareList = append(softwareList, SoftwareInfo{
-				Name:    name,
-				Version: version,
-				Vendor:  vendor,
+				Name:            name,
+				Version:         version,
+				Vendor:          vendor,
+				InstallDate:     installDate,
+				InstallLocation: installLocation,
 			})
 		}
 	}

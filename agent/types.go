@@ -50,9 +50,11 @@ type MonitorInfo struct {
 
 // SoftwareInfo містить інформацію про встановлене ПЗ
 type SoftwareInfo struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
-	Vendor  string `json:"vendor"`
+	Name            string `json:"name"`
+	Version         string `json:"version"`
+	Vendor          string `json:"vendor"`
+	InstallDate     string `json:"install_date,omitempty"`
+	InstallLocation string `json:"install_location,omitempty"`
 }
 
 // PrinterInfo містить інформацію про принтер

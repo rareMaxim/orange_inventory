@@ -10,7 +10,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -39,6 +41,15 @@ const (
 	SRP0Path         = SRPBasePath + `\0\Paths`
 	PolicyVersionKey = "OrangeInventoryPolicyVersion"
 )
+
+// Константи для DisallowRun Policy
+const (
+	ExplorerPolicyPath = `SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer`
+	DisallowRunPath    = ExplorerPolicyPath + `\DisallowRun`
+)
+
+// Префікс для правил брандмауера блокування програм
+const AppFirewallRulePrefix = "OrangeInv_AppBlock_"
 
 // fetchBlockedSoftware отримує список заблокованого ПЗ з сервера
 func fetchBlockedSoftware(config *Config) (*BlockedResponse, error) {
@@ -218,6 +229,238 @@ func clearAllBlockRules() error {
 	return nil
 }
 
+// enableDisallowRun вмикає політику DisallowRun в реєстрі
+func enableDisallowRun() error {
+	// Створюємо ключ Explorer Policies
+	key, _, err := registry.CreateKey(registry.LOCAL_MACHINE, ExplorerPolicyPath, registry.WRITE)
+	if err != nil {
+		return fmt.Errorf("не вдалося створити ключ Explorer Policies: %w", err)
+	}
+	defer key.Close()
+
+	// DisallowRun = 1 (увімкнути)
+	if err := key.SetDWordValue("DisallowRun", 1); err != nil {
+		return fmt.Errorf("не вдалося встановити DisallowRun: %w", err)
+	}
+
+	// Створюємо підключ DisallowRun для списку програм
+	_, _, err = registry.CreateKey(registry.LOCAL_MACHINE, DisallowRunPath, registry.WRITE)
+	if err != nil {
+		return fmt.Errorf("не вдалося створити ключ DisallowRun: %w", err)
+	}
+
+	return nil
+}
+
+// addDisallowRunEntries додає виконувані файли до списку DisallowRun
+func addDisallowRunEntries(blocked []BlockedSoftware) (int, error) {
+	key, _, err := registry.CreateKey(registry.LOCAL_MACHINE, DisallowRunPath, registry.WRITE)
+	if err != nil {
+		return 0, fmt.Errorf("не вдалося відкрити ключ DisallowRun: %w", err)
+	}
+	defer key.Close()
+
+	count := 0
+	for _, item := range blocked {
+		for _, exe := range item.Executables {
+			count++
+			// Використовуємо порядковий номер як ім'я значення
+			valueName := fmt.Sprintf("%d", count)
+			if err := key.SetStringValue(valueName, exe); err != nil {
+				log.Printf("⚠ Не вдалося додати %s до DisallowRun: %v", exe, err)
+				count--
+			}
+		}
+	}
+
+	return count, nil
+}
+
+// clearDisallowRunEntries очищає всі записи DisallowRun
+func clearDisallowRunEntries() error {
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, DisallowRunPath, registry.READ)
+	if err != nil {
+		// Ключ не існує — нічого очищати
+		return nil
+	}
+
+	// Зчитуємо всі значення
+	valueNames, err := key.ReadValueNames(-1)
+	key.Close()
+	if err != nil {
+		return fmt.Errorf("не вдалося прочитати значення DisallowRun: %w", err)
+	}
+
+	// Відкриваємо для запису та видаляємо всі значення
+	key, err = registry.OpenKey(registry.LOCAL_MACHINE, DisallowRunPath, registry.WRITE)
+	if err != nil {
+		return fmt.Errorf("не вдалося відкрити DisallowRun для запису: %w", err)
+	}
+	defer key.Close()
+
+	for _, name := range valueNames {
+		if err := key.DeleteValue(name); err != nil {
+			log.Printf("⚠ Не вдалося видалити значення %s з DisallowRun: %v", name, err)
+		}
+	}
+
+	return nil
+}
+
+// disableDisallowRun вимикає політику DisallowRun
+func disableDisallowRun() error {
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, ExplorerPolicyPath, registry.WRITE)
+	if err != nil {
+		return nil // Ключ не існує — вже вимкнено
+	}
+	defer key.Close()
+
+	// DisallowRun = 0 (вимкнути)
+	return key.SetDWordValue("DisallowRun", 0)
+}
+
+// findExecutablePaths шукає виконуваний файл у типових каталогах Windows
+func findExecutablePaths(exeName string) []string {
+	var found []string
+	seen := make(map[string]bool)
+
+	// Системні каталоги
+	searchRoots := []string{
+		os.Getenv("ProgramFiles"),
+		os.Getenv("ProgramFiles(x86)"),
+		os.Getenv("ProgramW6432"),
+	}
+
+	// Додаємо AppData для кожного користувача (C:\Users\*)
+	usersDir := filepath.Join(os.Getenv("SystemDrive")+"\\", "Users")
+	if entries, err := os.ReadDir(usersDir); err == nil {
+		for _, entry := range entries {
+			if !entry.IsDir() {
+				continue
+			}
+			name := entry.Name()
+			if name == "Public" || name == "Default" || name == "Default User" || name == "All Users" {
+				continue
+			}
+			userDir := filepath.Join(usersDir, name)
+			searchRoots = append(searchRoots,
+				filepath.Join(userDir, "AppData", "Roaming"),
+				filepath.Join(userDir, "AppData", "Local"),
+				filepath.Join(userDir, "Desktop"),
+			)
+		}
+	}
+
+	exeLower := strings.ToLower(exeName)
+
+	for _, root := range searchRoots {
+		if root == "" {
+			continue
+		}
+		// Обмежуємо глибину пошуку (до 4 рівнів) щоб не витрачати час
+		filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return filepath.SkipDir
+			}
+			// Обмежуємо глибину
+			rel, _ := filepath.Rel(root, path)
+			if strings.Count(rel, string(filepath.Separator)) > 4 {
+				return filepath.SkipDir
+			}
+			if !info.IsDir() && strings.ToLower(info.Name()) == exeLower {
+				absPath := strings.ToLower(path)
+				if !seen[absPath] {
+					seen[absPath] = true
+					found = append(found, path)
+				}
+			}
+			return nil
+		})
+	}
+
+	return found
+}
+
+// addFirewallBlockRule створює правило брандмауера для блокування програми
+func addFirewallBlockRule(exePath string, exeName string) error {
+	ruleName := AppFirewallRulePrefix + exeName
+
+	cmd := exec.Command("netsh", "advfirewall", "firewall", "add", "rule",
+		"name="+ruleName,
+		"dir=out",
+		"action=block",
+		"program="+exePath,
+		"enable=yes",
+	)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("netsh error: %v — %s", err, out.String())
+	}
+	return nil
+}
+
+// clearFirewallBlockRules видаляє всі правила брандмауера OrangeInv_AppBlock_*
+func clearFirewallBlockRules() error {
+	// Отримуємо список всіх правил
+	cmd := exec.Command("netsh", "advfirewall", "firewall", "show", "rule", "name=all", "dir=out")
+	output, err := cmd.Output()
+	if err != nil {
+		return fmt.Errorf("не вдалося отримати правила брандмауера: %w", err)
+	}
+
+	// Шукаємо наші правила за префіксом
+	lines := strings.Split(string(output), "\n")
+	for _, line := range lines {
+		if strings.Contains(line, "Rule Name:") && strings.Contains(line, AppFirewallRulePrefix) {
+			// Витягуємо ім'я правила
+			parts := strings.SplitN(line, ":", 2)
+			if len(parts) != 2 {
+				continue
+			}
+			ruleName := strings.TrimSpace(parts[1])
+
+			delCmd := exec.Command("netsh", "advfirewall", "firewall", "delete", "rule",
+				"name="+ruleName,
+				"dir=out",
+			)
+			if err := delCmd.Run(); err != nil {
+				log.Printf("⚠ Не вдалося видалити правило %s: %v", ruleName, err)
+			}
+		}
+	}
+
+	return nil
+}
+
+// applyFirewallBlocks застосовує правила брандмауера для заблокованих програм
+func applyFirewallBlocks(blocked []BlockedSoftware) int {
+	rulesCount := 0
+
+	for _, item := range blocked {
+		for _, exe := range item.Executables {
+			paths := findExecutablePaths(exe)
+			if len(paths) == 0 {
+				// Exe не знайдено на диску — пропускаємо
+				log.Printf("⚠ Брандмауер: %s не знайдено на диску, правило не створено", exe)
+				continue
+			}
+			for _, exePath := range paths {
+				if err := addFirewallBlockRule(exePath, exe); err != nil {
+					log.Printf("⚠ Не вдалося створити правило брандмауера для %s: %v", exePath, err)
+				} else {
+					log.Printf("🔥 Заблоковано мережу для: %s", exePath)
+					rulesCount++
+				}
+			}
+		}
+	}
+
+	return rulesCount
+}
+
 // applyBlockPolicies застосовує політики блокування
 func applyBlockPolicies(blocked []BlockedSoftware) error {
 	// Вмикаємо SRP якщо потрібно
@@ -242,7 +485,30 @@ func applyBlockPolicies(blocked []BlockedSoftware) error {
 		}
 	}
 
-	log.Printf("🔒 Застосовано %d правил блокування", blockedCount)
+	log.Printf("🔒 Застосовано %d правил блокування SRP", blockedCount)
+
+	// Застосовуємо DisallowRun політику (працює на всіх версіях Windows)
+	if err := enableDisallowRun(); err != nil {
+		log.Printf("⚠ Не вдалося увімкнути DisallowRun: %v", err)
+	} else {
+		if err := clearDisallowRunEntries(); err != nil {
+			log.Printf("⚠ Помилка очищення DisallowRun: %v", err)
+		}
+		drCount, err := addDisallowRunEntries(blocked)
+		if err != nil {
+			log.Printf("⚠ Помилка додавання записів DisallowRun: %v", err)
+		} else {
+			log.Printf("🔒 Застосовано %d правил DisallowRun", drCount)
+		}
+	}
+
+	// Застосовуємо правила брандмауера (блокування мережевої активності)
+	if err := clearFirewallBlockRules(); err != nil {
+		log.Printf("⚠ Помилка очищення правил брандмауера: %v", err)
+	}
+	if fwCount := applyFirewallBlocks(blocked); fwCount > 0 {
+		log.Printf("🔥 Застосовано %d правил брандмауера", fwCount)
+	}
 
 	// Оновлюємо Group Policy
 	refreshGroupPolicy()
@@ -350,10 +616,20 @@ func syncBlockedSoftware(config *Config) error {
 		// Немає заблокованих - очищаємо всі правила
 		log.Println("🔓 Знімаємо всі блокування...")
 		if err := clearAllBlockRules(); err != nil {
-			log.Printf("⚠ Помилка очищення правил: %v", err)
-		} else {
-			log.Println("✓ Всі блокування знято")
+			log.Printf("⚠ Помилка очищення правил SRP: %v", err)
 		}
+		// Очищаємо DisallowRun
+		if err := clearDisallowRunEntries(); err != nil {
+			log.Printf("⚠ Помилка очищення DisallowRun: %v", err)
+		}
+		if err := disableDisallowRun(); err != nil {
+			log.Printf("⚠ Помилка вимкнення DisallowRun: %v", err)
+		}
+		// Очищаємо правила брандмауера
+		if err := clearFirewallBlockRules(); err != nil {
+			log.Printf("⚠ Помилка очищення правил брандмауера: %v", err)
+		}
+		log.Println("✓ Всі блокування знято")
 		// Оновлюємо Group Policy щоб зміни застосувались
 		refreshGroupPolicy()
 	} else {
