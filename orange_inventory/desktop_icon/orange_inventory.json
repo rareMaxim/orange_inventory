@@ -8,7 +8,7 @@
  "icon_type": "App",
  "idx": 0,
  "label": "Orange Inventory",
- "link": "/app/orange-inventory",
+ "link": "/desk/orange-inventory",
  "link_to": "Orange Inventory",
  "link_type": "Workspace Sidebar",
  "logo_url": "",

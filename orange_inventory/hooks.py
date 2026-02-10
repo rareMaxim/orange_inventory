@@ -5,7 +5,7 @@ app_description = "IT Inventory Tool"
 app_email = "maks4a@gmail.com"
 app_license = "mit"
 app_logo_url = "/assets/orange_inventory/images/oi-logo.webp"
-app_home = "/app/orange-inventory"
+app_home = "/desk/orange-inventory"
 
 # Apps
 # ------------------
@@ -25,7 +25,7 @@ add_to_apps_screen = [
 		"name": "orange_inventory",
 		"logo": "/assets/orange_inventory/images/oi-logo.webp",
 		"title": "Orange Inventory",
-		"route": "/app/orange-inventory",
+		"route": "/desk/orange-inventory",
 		# "has_permission": "orange_inventory.api.permission.has_app_permission"
 	}
 ]
