@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "field:agent_id",
- "creation": "2026-01-29 14:00:00.000000",
+ "creation": "2026-01-29 14:00:00",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -36,12 +36,11 @@
   {
    "fieldname": "main_section",
    "fieldtype": "Section Break",
-   "label": "Основна інформація"
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
   },
   {
    "fieldname": "agent_id",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Agent ID",
    "reqd": 1,
    "unique": 1
@@ -54,20 +53,20 @@
    "label": "Hostname"
   },
   {
-   "default": "Активний",
+   "default": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Статус",
-   "options": "Активний\nНеактивний\nОфлайн"
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
+   "options": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u041e\u0444\u043b\u0430\u0439\u043d"
   },
   {
    "fieldname": "agent_version",
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Версія агента",
+   "label": "\u0412\u0435\u0440\u0441\u0456\u044f \u0430\u0433\u0435\u043d\u0442\u0430",
    "read_only": 1
   },
   {
@@ -79,51 +78,52 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Прив'язаний актив",
+   "label": "\u041f\u0440\u0438\u0432'\u044f\u0437\u0430\u043d\u0438\u0439 \u0430\u043a\u0442\u0438\u0432",
    "options": "oiAsset"
   },
   {
    "fieldname": "asset_group",
    "fieldtype": "Link",
    "in_standard_filter": 1,
-   "label": "Група",
-   "options": "oiAssetGroup"
+   "label": "\u0413\u0440\u0443\u043f\u0430",
+   "options": "oiAssetGroup",
+   "search_index": 1
   },
   {
    "fieldname": "last_seen",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Останній зв'язок",
+   "label": "\u041e\u0441\u0442\u0430\u043d\u043d\u0456\u0439 \u0437\u0432'\u044f\u0437\u043e\u043a",
    "read_only": 1
   },
   {
    "fieldname": "first_seen",
    "fieldtype": "Datetime",
-   "label": "Перший зв'язок",
+   "label": "\u041f\u0435\u0440\u0448\u0438\u0439 \u0437\u0432'\u044f\u0437\u043e\u043a",
    "read_only": 1
   },
   {
    "fieldname": "system_section",
    "fieldtype": "Section Break",
-   "label": "Система"
+   "label": "\u0421\u0438\u0441\u0442\u0435\u043c\u0430"
   },
   {
    "fieldname": "os",
    "fieldtype": "Data",
-   "label": "Операційна система",
+   "label": "\u041e\u043f\u0435\u0440\u0430\u0446\u0456\u0439\u043d\u0430 \u0441\u0438\u0441\u0442\u0435\u043c\u0430",
    "read_only": 1
   },
   {
    "fieldname": "os_edition",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Редакція ОС",
+   "label": "\u0420\u0435\u0434\u0430\u043a\u0446\u0456\u044f \u041e\u0421",
    "read_only": 1
   },
   {
    "fieldname": "cpu_model",
    "fieldtype": "Data",
-   "label": "Модель CPU",
+   "label": "\u041c\u043e\u0434\u0435\u043b\u044c CPU",
    "read_only": 1
   },
   {
@@ -133,7 +133,7 @@
   {
    "fieldname": "cpu_cores",
    "fieldtype": "Int",
-   "label": "Ядер CPU",
+   "label": "\u042f\u0434\u0435\u0440 CPU",
    "read_only": 1
   },
   {
@@ -146,24 +146,24 @@
   {
    "fieldname": "hardware_section",
    "fieldtype": "Section Break",
-   "label": "Обладнання"
+   "label": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f"
   },
   {
    "fieldname": "system_manufacturer",
    "fieldtype": "Data",
-   "label": "Виробник",
+   "label": "\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a",
    "read_only": 1
   },
   {
    "fieldname": "system_model",
    "fieldtype": "Data",
-   "label": "Модель",
+   "label": "\u041c\u043e\u0434\u0435\u043b\u044c",
    "read_only": 1
   },
   {
    "fieldname": "system_type",
    "fieldtype": "Data",
-   "label": "Тип системи",
+   "label": "\u0422\u0438\u043f \u0441\u0438\u0441\u0442\u0435\u043c\u0438",
    "read_only": 1
   },
   {
@@ -186,7 +186,7 @@
    "collapsible": 1,
    "fieldname": "raw_data_section",
    "fieldtype": "Section Break",
-   "label": "Повні дані (JSON)"
+   "label": "\u041f\u043e\u0432\u043d\u0456 \u0434\u0430\u043d\u0456 (JSON)"
   },
   {
    "fieldname": "raw_data",
@@ -211,7 +211,7 @@
    "link_fieldname": "agent"
   }
  ],
- "modified": "2026-01-29 14:00:00.000000",
+ "modified": "2026-02-10 11:38:33.134083",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAgent",
@@ -242,13 +242,15 @@
   {
    "create": 1,
    "read": 1,
-   "write": 1,
-   "role": "Agent Bot"
+   "role": "Agent Bot",
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "last_seen",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "hostname",
  "track_changes": 1
 }

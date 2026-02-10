@@ -1,0 +1,101 @@
+{
+ "app": "orange_inventory",
+ "charts": [],
+ "content": "[{\"id\":\"hw_header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f</b></span>\",\"col\":12}},{\"id\":\"sc_hw_type\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0422\u0438\u043f\u0438 \u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f\",\"col\":3}},{\"id\":\"sc_hw_model\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041c\u043e\u0434\u0435\u043b\u0456 \u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f\",\"col\":3}},{\"id\":\"sc_manufacturer\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a\u0438\",\"col\":3}},{\"id\":\"sc_netport\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041c\u0435\u0440\u0435\u0436\u0435\u0432\u0456 \u043f\u043e\u0440\u0442\u0438\",\"col\":3}},{\"id\":\"sc_netmap\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"\u041a\u0430\u0440\u0442\u0430 \u043c\u0435\u0440\u0435\u0436\u0456\",\"col\":3}},{\"id\":\"spacer1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ref_header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438</b></span>\",\"col\":12}},{\"id\":\"card_asset_ref\",\"type\":\"card\",\"data\":{\"card_name\":\"\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438 \u0430\u043a\u0442\u0438\u0432\u0456\u0432\",\"col\":6}}]",
+ "creation": "2026-02-10 12:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "tool",
+ "idx": 0,
+ "indicator_color": "blue",
+ "is_hidden": 0,
+ "label": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+ "links": [
+  {
+   "description": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438 \u0434\u043b\u044f \u0430\u043a\u0442\u0438\u0432\u0456\u0432",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438 \u0430\u043a\u0442\u0438\u0432\u0456\u0432",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u041f\u0430\u0440\u0442\u0456\u0457 \u0435\u0442\u0438\u043a\u0435\u0442\u043e\u043a",
+   "link_count": 0,
+   "link_to": "oiAssetLabelBatch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Starlink",
+   "link_count": 0,
+   "link_to": "oiAssetStarlink",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-10 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 48.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0422\u0438\u043f\u0438 \u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+   "link_to": "oiHardwareType",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u041c\u043e\u0434\u0435\u043b\u0456 \u043e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+   "link_to": "oiHardwareModel",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a\u0438",
+   "link_to": "oiManufacturer",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "\u041c\u0435\u0440\u0435\u0436\u0435\u0432\u0456 \u043f\u043e\u0440\u0442\u0438",
+   "link_to": "oiNetworkPort",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "label": "\u041a\u0430\u0440\u0442\u0430 \u043c\u0435\u0440\u0435\u0436\u0456",
+   "link_to": "network-map",
+   "type": "Page"
+  }
+ ],
+ "title": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f",
+ "type": "Workspace"
+}

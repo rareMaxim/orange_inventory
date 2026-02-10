@@ -18,18 +18,25 @@ class oiAgent(Document):
 		from frappe.types import DF
 
 		agent_id: DF.Data
+		agent_version: DF.Data | None
 		asset: DF.Link | None
+		asset_group: DF.Link | None
 		bios_serial: DF.Data | None
 		board_serial: DF.Data | None
-		cpu_cores: DF.Int | None
+		cpu_cores: DF.Int
 		cpu_model: DF.Data | None
 		first_seen: DF.Datetime | None
 		hostname: DF.Data | None
 		last_seen: DF.Datetime | None
 		os: DF.Data | None
-		ram_total_gb: DF.Float | None
+		os_edition: DF.Data | None
+		ram_total_gb: DF.Float
 		raw_data: DF.Code | None
-		status: DF.Literal["Активний", "Неактивний", "Офлайн"]
+		status: DF.Literal[
+			"\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
+			"\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
+			"\u041e\u0444\u043b\u0430\u0439\u043d",
+		]
 		system_manufacturer: DF.Data | None
 		system_model: DF.Data | None
 		system_type: DF.Data | None
