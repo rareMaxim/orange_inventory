@@ -211,7 +211,7 @@
    "link_fieldname": "agent"
   }
  ],
- "modified": "2026-02-10 11:38:33.134083",
+ "modified": "2026-02-10 15:59:31.279733",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAgent",
@@ -250,7 +250,20 @@
  "show_title_field_in_link": 1,
  "sort_field": "last_seen",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Blue",
+   "title": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
+  },
+  {
+   "color": "Yellow",
+   "title": "\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
+  },
+  {
+   "color": "Orange",
+   "title": "\u041e\u0444\u043b\u0430\u0439\u043d"
+  }
+ ],
  "title_field": "hostname",
  "track_changes": 1
 }
