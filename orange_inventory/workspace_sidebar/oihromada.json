@@ -1,0 +1,61 @@
+{
+ "app": "orange_inventory",
+ "creation": "2026-02-11 12:43:24.603504",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "grid",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "oiHromada",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0406\u043d\u0442\u0435\u0433\u0440\u0430\u0446\u0456\u044f",
+   "link_to": "oiHromadaSettings",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u041f\u043e\u043a\u0430\u0437\u043d\u0438\u043a\u0438",
+   "link_to": "oiHromadaSurvey",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0416\u0443\u0440\u043d\u0430\u043b \u0437\u0430\u043f\u043e\u0432\u043d\u0435\u043d\u043d\u044f",
+   "link_to": "oiHromadaImportLog",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-12 10:52:57.941894",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiHromada",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "oiHromada"
+}

@@ -1,0 +1,94 @@
+{
+ "app": "orange_inventory",
+ "creation": "2026-02-11 12:43:24.586099",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "header_icon": "microchip",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "oiAgentMonitoring",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0410\u0433\u0435\u043d\u0442\u0438",
+   "link_to": "oiAgent",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0421\u043f\u043e\u0432\u0456\u0449\u0435\u043d\u043d\u044f",
+   "link_to": "oiAgentAlert",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0414\u0430\u0448\u0431\u043e\u0430\u0440\u0434",
+   "link_to": "agent-dashboard",
+   "link_type": "Page",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0417\u043d\u0456\u043c\u043a\u0438",
+   "link_to": "oiAgentSnapshot",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u041f\u0417 \u043d\u0430 \u0430\u0433\u0435\u043d\u0442\u0430\u0445",
+   "link_to": "oiAgentSoftware",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "\u0420\u0435\u043b\u0456\u0437\u0438 \u0430\u0433\u0435\u043d\u0442\u0430",
+   "link_to": "oiAgentRelease",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-02-12 10:53:04.666933",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgentMonitoring",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "oiAgentMonitoring"
+}

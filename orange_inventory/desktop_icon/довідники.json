@@ -1,0 +1,23 @@
+{
+ "app": "orange_inventory",
+ "bg_color": "blue",
+ "creation": "2026-02-11 12:43:24.730445",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon": "book",
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438",
+ "link_to": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438",
+ "link_type": "Workspace Sidebar",
+ "modified": "2026-02-13 10:17:36.614778",
+ "modified_by": "Administrator",
+ "name": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438",
+ "owner": "Administrator",
+ "parent_icon": "Orange Inventory",
+ "restrict_removal": 0,
+ "roles": [],
+ "sidebar": "\u0414\u043e\u0432\u0456\u0434\u043d\u0438\u043a\u0438",
+ "standard": 1
+}
