@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"os/user"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -95,11 +96,30 @@ func safeGet(arr []string, idx int) string {
 	return ""
 }
 
+// getMinimalStaticInfo отримує лише дані для генерації agent_id (hostname + серійні номери)
+func getMinimalStaticInfo() StaticData {
+	hInfo, _ := host.Info()
+
+	boardS := readDMI("/sys/class/dmi/id/board_serial")
+	if boardS == "" {
+		boardS = "Unknown"
+	}
+
+	return StaticData{
+		Hostname:    hInfo.Hostname,
+		BoardSerial: boardS,
+		BIOS: BIOSInfo{
+			SerialNumber: readDMI("/sys/class/dmi/id/product_serial"),
+		},
+	}
+}
+
 // getStaticInfo збирає статичні дані про систему
 func getStaticInfo() StaticData {
 	hInfo, _ := host.Info()
 	cpuInfo, _ := cpu.Info()
 	vmStat, _ := mem.VirtualMemory()
+	logicalCores, _ := cpu.Counts(true)
 
 	// Board Serial (з DMI)
 	boardS := readDMI("/sys/class/dmi/id/board_serial")
@@ -156,7 +176,7 @@ func getStaticInfo() StaticData {
 		OSVersion:       hInfo.PlatformVersion,
 		OSEdition:       "", // Linux не має редакцій як Windows
 		CPUModel:        cpuModel,
-		CPUCores:        len(cpuInfo),
+		CPUCores:        logicalCores,
 		TotalRAM:        vmStat.Total,
 		RAMSlots:        ramSlots,
 		BoardSerial:     boardS,
@@ -542,18 +562,14 @@ func getSystemdServices() []ServiceInfo {
 }
 
 func getTopProcesses() []ProcessInfo {
-	processList := []ProcessInfo{}
+	allProcs := []ProcessInfo{}
 
 	procs, err := process.Processes()
 	if err != nil {
-		return processList
+		return allProcs
 	}
 
-	for i, p := range procs {
-		if i >= 20 {
-			break
-		}
-
+	for _, p := range procs {
 		name, _ := p.Name()
 		memInfo, _ := p.MemoryInfo()
 		if memInfo == nil {
@@ -561,8 +577,8 @@ func getTopProcesses() []ProcessInfo {
 		}
 
 		memMB := float64(memInfo.RSS) / 1024 / 1024
-		if memMB > 50 {
-			processList = append(processList, ProcessInfo{
+		if memMB > 10 {
+			allProcs = append(allProcs, ProcessInfo{
 				Name:     name,
 				PID:      uint32(p.Pid),
 				MemoryMB: memMB,
@@ -570,7 +586,16 @@ func getTopProcesses() []ProcessInfo {
 		}
 	}
 
-	return processList
+	// Сортуємо по пам'яті (від більшого до меншого) та беремо топ 10
+	sort.Slice(allProcs, func(i, j int) bool {
+		return allProcs[i].MemoryMB > allProcs[j].MemoryMB
+	})
+
+	if len(allProcs) > 10 {
+		allProcs = allProcs[:10]
+	}
+
+	return allProcs
 }
 
 func getStartupItems() []StartupInfo {
@@ -629,6 +654,12 @@ func getSecurityStatus() SecurityStatus {
 		}
 	} else if _, err := os.Stat("/sys/kernel/security/apparmor"); err == nil {
 		security.UACEnabled = true // AppArmor enabled
+	}
+
+	// Secure Boot
+	sbOutput, err := exec.Command("mokutil", "--sb-state").Output()
+	if err == nil {
+		security.SecureBootEnabled = strings.Contains(string(sbOutput), "SecureBoot enabled")
 	}
 
 	return security

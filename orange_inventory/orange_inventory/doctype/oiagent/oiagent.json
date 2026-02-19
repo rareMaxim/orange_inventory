@@ -209,9 +209,13 @@
   {
    "link_doctype": "oiAgentSoftware",
    "link_fieldname": "agent"
+  },
+  {
+   "link_doctype": "oiAgentCertificate",
+   "link_fieldname": "agent"
   }
  ],
- "modified": "2026-02-10 15:59:31.279733",
+ "modified": "2026-02-19 11:53:57.912247",
  "modified_by": "Administrator",
  "module": "Orange Inventory",
  "name": "oiAgent",

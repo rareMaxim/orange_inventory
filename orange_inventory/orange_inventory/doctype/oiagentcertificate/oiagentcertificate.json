@@ -1,0 +1,169 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-02-19 12:00:00",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "main_section",
+  "agent",
+  "subject_cn",
+  "file_name",
+  "column_break_main",
+  "issuer_cn",
+  "serial_number",
+  "thumbprint",
+  "validity_section",
+  "not_before",
+  "not_after",
+  "column_break_validity",
+  "days_until_expiry",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_section",
+   "fieldtype": "Section Break",
+   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u043f\u0440\u043e \u0441\u0435\u0440\u0442\u0438\u0444\u0456\u043a\u0430\u0442"
+  },
+  {
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0410\u0433\u0435\u043d\u0442",
+   "options": "oiAgent",
+   "reqd": 1
+  },
+  {
+   "fieldname": "subject_cn",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0412\u043b\u0430\u0441\u043d\u0438\u043a (CN)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "file_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0406\u043c'\u044f \u0444\u0430\u0439\u043b\u0443"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "issuer_cn",
+   "fieldtype": "Data",
+   "label": "\u0412\u0438\u0434\u0430\u0432\u0435\u0446\u044c (CN)"
+  },
+  {
+   "fieldname": "serial_number",
+   "fieldtype": "Data",
+   "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440"
+  },
+  {
+   "fieldname": "thumbprint",
+   "fieldtype": "Data",
+   "label": "\u0412\u0456\u0434\u0431\u0438\u0442\u043e\u043a (SHA1)"
+  },
+  {
+   "fieldname": "validity_section",
+   "fieldtype": "Section Break",
+   "label": "\u0422\u0435\u0440\u043c\u0456\u043d \u0434\u0456\u0457"
+  },
+  {
+   "fieldname": "not_before",
+   "fieldtype": "Date",
+   "label": "\u0414\u0456\u0439\u0441\u043d\u0438\u0439 \u0437"
+  },
+  {
+   "fieldname": "not_after",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "\u0414\u0456\u0439\u0441\u043d\u0438\u0439 \u0434\u043e"
+  },
+  {
+   "fieldname": "column_break_validity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "days_until_expiry",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "\u0414\u043d\u0456\u0432 \u0434\u043e \u0437\u0430\u043a\u0456\u043d\u0447\u0435\u043d\u043d\u044f",
+   "read_only": 1
+  },
+  {
+   "default": "\u0414\u0456\u0439\u0441\u043d\u0438\u0439",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
+   "options": "\u0414\u0456\u0439\u0441\u043d\u0438\u0439\n\u0421\u043a\u043e\u0440\u043e \u0437\u0430\u043a\u0456\u043d\u0447\u0443\u0454\u0442\u044c\u0441\u044f\n\u041f\u0440\u043e\u0442\u0435\u0440\u043c\u0456\u043d\u043e\u0432\u0430\u043d\u0438\u0439\n\u0429\u0435 \u043d\u0435 \u0434\u0456\u0439\u0441\u043d\u0438\u0439",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-02-19 11:59:53.165566",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAgentCertificate",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Agent Bot",
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "not_after",
+ "sort_order": "ASC",
+ "states": [
+  {
+   "color": "Blue",
+   "title": "\u0414\u0456\u0439\u0441\u043d\u0438\u0439"
+  },
+  {
+   "color": "Orange",
+   "title": "\u0421\u043a\u043e\u0440\u043e \u0437\u0430\u043a\u0456\u043d\u0447\u0443\u0454\u0442\u044c\u0441\u044f"
+  },
+  {
+   "color": "Red",
+   "title": "\u041f\u0440\u043e\u0442\u0435\u0440\u043c\u0456\u043d\u043e\u0432\u0430\u043d\u0438\u0439"
+  },
+  {
+   "color": "Purple",
+   "title": "\u0429\u0435 \u043d\u0435 \u0434\u0456\u0439\u0441\u043d\u0438\u0439"
+  }
+ ],
+ "title_field": "subject_cn"
+}

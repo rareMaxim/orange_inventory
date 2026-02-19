@@ -178,6 +178,7 @@ scheduler_events = {
 	"daily": [
 		"orange_inventory.tasks.cleanup_old_snapshots",
 		"orange_inventory.tasks.cleanup_old_alerts",
+		"orange_inventory.tasks.check_certificate_expiry",
 	],
 }
 

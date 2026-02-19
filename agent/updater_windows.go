@@ -132,6 +132,11 @@ if exist "%s" del /f /q "%s"
 
 echo [%%date%% %%time%%] Update completed successfully >> "%%LOG_FILE%%"
 
+:: Запускаємо нову версію агента для збору та відправки даних
+echo [%%date%% %%time%%] Starting updated agent... >> "%%LOG_FILE%%"
+start "" "%s" --silent
+echo [%%date%% %%time%%] Agent started >> "%%LOG_FILE%%"
+
 :cleanup
 :: Видаляємо цей batch файл
 (goto) 2>nul & del /f /q "%%~f0"
@@ -140,7 +145,8 @@ echo [%%date%% %%time%%] Update completed successfully >> "%%LOG_FILE%%"
 		exePath, exePath, oldPath,
 		newExePath, exePath,
 		oldPath, oldPath, exePath,
-		oldPath, oldPath)
+		oldPath, oldPath,
+		exePath)
 
 	// Записуємо batch скрипт
 	if err := os.WriteFile(batPath, []byte(batContent), 0755); err != nil {
@@ -159,6 +165,6 @@ echo [%%date%% %%time%%] Update completed successfully >> "%%LOG_FILE%%"
 		return fmt.Errorf("не вдалося запустити update.bat: %w", err)
 	}
 
-	log.Println("✓ Оновлення запущено. Наступний запуск використає нову версію.")
+	log.Println("✓ Оновлення запущено. Нова версія буде запущена автоматично.")
 	return nil
 }

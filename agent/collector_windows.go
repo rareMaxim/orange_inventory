@@ -5,6 +5,7 @@ package main
 
 import (
 	"net"
+	"sort"
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -48,6 +49,29 @@ func getWindowsEdition() string {
 	}
 
 	return "Unknown"
+}
+
+// getWindowsBuildNumber отримує повну версію Windows (включно з Build Number)
+func getWindowsBuildNumber() string {
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, `SOFTWARE\Microsoft\Windows NT\CurrentVersion`, registry.READ)
+	if err != nil {
+		return ""
+	}
+	defer key.Close()
+
+	// CurrentBuildNumber (наприклад "22631")
+	build, _, err := key.GetStringValue("CurrentBuildNumber")
+	if err != nil || build == "" {
+		return ""
+	}
+
+	// UBR - Update Build Revision (наприклад 4890)
+	ubr, _, err := key.GetIntegerValue("UBR")
+	if err == nil {
+		return fmt.Sprintf("%s.%d", build, ubr)
+	}
+
+	return build
 }
 
 // getInstalledSoftware отримує список ПЗ з реєстру Windows (швидкий метод)
@@ -154,11 +178,37 @@ func getBatteryStatus(code uint16) string {
 	return "Unknown"
 }
 
+// getMinimalStaticInfo отримує лише дані для генерації agent_id (hostname + серійні номери)
+func getMinimalStaticInfo() StaticData {
+	hInfo, _ := host.Info()
+
+	var board []Win32_BaseBoard
+	wmi.Query("SELECT SerialNumber FROM Win32_BaseBoard", &board)
+	boardS := "Unknown"
+	if len(board) > 0 {
+		boardS = board[0].SerialNumber
+	}
+
+	var bios []Win32_BIOS
+	wmi.Query("SELECT SerialNumber FROM Win32_BIOS", &bios)
+	biosInfo := BIOSInfo{}
+	if len(bios) > 0 {
+		biosInfo.SerialNumber = bios[0].SerialNumber
+	}
+
+	return StaticData{
+		Hostname:    hInfo.Hostname,
+		BoardSerial: boardS,
+		BIOS:        biosInfo,
+	}
+}
+
 // getStaticInfo збирає статичні дані про систему
 func getStaticInfo() StaticData {
 	hInfo, _ := host.Info()
 	cpuInfo, _ := cpu.Info()
 	vmStat, _ := mem.VirtualMemory()
+	logicalCores, _ := cpu.Counts(true)
 
 	// Board Serial
 	var board []Win32_BaseBoard
@@ -253,6 +303,9 @@ func getStaticInfo() StaticData {
 	// Installed Software (швидкий метод через реєстр)
 	softwareList := getInstalledSoftware()
 
+	// Certificates
+	certList := getCertificates()
+
 	// Printers
 	var printers []Win32_Printer
 	wmi.Query("SELECT Name, PortName, Default, Network FROM Win32_Printer", &printers)
@@ -276,7 +329,7 @@ func getStaticInfo() StaticData {
 		OSVersion:       hInfo.PlatformVersion,
 		OSEdition:       osEdition,
 		CPUModel:        cpuInfo[0].ModelName,
-		CPUCores:        len(cpuInfo),
+		CPUCores:        logicalCores,
 		TotalRAM:        vmStat.Total,
 		RAMSlots:        ramSlots,
 		BoardSerial:     boardS,
@@ -288,6 +341,7 @@ func getStaticInfo() StaticData {
 		Monitors:        monitorList,
 		Software:        softwareList,
 		Printers:        printerList,
+		Certificates:    certList,
 	}
 }
 
@@ -407,14 +461,19 @@ func getDynamicInfo() DynamicData {
 	// Top Processes (топ 10 по пам'яті)
 	var processes []Win32_Process
 	wmi.Query("SELECT Name, ProcessId, WorkingSetSize FROM Win32_Process", &processes)
+
+	// Сортуємо по пам'яті (від більшого до меншого)
+	sort.Slice(processes, func(i, j int) bool {
+		return processes[i].WorkingSetSize > processes[j].WorkingSetSize
+	})
+
 	processList := []ProcessInfo{}
-	// Сортуємо по пам'яті та беремо топ 10
-	for i, p := range processes {
-		if i >= 20 { // Обмежуємо для швидкості
+	for _, p := range processes {
+		if len(processList) >= 10 {
 			break
 		}
 		memMB := float64(p.WorkingSetSize) / 1024 / 1024
-		if memMB > 50 { // Тільки процеси > 50MB
+		if memMB > 10 {
 			processList = append(processList, ProcessInfo{
 				Name:     p.Name,
 				PID:      p.ProcessId,
@@ -490,6 +549,16 @@ func getSecurityStatus() SecurityStatus {
 		key.Close()
 		if err == nil {
 			security.UACEnabled = val == 1
+		}
+	}
+
+	// Secure Boot status
+	sbKey, err := registry.OpenKey(registry.LOCAL_MACHINE, `SYSTEM\CurrentControlSet\Control\SecureBoot\State`, registry.READ)
+	if err == nil {
+		val, _, err := sbKey.GetIntegerValue("UEFISecureBootEnabled")
+		sbKey.Close()
+		if err == nil {
+			security.SecureBootEnabled = val == 1
 		}
 	}
 

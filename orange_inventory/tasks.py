@@ -271,3 +271,86 @@ def check_outdated_agents():
 		resolve_alerts(agent.name, "Застаріла версія")
 
 	frappe.db.commit()
+
+
+def check_certificate_expiry():
+	"""
+	Перевіряє терміни дії сертифікатів на машинах агентів.
+	Створює сповіщення якщо сертифікат закінчується протягом 30 днів або вже протермінований.
+
+	Запускається щодня.
+	"""
+	from orange_inventory.orange_inventory.doctype.oiagentalert.oiagentalert import (
+		create_alert,
+		resolve_alerts,
+	)
+
+	# Оновлюємо статус та days_until_expiry для всіх сертифікатів
+	all_certs = frappe.get_all(
+		"oiAgentCertificate",
+		fields=["name"],
+	)
+	for cert_ref in all_certs:
+		doc = frappe.get_doc("oiAgentCertificate", cert_ref.name)
+		doc.update_status()
+		doc.db_update()
+
+	# Знаходимо сертифікати що закінчуються або протерміновані
+	expiring_certs = frappe.db.sql(
+		"""
+		SELECT c.agent, c.subject_cn, c.not_after, c.days_until_expiry, c.status,
+		       c.file_name, a.hostname
+		FROM `taboiAgentCertificate` c
+		INNER JOIN `taboiAgent` a ON a.name = c.agent
+		WHERE a.status = 'Активний'
+		AND c.status IN ('Скоро закінчується', 'Протермінований')
+		""",
+		as_dict=True,
+	)
+
+	# Групуємо по агентах
+	agents_with_issues = {}
+	for cert in expiring_certs:
+		if cert.agent not in agents_with_issues:
+			agents_with_issues[cert.agent] = {
+				"hostname": cert.hostname,
+				"certs": [],
+			}
+		agents_with_issues[cert.agent]["certs"].append(cert)
+
+	for agent_name, data in agents_with_issues.items():
+		certs = data["certs"]
+		expired = [c for c in certs if c.status == "Протермінований"]
+		expiring = [c for c in certs if c.status == "Скоро закінчується"]
+
+		parts = []
+		if expired:
+			names = ", ".join(c.subject_cn or c.file_name for c in expired)
+			parts.append(f"протерміновані: {names}")
+		if expiring:
+			names = ", ".join(f"{c.subject_cn or c.file_name} ({c.days_until_expiry} дн.)" for c in expiring)
+			parts.append(f"закінчуються: {names}")
+
+		severity = "Critical" if expired else "Warning"
+		message = f"Сертифікати на {data['hostname']}: {'; '.join(parts)}"
+
+		create_alert(
+			agent_name=agent_name,
+			alert_type="Сертифікат закінчується",
+			severity=severity,
+			message=message,
+		)
+
+	# Вирішуємо алерти для агентів де всі сертифікати дійсні
+	agents_with_alerts = frappe.get_all(
+		"oiAgentAlert",
+		filters={"alert_type": "Сертифікат закінчується", "status": "Активне"},
+		fields=["agent"],
+		group_by="agent",
+	)
+
+	for row in agents_with_alerts:
+		if row.agent not in agents_with_issues:
+			resolve_alerts(row.agent, "Сертифікат закінчується")
+
+	frappe.db.commit()

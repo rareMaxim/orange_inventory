@@ -15,7 +15,7 @@ import (
 
 // --- КОНСТАНТИ ---
 const (
-	AppVersion          = "1.11.1"
+	AppVersion          = "1.12.0"
 	TaskName            = "OrangeInventoryAgent"
 	TaskNameCommands    = "OrangeInventoryAgent_Commands"
 	TaskInterval        = 15 // хвилин (повний збір)
@@ -40,6 +40,10 @@ func main() {
 	// Логування у файл (для діагностики scheduled task)
 	exePath, _ := getExePath()
 	logPath := filepath.Join(filepath.Dir(exePath), "orange_agent.log")
+
+	// Ротація логу: якщо файл > 5MB — перейменовуємо в .old
+	rotateLogFile(logPath)
+
 	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err == nil {
 		if *silentFlag {
@@ -133,6 +137,12 @@ func runAgent() {
 		log.Printf("✓ Конфігурація завантажена (сервер: %s)", config.ServerURL)
 	}
 
+	// Перевіряємо оновлення першочергово — якщо є нова версія,
+	// оновлюємось і перезапускаємось, щоб дані зібрала вже нова версія
+	if config != nil {
+		checkAndUpdate(config)
+	}
+
 	// Збираємо статичні дані
 	log.Println("\n=== ЗБІР СТАТИЧНИХ ДАНИХ ===")
 	static := getStaticInfo()
@@ -141,6 +151,7 @@ func runAgent() {
 	log.Printf("CPU: %s (%d cores)", static.CPUModel, static.CPUCores)
 	log.Printf("RAM: %.2f GB", float64(static.TotalRAM)/(1024*1024*1024))
 	log.Printf("Serial: %s", static.BIOS.SerialNumber)
+	log.Printf("Certificates: %d", len(static.Certificates))
 
 	// Збираємо динамічні дані
 	log.Println("\n=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===")
@@ -183,9 +194,6 @@ func runAgent() {
 		} else {
 			log.Println("⚠ Команди обробляються іншим процесом, пропускаємо")
 		}
-
-		// Перевіряємо оновлення
-		checkAndUpdate(config)
 	} else {
 		// Локальний вивід JSON для дебагу
 		printLocalData(static, dynamic)
@@ -300,11 +308,20 @@ func releaseLock(name string) {
 	os.Remove(lockPath)
 }
 
-// getMinimalStaticInfo отримує дані для agent_id
-// TODO: оптимізувати щоб не збирати всі дані
-func getMinimalStaticInfo() StaticData {
-	// Поки що використовуємо повний збір - можна оптимізувати пізніше
-	return getStaticInfo()
+// rotateLogFile перевіряє розмір лог-файлу та виконує ротацію якщо > 5MB
+func rotateLogFile(logPath string) {
+	const maxLogSize = 5 * 1024 * 1024 // 5MB
+
+	info, err := os.Stat(logPath)
+	if err != nil {
+		return
+	}
+
+	if info.Size() > maxLogSize {
+		oldPath := logPath + ".old"
+		os.Remove(oldPath)
+		os.Rename(logPath, oldPath)
+	}
 }
 
 // printLocalData виводить дані локально для дебагу

@@ -248,6 +248,11 @@ def report_machine_data(static_data: str | None = None, dynamic_data: str | None
 	if software_list:
 		_save_software(agent.name, software_list)
 
+	# Зберігаємо дані про сертифікати
+	certificates = static.get("certificates", [])
+	if certificates:
+		_save_certificates(agent.name, certificates)
+
 	frappe.db.commit()
 
 	return {
@@ -380,6 +385,79 @@ def _update_catalog_counts():
 	for entry in catalog_entries:
 		doc = frappe.get_doc("oiSoftwareCatalog", entry.name)
 		doc.update_installations_count()
+
+
+def _save_certificates(agent_name: str, certificates: list):
+	"""
+	Зберігає/оновлює список сертифікатів для агента.
+
+	Args:
+	        agent_name: ID агента
+	        certificates: список словників з даними про сертифікати
+	"""
+	if not certificates:
+		return
+
+	try:
+		# Отримуємо існуючі сертифікати для цього агента (по thumbprint)
+		existing_certs = {
+			row.thumbprint: row.name
+			for row in frappe.get_all(
+				"oiAgentCertificate",
+				filters={"agent": agent_name},
+				fields=["name", "thumbprint"],
+			)
+		}
+
+		current_thumbprints = set()
+
+		for cert in certificates:
+			thumbprint = cert.get("thumbprint", "").strip()
+			if not thumbprint:
+				continue
+
+			current_thumbprints.add(thumbprint)
+
+			values = {
+				"subject_cn": cert.get("subject_cn", ""),
+				"issuer_cn": cert.get("issuer_cn", ""),
+				"serial_number": cert.get("serial_number", ""),
+				"not_before": cert.get("not_before"),
+				"not_after": cert.get("not_after"),
+				"file_name": cert.get("file_name", ""),
+			}
+
+			if thumbprint in existing_certs:
+				# Оновлюємо існуючий запис
+				frappe.db.set_value(
+					"oiAgentCertificate",
+					existing_certs[thumbprint],
+					values,
+					update_modified=False,
+				)
+				# Оновлюємо статус
+				doc = frappe.get_doc("oiAgentCertificate", existing_certs[thumbprint])
+				doc.update_status()
+				doc.db_update()
+			else:
+				# Створюємо новий запис
+				doc = frappe.get_doc(
+					{
+						"doctype": "oiAgentCertificate",
+						"agent": agent_name,
+						"thumbprint": thumbprint,
+						**values,
+					}
+				)
+				doc.insert(ignore_permissions=True)
+
+		# Видаляємо сертифікати яких більше немає на машині
+		for tp, doc_name in existing_certs.items():
+			if tp not in current_thumbprints:
+				frappe.delete_doc("oiAgentCertificate", doc_name, ignore_permissions=True)
+
+	except Exception:
+		frappe.log_error("Не вдалося зберегти oiAgentCertificate", "Agent API")
 
 
 @frappe.whitelist()

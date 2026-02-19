@@ -60,20 +60,10 @@ func verifyCommandSignature(cmd Command, agentID string, signingKey string) bool
 	// Формуємо повідомлення для перевірки (має співпадати з сервером)
 	message := fmt.Sprintf("%s:%s:%s:%s", cmd.ID, agentID, cmd.Command, cmd.ExpiresAt)
 
-	// DEBUG: вивід для діагностики
-	log.Printf("  [DEBUG] command_id: %s", cmd.ID)
-	log.Printf("  [DEBUG] agent_id: %s", agentID)
-	log.Printf("  [DEBUG] expires_at: %s", cmd.ExpiresAt)
-	log.Printf("  [DEBUG] cmd_length: %d", len(cmd.Command))
-	log.Printf("  [DEBUG] key_prefix: %s...", signingKey[:8])
-	log.Printf("  [DEBUG] received_sig: %s", cmd.Signature[:16]+"...")
-
 	// Обчислюємо HMAC-SHA256
 	h := hmac.New(sha256.New, []byte(signingKey))
 	h.Write([]byte(message))
 	expectedSignature := hex.EncodeToString(h.Sum(nil))
-
-	log.Printf("  [DEBUG] expected_sig: %s", expectedSignature[:16]+"...")
 
 	// Порівнюємо з отриманим підписом (константний час)
 	return hmac.Equal([]byte(expectedSignature), []byte(cmd.Signature))

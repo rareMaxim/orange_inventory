@@ -124,6 +124,17 @@ type UpdateInfo struct {
 	InstalledOn string `json:"installed_on"`
 }
 
+// CertificateInfo містить інформацію про сертифікат
+type CertificateInfo struct {
+	SubjectCN    string `json:"subject_cn"`
+	IssuerCN     string `json:"issuer_cn"`
+	SerialNumber string `json:"serial_number"`
+	NotBefore    string `json:"not_before"`
+	NotAfter     string `json:"not_after"`
+	Thumbprint   string `json:"thumbprint"`
+	FileName     string `json:"file_name"`
+}
+
 // StaticData містить статичні дані про систему (змінюються рідко)
 type StaticData struct {
 	AgentVersion    string               `json:"agent_version"`
@@ -144,6 +155,7 @@ type StaticData struct {
 	Monitors        []MonitorInfo        `json:"monitors"`
 	Software        []SoftwareInfo       `json:"installed_software"`
 	Printers        []PrinterInfo        `json:"printers"`
+	Certificates    []CertificateInfo    `json:"certificates,omitempty"`
 }
 
 // DynamicData містить динамічні дані про систему (змінюються часто)
