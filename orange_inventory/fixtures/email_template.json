@@ -1,0 +1,9 @@
+[
+ {
+  "doctype": "Email Template",
+  "name": "OI Certificate Expiry",
+  "subject": "Сертифікати на {{ hostname }} потребують уваги",
+  "use_html": 1,
+  "response_html": "<div style=\"font-family: Arial, sans-serif;\">\n  <h3 style=\"color: #1f2937;\">Сповіщення про сертифікати</h3>\n  <p>На комп'ютері <strong>{{ hostname }}</strong> виявлено проблеми з сертифікатами:</p>\n  <table style=\"border-collapse: collapse; width: 100%; margin: 16px 0;\">\n    <thead>\n      <tr style=\"background-color: #f3f4f6;\">\n        <th style=\"padding: 8px; border: 1px solid #ddd; text-align: left;\">Сертифікат</th>\n        <th style=\"padding: 8px; border: 1px solid #ddd; text-align: left;\">Дійсний до</th>\n        <th style=\"padding: 8px; border: 1px solid #ddd; text-align: left;\">Статус</th>\n      </tr>\n    </thead>\n    <tbody>\n      {% for cert in expired %}\n      <tr style=\"background-color: #fee2e2;\">\n        <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ cert.subject_cn or cert.file_name or '—' }}</td>\n        <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ cert.not_after }}</td>\n        <td style=\"padding: 8px; border: 1px solid #ddd; color: #dc2626; font-weight: bold;\">Протермінований</td>\n      </tr>\n      {% endfor %}\n      {% for cert in expiring %}\n      <tr style=\"background-color: #fef3c7;\">\n        <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ cert.subject_cn or cert.file_name or '—' }}</td>\n        <td style=\"padding: 8px; border: 1px solid #ddd;\">{{ cert.not_after }}</td>\n        <td style=\"padding: 8px; border: 1px solid #ddd; color: #d97706; font-weight: bold;\">Закінчується через {{ cert.days_until_expiry }} дн.</td>\n      </tr>\n      {% endfor %}\n    </tbody>\n  </table>\n  <p style=\"color: #6b7280; font-size: 12px;\">\n    Це автоматичне сповіщення від Orange Inventory.\n    Зверніться до ІТ-відділу для оновлення сертифікатів.\n  </p>\n</div>"
+ }
+]

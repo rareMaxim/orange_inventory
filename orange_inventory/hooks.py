@@ -17,6 +17,7 @@ required_apps = ["hr_oms"]
 fixtures = [
 	{"dt": "oiAlertRule", "filters": [["enabled", "=", 1]]},
 	{"dt": "oiCommandTemplate", "filters": [["enabled", "=", 1]]},
+	{"dt": "Email Template", "filters": [["name", "like", "OI %"]]},
 ]
 
 # Each item in the list will be shown as an app in the apps page

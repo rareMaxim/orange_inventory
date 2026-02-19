@@ -406,62 +406,28 @@ def _get_employee_email_for_agent(agent_name: str) -> str | None:
 
 
 def _send_certificate_notification_email(email: str, data: dict):
-	"""Надсилає email про проблеми з сертифікатами."""
+	"""Надсилає email про проблеми з сертифікатами через Email Template."""
 	certs = data["certs"]
 	hostname = data["hostname"]
 	expired = [c for c in certs if c.status == "Протермінований"]
 	expiring = [c for c in certs if c.status == "Скоро закінчується"]
 
-	# Формуємо тіло листа
-	rows = ""
-	for cert in expired:
-		name = cert.subject_cn or cert.file_name or "—"
-		rows += (
-			f"<tr style='background-color: #fee2e2;'>"
-			f"<td style='padding: 8px; border: 1px solid #ddd;'>{name}</td>"
-			f"<td style='padding: 8px; border: 1px solid #ddd;'>{cert.not_after}</td>"
-			f"<td style='padding: 8px; border: 1px solid #ddd; color: #dc2626; font-weight: bold;'>Протермінований</td>"
-			f"</tr>"
-		)
-	for cert in expiring:
-		name = cert.subject_cn or cert.file_name or "—"
-		rows += (
-			f"<tr style='background-color: #fef3c7;'>"
-			f"<td style='padding: 8px; border: 1px solid #ddd;'>{name}</td>"
-			f"<td style='padding: 8px; border: 1px solid #ddd;'>{cert.not_after}</td>"
-			f"<td style='padding: 8px; border: 1px solid #ddd; color: #d97706; font-weight: bold;'>"
-			f"Закінчується через {cert.days_until_expiry} дн.</td>"
-			f"</tr>"
-		)
-
-	subject = f"Сертифікати на {hostname} потребують уваги"
-	message = f"""
-	<div style="font-family: Arial, sans-serif; max-width: 600px;">
-		<h3 style="color: #1f2937;">Сповіщення про сертифікати</h3>
-		<p>На комп'ютері <strong>{hostname}</strong> виявлено проблеми з сертифікатами:</p>
-		<table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
-			<thead>
-				<tr style="background-color: #f3f4f6;">
-					<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Сертифікат</th>
-					<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Дійсний до</th>
-					<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Статус</th>
-				</tr>
-			</thead>
-			<tbody>{rows}</tbody>
-		</table>
-		<p style="color: #6b7280; font-size: 12px;">
-			Це автоматичне сповіщення від Orange Inventory.
-			Зверніться до ІТ-відділу для оновлення сертифікатів.
-		</p>
-	</div>
-	"""
+	template_name = "OI Certificate Expiry"
+	template = frappe.get_doc("Email Template", template_name)
+	rendered = template.get_formatted_email(
+		{
+			"hostname": hostname,
+			"expired": expired,
+			"expiring": expiring,
+		}
+	)
 
 	try:
 		frappe.sendmail(
 			recipients=[email],
 			sender="Orange Inventory <itsystems@mlt.gov.ua>",
-			subject=subject,
-			message=message,
+			subject=rendered["subject"],
+			message=rendered["message"],
 			now=True,
 		)
 	except Exception:
@@ -541,3 +507,36 @@ def test_certificate_email_notification(employee_name: str):
 		print(f"Немає проблемних сертифікатів для агентів співробітника {employee_name}")
 	else:
 		print(f"Всього надіслано {sent} email(ів)")
+
+
+def test_cert_email_for_agent(agent_name: str, override_email: str):
+	"""
+	Тест: надсилає email про сертифікати конкретного агента на вказану адресу.
+
+	Використання: bench execute orange_inventory.tasks.test_cert_email_for_agent
+	              --args '["MMRZO086-f66f36f1", "maks4a@gmail.com"]'
+	"""
+	agent = frappe.db.get_value("oiAgent", agent_name, ["hostname", "status"], as_dict=True)
+	if not agent:
+		print(f"Агент {agent_name} не знайдено")
+		return
+
+	certs = frappe.db.sql(
+		"""
+		SELECT subject_cn, file_name, not_after, days_until_expiry, status
+		FROM `taboiAgentCertificate`
+		WHERE agent = %s
+		AND status IN ('Скоро закінчується', 'Протермінований')
+		ORDER BY not_after ASC
+		""",
+		agent_name,
+		as_dict=True,
+	)
+
+	if not certs:
+		print(f"Немає проблемних сертифікатів для агента {agent_name}")
+		return
+
+	data = {"hostname": agent.hostname, "certs": certs}
+	_send_certificate_notification_email(override_email, data)
+	print(f"Email надіслано на {override_email} для {agent.hostname} ({len(certs)} сертифікатів)")
