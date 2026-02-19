@@ -1,0 +1,16 @@
+[
+ {
+  "doctype": "oiCommandTemplate",
+  "name": "Delete Expired Certificates",
+  "template_name": "Delete Expired Certificates",
+  "description": "Видаляє протерміновані сертифікати (.cer файли) з теки C:\\My Certificates and CRLs 13",
+  "enabled": 1,
+  "command_type": "PowerShell",
+  "risk_level": "Medium",
+  "requires_approval": 0,
+  "max_timeout_seconds": 120,
+  "allowed_roles": "System Manager,Maintenance Manager",
+  "allowed_parameters": "{}",
+  "command_template": "$certDir = 'C:\\My Certificates and CRLs 13'\nif (-not (Test-Path $certDir)) {\n    Write-Output \"Directory not found: $certDir\"\n    exit 1\n}\n$deleted = @()\n$errors = @()\nGet-ChildItem -Path $certDir -Filter '*.cer' | ForEach-Object {\n    try {\n        $certBytes = [System.IO.File]::ReadAllBytes($_.FullName)\n        $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2($certBytes)\n        if ($cert.NotAfter -lt (Get-Date)) {\n            Remove-Item $_.FullName -Force\n            $deleted += \"$($_.Name) (expired: $($cert.NotAfter.ToString('yyyy-MM-dd')))\"\n        }\n        $cert.Dispose()\n    } catch {\n        $errors += \"$($_.Name): $($_.Exception.Message)\"\n    }\n}\nif ($deleted.Count -gt 0) {\n    Write-Output \"Deleted $($deleted.Count) expired certificate(s):\"\n    $deleted | ForEach-Object { Write-Output \"  - $_\" }\n} else {\n    Write-Output 'No expired certificates found.'\n}\nif ($errors.Count -gt 0) {\n    Write-Output \"`nErrors:\"\n    $errors | ForEach-Object { Write-Output \"  - $_\" }\n}"
+ }
+]

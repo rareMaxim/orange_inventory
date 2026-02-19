@@ -318,6 +318,7 @@ def check_certificate_expiry():
 			}
 		agents_with_issues[cert.agent]["certs"].append(cert)
 
+	new_alerts = {}
 	for agent_name, data in agents_with_issues.items():
 		certs = data["certs"]
 		expired = [c for c in certs if c.status == "Протермінований"]
@@ -334,12 +335,16 @@ def check_certificate_expiry():
 		severity = "Critical" if expired else "Warning"
 		message = f"Сертифікати на {data['hostname']}: {'; '.join(parts)}"
 
-		create_alert(
+		alert_name = create_alert(
 			agent_name=agent_name,
 			alert_type="Сертифікат закінчується",
 			severity=severity,
 			message=message,
 		)
+
+		# Якщо алерт новий — додаємо до списку для email
+		if alert_name:
+			new_alerts[agent_name] = data
 
 	# Вирішуємо алерти для агентів де всі сертифікати дійсні
 	agents_with_alerts = frappe.get_all(
@@ -353,4 +358,186 @@ def check_certificate_expiry():
 		if row.agent not in agents_with_issues:
 			resolve_alerts(row.agent, "Сертифікат закінчується")
 
+	# Надсилаємо email тільки для НОВИХ алертів (уникаємо повторних листів)
+	send_certificate_email_notifications(new_alerts)
+
 	frappe.db.commit()
+
+
+def send_certificate_email_notifications(agents_with_issues: dict):
+	"""
+	Надсилає email-сповіщення відповідальним співробітникам
+	про протерміновані або скоро протерміновані сертифікати.
+
+	Ланцюг: oiAgent → oiAsset (asset) → hromsEmployee (responsible_employee) → email/work_email
+	"""
+	if not agents_with_issues:
+		return
+
+	for agent_name, data in agents_with_issues.items():
+		email = _get_employee_email_for_agent(agent_name)
+		if not email:
+			continue
+
+		_send_certificate_notification_email(email, data)
+
+
+def _get_employee_email_for_agent(agent_name: str) -> str | None:
+	"""
+	Отримує email користувача за ланцюгом:
+	oiAgent → oiAsset → hromsEmployee (asset_user) → work_email або email
+	"""
+	# Отримуємо asset прив'язаний до агента
+	asset_name = frappe.db.get_value("oiAgent", agent_name, "asset")
+	if not asset_name:
+		return None
+
+	# Отримуємо користувача активу
+	employee_name = frappe.db.get_value("oiAsset", asset_name, "asset_user")
+	if not employee_name:
+		return None
+
+	# Отримуємо email (пріоритет: робочий > особистий)
+	work_email, personal_email = frappe.db.get_value(
+		"hromsEmployee", employee_name, ["work_email", "email"]
+	) or (None, None)
+
+	return work_email or personal_email
+
+
+def _send_certificate_notification_email(email: str, data: dict):
+	"""Надсилає email про проблеми з сертифікатами."""
+	certs = data["certs"]
+	hostname = data["hostname"]
+	expired = [c for c in certs if c.status == "Протермінований"]
+	expiring = [c for c in certs if c.status == "Скоро закінчується"]
+
+	# Формуємо тіло листа
+	rows = ""
+	for cert in expired:
+		name = cert.subject_cn or cert.file_name or "—"
+		rows += (
+			f"<tr style='background-color: #fee2e2;'>"
+			f"<td style='padding: 8px; border: 1px solid #ddd;'>{name}</td>"
+			f"<td style='padding: 8px; border: 1px solid #ddd;'>{cert.not_after}</td>"
+			f"<td style='padding: 8px; border: 1px solid #ddd; color: #dc2626; font-weight: bold;'>Протермінований</td>"
+			f"</tr>"
+		)
+	for cert in expiring:
+		name = cert.subject_cn or cert.file_name or "—"
+		rows += (
+			f"<tr style='background-color: #fef3c7;'>"
+			f"<td style='padding: 8px; border: 1px solid #ddd;'>{name}</td>"
+			f"<td style='padding: 8px; border: 1px solid #ddd;'>{cert.not_after}</td>"
+			f"<td style='padding: 8px; border: 1px solid #ddd; color: #d97706; font-weight: bold;'>"
+			f"Закінчується через {cert.days_until_expiry} дн.</td>"
+			f"</tr>"
+		)
+
+	subject = f"Сертифікати на {hostname} потребують уваги"
+	message = f"""
+	<div style="font-family: Arial, sans-serif; max-width: 600px;">
+		<h3 style="color: #1f2937;">Сповіщення про сертифікати</h3>
+		<p>На комп'ютері <strong>{hostname}</strong> виявлено проблеми з сертифікатами:</p>
+		<table style="border-collapse: collapse; width: 100%; margin: 16px 0;">
+			<thead>
+				<tr style="background-color: #f3f4f6;">
+					<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Сертифікат</th>
+					<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Дійсний до</th>
+					<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Статус</th>
+				</tr>
+			</thead>
+			<tbody>{rows}</tbody>
+		</table>
+		<p style="color: #6b7280; font-size: 12px;">
+			Це автоматичне сповіщення від Orange Inventory.
+			Зверніться до ІТ-відділу для оновлення сертифікатів.
+		</p>
+	</div>
+	"""
+
+	try:
+		frappe.sendmail(
+			recipients=[email],
+			sender="Orange Inventory <itsystems@mlt.gov.ua>",
+			subject=subject,
+			message=message,
+			now=True,
+		)
+	except Exception:
+		frappe.log_error(
+			f"Не вдалося надіслати email на {email} про сертифікати {hostname}",
+			"Certificate Email Notification",
+		)
+
+
+@frappe.whitelist()
+def test_certificate_email_notification(employee_name: str):
+	"""
+	Тестова відправка email-сповіщення про сертифікати для конкретного співробітника.
+	Знаходить всі агенти/активи прив'язані до цього співробітника і надсилає сповіщення.
+
+	Використання: bench execute orange_inventory.tasks.test_certificate_email_notification --args '["EMP-26017"]'
+	"""
+	# Отримуємо email
+	work_email, personal_email = frappe.db.get_value(
+		"hromsEmployee", employee_name, ["work_email", "email"]
+	) or (None, None)
+
+	email = work_email or personal_email
+	if not email:
+		frappe.throw(f"Співробітник {employee_name} не має email-адреси")
+
+	# Знаходимо активи цього співробітника
+	assets = frappe.get_all(
+		"oiAsset",
+		filters={"responsible_employee": employee_name},
+		fields=["name"],
+	)
+
+	if not assets:
+		frappe.throw(f"У співробітника {employee_name} немає прив'язаних активів")
+
+	# Знаходимо агентів для цих активів
+	asset_names = [a.name for a in assets]
+	agents = frappe.get_all(
+		"oiAgent",
+		filters={"asset": ["in", asset_names], "status": "Активний"},
+		fields=["name", "hostname"],
+	)
+
+	if not agents:
+		frappe.throw(f"Немає активних агентів для активів співробітника {employee_name}")
+
+	sent = 0
+	for agent in agents:
+		# Знаходимо проблемні сертифікати
+		certs = frappe.db.sql(
+			"""
+			SELECT agent, subject_cn, not_after, days_until_expiry, status, file_name
+			FROM `taboiAgentCertificate`
+			WHERE agent = %s
+			AND status IN ('Скоро закінчується', 'Протермінований')
+			ORDER BY not_after ASC
+			LIMIT 20
+			""",
+			agent.name,
+			as_dict=True,
+		)
+
+		if not certs:
+			continue
+
+		data = {
+			"hostname": agent.hostname,
+			"certs": certs,
+		}
+
+		_send_certificate_notification_email(email, data)
+		sent += 1
+		print(f"Email надіслано на {email} для {agent.hostname} ({len(certs)} сертифікатів)")
+
+	if sent == 0:
+		print(f"Немає проблемних сертифікатів для агентів співробітника {employee_name}")
+	else:
+		print(f"Всього надіслано {sent} email(ів)")
