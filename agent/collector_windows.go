@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"net"
 	"sort"
 	"time"
@@ -322,11 +323,17 @@ func getStaticInfo() StaticData {
 	// Windows Edition
 	osEdition := getWindowsEdition()
 
+	// OS Version з Build Number (наприклад "10.0.22631.4890")
+	osVersion := hInfo.PlatformVersion
+	if buildNum := getWindowsBuildNumber(); buildNum != "" {
+		osVersion = osVersion + "." + buildNum
+	}
+
 	return StaticData{
 		AgentVersion:    AppVersion,
 		Hostname:        hInfo.Hostname,
 		Platform:        hInfo.OS,
-		OSVersion:       hInfo.PlatformVersion,
+		OSVersion:       osVersion,
 		OSEdition:       osEdition,
 		CPUModel:        cpuInfo[0].ModelName,
 		CPUCores:        logicalCores,
