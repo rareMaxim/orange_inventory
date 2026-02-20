@@ -296,14 +296,14 @@ def check_certificate_expiry():
 		doc.db_update()
 
 	# Знаходимо сертифікати що закінчуються або протерміновані
+	# Не фільтруємо по статусу агента — сертифікати актуальні незалежно від того чи агент онлайн
 	expiring_certs = frappe.db.sql(
 		"""
 		SELECT c.agent, c.subject_cn, c.not_after, c.days_until_expiry, c.status,
 		       c.file_name, a.hostname
 		FROM `taboiAgentCertificate` c
 		INNER JOIN `taboiAgent` a ON a.name = c.agent
-		WHERE a.status = 'Активний'
-		AND c.status IN ('Скоро закінчується', 'Протермінований')
+		WHERE c.status IN ('Скоро закінчується', 'Протермінований')
 		""",
 		as_dict=True,
 	)
