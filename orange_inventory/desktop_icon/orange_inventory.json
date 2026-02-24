@@ -12,13 +12,13 @@
  "link_to": "Orange Inventory",
  "link_type": "Workspace Sidebar",
  "logo_url": "",
- "modified": "2026-02-20 11:49:02.622504",
+ "modified": "2026-02-23 09:11:20.622531",
  "modified_by": "Administrator",
  "name": "Orange Inventory",
  "owner": "Administrator",
- "parent_icon": "Orange Inventory",
+ "parent_icon": "",
  "restrict_removal": 0,
  "roles": [],
- "sidebar": "Orange Inventory",
+ "sidebar": "",
  "standard": 1
 }

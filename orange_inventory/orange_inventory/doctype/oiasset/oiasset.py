@@ -71,6 +71,11 @@ class oiAsset(Document):
 
 	def before_save(self):
 		self.total = self.cost * self.quantity
+		if self.responsible_employee:
+			# Get department even if user doesn't have read access to hromsEmployee
+			department = frappe.db.get_value("hromsEmployee", self.responsible_employee, "department")
+			if department:
+				self.current_owner = department
 
 	def on_update(self):
 		self.create_network_ports_from_model()
@@ -380,10 +385,22 @@ def split_asset_partial(source_asset_name, quantity_to_split, serial_numbers):
 	}
 
 
-def has_permission(doc, user):
-	# Отримуємо department співробітника з hromsEmployee
+def has_permission(doc, ptype="read", user=None):
+	if not user:
+		user = frappe.session.user
+
+	# 1. Перевірка для привілейованих ролей
+	user_roles = frappe.get_roles(user)
+	privileged_roles = {"System Manager", "Maintenance Manager"}
+	if any(role in user_roles for role in privileged_roles):
+		return True
+
+	if not doc:
+		return True
+
+	# 2. Отримуємо department співробітника з hromsEmployee
 	department = frappe.db.get_value("hromsEmployee", {"user_id": user}, "department")
-	if doc.current_owner == department:
+	if department and doc.current_owner == department:
 		return True
 
 	return False
