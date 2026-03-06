@@ -90,10 +90,6 @@ def create_delete_certs_command(certs_by_agent):
 			skipped.append({"agent": agent_name, "reason": "Агент не знайдено"})
 			continue
 
-		if agent.status != "Активний":
-			skipped.append({"agent": agent.hostname, "reason": f"Статус: {agent.status}"})
-			continue
-
 		# Збираємо імена файлів
 		file_names = [c["file_name"] for c in certs if c.get("file_name")]
 		if not file_names:
