@@ -241,6 +241,7 @@ func getDynamicInfo() DynamicData {
 		Services:      serviceList,
 		TopProcesses:  processList,
 		StartupItems:  startupList,
+		Neighbors:     getNetworkNeighbors(),
 		Security:      security,
 	}
 }
@@ -499,6 +500,43 @@ func getCurrentUser() string {
 		return "Unknown"
 	}
 	return u.Username
+}
+
+func getNetworkNeighbors() []NeighborInfo {
+	neighbors := []NeighborInfo{}
+
+	data, err := os.ReadFile("/proc/net/arp")
+	if err != nil {
+		return neighbors
+	}
+
+	lines := strings.Split(string(data), "\n")
+	// Пропускаємо заголовок
+	if len(lines) <= 1 {
+		return neighbors
+	}
+
+	for _, line := range lines[1:] {
+		fields := strings.Fields(line)
+		if len(fields) >= 6 {
+			ip := fields[0]
+			mac := fields[3]
+			iface := fields[5]
+
+			// Пропускаємо нульові MAC-адреси
+			if mac == "00:00:00:00:00:00" || mac == "" {
+				continue
+			}
+
+			neighbors = append(neighbors, NeighborInfo{
+				IPAddress:  ip,
+				MACAddress: mac,
+				Interface:  iface,
+			})
+		}
+	}
+
+	return neighbors
 }
 
 func getDiskStats() []DiskStatus {

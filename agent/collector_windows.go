@@ -15,6 +15,8 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/yusufpapurcu/wmi"
 	"golang.org/x/sys/windows/registry"
+	"os/exec"
+	"strings"
 )
 
 // --- ФУНКЦІЇ ЗБОРУ ДАНИХ (Windows) ---
@@ -506,8 +508,42 @@ func getDynamicInfo() DynamicData {
 		Services:      serviceList,
 		TopProcesses:  processList,
 		StartupItems:  startupList,
+		Neighbors:     getNetworkNeighbors(),
 		Security:      security,
 	}
+}
+
+// getNetworkNeighbors збирає динамічні дані про систему
+func getNetworkNeighbors() []NeighborInfo {
+	neighbors := []NeighborInfo{}
+
+	cmd := exec.Command("arp", "-a")
+	output, err := cmd.Output()
+	if err != nil {
+		return neighbors
+	}
+
+	lines := strings.Split(string(output), "\n")
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		if len(fields) >= 3 {
+			// Windows arp -a output format:
+			// Internet Address      Physical Address      Type
+			// 192.168.1.1           00-11-22-33-44-55     dynamic
+			ip := fields[0]
+			mac := strings.ReplaceAll(fields[1], "-", ":")
+			
+			// Перевірка чи це IP-адреса (базовий варіант)
+			if strings.Count(ip, ".") == 3 && strings.Count(mac, ":") == 5 {
+				neighbors = append(neighbors, NeighborInfo{
+					IPAddress:  ip,
+					MACAddress: strings.ToLower(mac),
+				})
+			}
+		}
+	}
+
+	return neighbors
 }
 
 // getSecurityStatus збирає інформацію про безпеку системи

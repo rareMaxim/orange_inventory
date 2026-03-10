@@ -112,6 +112,14 @@ type BatteryInfo struct {
 	Status        string `json:"status"` // Charging, Discharging, Full, No Battery
 }
 
+// NeighborInfo містить інформацію про мережевого сусіда (ARP)
+type NeighborInfo struct {
+	IPAddress  string `json:"ip_address"`
+	MACAddress string `json:"mac_address"`
+	Interface  string `json:"interface"`
+	State      string `json:"state,omitempty"`
+}
+
 // AntivirusInfo містить інформацію про антивірус
 type AntivirusInfo struct {
 	Name   string `json:"name"`
@@ -173,5 +181,6 @@ type DynamicData struct {
 	Services      []ServiceInfo   `json:"services"`
 	TopProcesses  []ProcessInfo   `json:"top_processes"`
 	StartupItems  []StartupInfo   `json:"startup_items"`
+	Neighbors     []NeighborInfo  `json:"neighbors"`
 	Security      SecurityStatus  `json:"security"`
 }

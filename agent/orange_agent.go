@@ -160,6 +160,7 @@ func runAgent() {
 	log.Printf("RAM Usage: %.1f%%", dynamic.RAMUsage)
 	log.Printf("Current User: %s", dynamic.CurrentUser)
 	log.Printf("Uptime: %d seconds", dynamic.Uptime)
+	log.Printf("Neighbors: %d", len(dynamic.Neighbors))
 
 	// Відправляємо на сервер якщо є конфігурація
 	if config != nil {
