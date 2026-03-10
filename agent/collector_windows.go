@@ -5,8 +5,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net"
+	"os/exec"
 	"sort"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -15,8 +19,6 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/yusufpapurcu/wmi"
 	"golang.org/x/sys/windows/registry"
-	"os/exec"
-	"strings"
 )
 
 // --- ФУНКЦІЇ ЗБОРУ ДАНИХ (Windows) ---
@@ -515,6 +517,9 @@ func getDynamicInfo() DynamicData {
 
 // getNetworkNeighbors збирає динамічні дані про систему
 func getNetworkNeighbors() []NeighborInfo {
+	// Проактивне сканування (пінг) для оновлення ARP-таблиці
+	pingSubnet()
+
 	neighbors := []NeighborInfo{}
 
 	cmd := exec.Command("arp", "-a")
@@ -606,4 +611,52 @@ func getSecurityStatus() SecurityStatus {
 	}
 
 	return security
+}
+
+// pingSubnet виконує швидкий паралельний пінг поточної підмережі
+func pingSubnet() {
+	log.Println("🔍 Discovery: Швидке сканування підмережі для оновлення ARP...")
+	
+	// Отримуємо локальні IP
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return
+	}
+
+	var wg sync.WaitGroup
+	for _, addr := range addrs {
+		// Шукаємо IPv4 мережу
+		ipnet, ok := addr.(*net.IPNet)
+		if !ok || ipnet.IP.IsLoopback() || ipnet.IP.To4() == nil {
+			continue
+		}
+
+		// Беремо тільки перші 24 біти (клас C) для швидкості
+		ip := ipnet.IP.To4()
+		baseIP := fmt.Sprintf("%d.%d.%d.", ip[0], ip[1], ip[2])
+
+		// Пінгуємо хости паралельно (перші 254)
+		for i := 1; i <= 254; i++ {
+			target := fmt.Sprintf("%s%d", baseIP, i)
+			if target == ip.String() {
+				continue
+			}
+
+			wg.Add(1)
+			go func(host string) {
+				defer wg.Done()
+				// Використовуємо системний ping з коротким таймаутом
+				// -n 1: один пакет
+				// -w 100: таймаут 100мс
+				exec.Command("ping", "-n", "1", "-w", "100", host).Run()
+			}(target)
+			
+			// Невелике обмеження паралелізму
+			if i%50 == 0 {
+				wg.Wait()
+			}
+		}
+	}
+	wg.Wait()
+	log.Println("✓ Discovery: Сканування завершено")
 }

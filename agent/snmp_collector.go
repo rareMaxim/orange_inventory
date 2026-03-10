@@ -42,8 +42,8 @@ func pollDevice(target SNMPTarget) (*SNMPReport, error) {
 		Port:      161,
 		Community: target.Community,
 		Version:   gosnmp.Version2c,
-		Timeout:   time.Duration(2) * time.Second,
-		Retries:   1,
+		Timeout:   time.Duration(3) * time.Second,
+		Retries:   2,
 		MaxOids:   60,
 	}
 
@@ -53,11 +53,15 @@ func pollDevice(target SNMPTarget) (*SNMPReport, error) {
 	}
 	defer gs.Conn.Close()
 
-	// 1. Отримуємо імена інтерфейсів (ifName)
-	// ifName OID: 1.3.6.1.2.1.31.1.1.1.1
+	// 1. Отримуємо імена інтерфейсів (ifName або ifDescr як fallback)
+	// ifName: 1.3.6.1.2.1.31.1.1.1.1
+	// ifDescr: 1.3.6.1.2.1.2.2.1.2
 	names, err := gs.WalkAll(".1.3.6.1.2.1.31.1.1.1.1")
+	if err != nil || len(names) == 0 {
+		names, err = gs.WalkAll(".1.3.6.1.2.1.2.2.1.2")
+	}
 	if err != nil {
-		return nil, fmt.Errorf("walk ifName error: %w", err)
+		return nil, fmt.Errorf("walk interface names error: %w", err)
 	}
 
 	// 2. Отримуємо MAC-адреси (ifPhysAddress)

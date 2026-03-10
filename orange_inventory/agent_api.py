@@ -18,6 +18,8 @@ import json
 import frappe
 from frappe.utils import now_datetime
 
+from orange_inventory.orange_inventory.discovery_utils import get_manufacturer_from_mac
+
 
 def _decompress_gzip(data: bytes) -> bytes:
 	"""Розпаковує gzip дані."""
@@ -537,7 +539,6 @@ def _sync_network_ports(asset_name: str, adapters: list):
 			)
 			port.insert(ignore_permissions=True)
 		else:
-			# Оновлюємо MAC для знайденого порту (це прив'яже ручні порти до заліза)
 			frappe.db.set_value("oiNetworkPort", existing_port, "mac_address", mac)
 
 
@@ -552,10 +553,11 @@ def _process_neighbors(agent_name: str, asset_name: str, neighbors: list):
 		_log(f"Discovery: processing {len(neighbors)} neighbors for agent {agent_name}")
 		for neighbor in neighbors:
 			neighbor_mac = neighbor.get("mac_address", "").lower().strip()
+			neighbor_ip = neighbor.get("ip_address")
 			if not neighbor_mac or neighbor_mac == "00:00:00:00:00:00":
 				continue
 
-			_log(f"Discovery: investigating neighbor {neighbor_mac} ({neighbor.get('ip_address')})")
+			_log(f"Discovery: investigating neighbor {neighbor_mac} ({neighbor_ip})")
 
 			# Шукаємо актив по MAC адресу порту
 			neighbor_asset = frappe.db.get_value("oiNetworkPort", {"mac_address": neighbor_mac}, "asset")
@@ -572,6 +574,30 @@ def _process_neighbors(agent_name: str, asset_name: str, neighbors: list):
 				)
 				if neighbor_asset:
 					neighbor_asset = neighbor_asset[0].name
+
+			if not neighbor_asset:
+				# --- АВТОМАТИЧНЕ СТВОРЕННЯ АКТИВУ (Discovery) ---
+				_log(f"Discovery: Found new device {neighbor_mac} ({neighbor_ip}), creating Asset...")
+
+				manufacturer = get_manufacturer_from_mac(neighbor_mac)
+
+				# Створюємо актив
+				asset = frappe.new_doc("oiAsset")
+				asset.asset_name = f"Discovered-{neighbor_mac[-8:]}"
+				asset.ip_address = neighbor_ip
+				asset.mac_addresses = neighbor_mac
+				asset.is_network_device = 1
+				asset.manufacturer = manufacturer
+				asset.status = "В експлуатації"
+				asset.insert(ignore_permissions=True)
+				neighbor_asset = asset.name
+
+				# Створюємо порт для нього
+				port = frappe.new_doc("oiNetworkPort")
+				port.asset = neighbor_asset
+				port.port_name = "Auto-MGMT"
+				port.mac_address = neighbor_mac
+				port.insert(ignore_permissions=True)
 
 			if neighbor_asset and neighbor_asset != asset_name:
 				# Створюємо/знаходимо порти для зв'язку
@@ -1030,7 +1056,11 @@ def _process_snmp_reports(agent_name: str, reports: list):
 			_log(f"SNMP: Asset {asset_name} not found, skipping report from {agent_name}")
 			continue
 
-		interfaces = report.get("interfaces", [])
+		error = report.get("error")
+		if error:
+			_log(f"SNMP: Agent {agent_name} reported error for {asset_name} ({report.get('ip')}): {error}")
+
+		interfaces = report.get("interfaces") or []
 		_log(f"SNMP: Processing {len(interfaces)} interfaces for {asset_name} from {agent_name}")
 
 		# Збираємо всі MAC-адреси для активу (для мапи)
