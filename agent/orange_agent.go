@@ -15,7 +15,7 @@ import (
 
 // --- КОНСТАНТИ ---
 const (
-	AppVersion          = "1.12.2"
+	AppVersion          = "1.12.3"
 	TaskName            = "OrangeInventoryAgent"
 	TaskNameCommands    = "OrangeInventoryAgent_Commands"
 	TaskInterval        = 15 // хвилин (повний збір)
@@ -204,7 +204,12 @@ func runAgent() {
 // checkAndUpdate перевіряє та виконує оновлення
 func checkAndUpdate(config *Config) {
 	log.Println("\n=== ПЕРЕВІРКА ОНОВЛЕНЬ ===")
-	updateResp, err := checkForUpdate(config)
+
+	// Отримуємо agent_id для перевірки бета-прав на сервері
+	static := getMinimalStaticInfo()
+	agentID := generateAgentID(static)
+
+	updateResp, err := checkForUpdate(config, agentID)
 	if err != nil {
 		log.Printf("⚠ Не вдалося перевірити оновлення: %v", err)
 		return

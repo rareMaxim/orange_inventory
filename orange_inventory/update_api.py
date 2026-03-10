@@ -18,34 +18,36 @@ def _log(message: str):
 
 
 @frappe.whitelist()
-def check_update(current_version: str):
+def check_update(current_version: str, agent_id: str = None):
 	"""
 	Перевіряє чи є оновлення для агента.
 
 	Args:
 	        current_version: поточна версія агента (наприклад "1.1")
-
-	Returns:
-	        dict: {
-	                "update_available": True/False,
-	                "latest_version": "1.2",
-	                "is_mandatory": True/False,
-	                "download_url": "/api/method/...",
-	                "file_size": 12345678,
-	                "checksum": "sha256...",
-	                "release_notes": "..."
-	        }
+	        agent_id: унікальний ідентифікатор агента (опціонально)
 	"""
 	# Логуємо запит
 	user = frappe.session.user
 	ip = frappe.local.request_ip if hasattr(frappe.local, "request_ip") else "unknown"
-	_log(f"check_update: user={user}, ip={ip}, current_version={current_version}")
+	_log(f"check_update: user={user}, ip={ip}, current_version={current_version}, agent_id={agent_id}")
+
+	# Перевіряємо чи дозволено бета-версії для цього агента
+	allow_beta = False
+	if agent_id:
+		allow_beta = frappe.db.get_value("oiAgent", {"agent_id": agent_id}, "allow_beta")
+	else:
+		# Fallback: спробуємо знайти за IP якщо agent_id не передано (для старих версій)
+		if ip and ip != "unknown":
+			# Шукаємо агента який має цей IP
+			allow_beta = frappe.db.get_value("oiAgent", {"last_ip": ip}, "allow_beta")
+			if allow_beta:
+				_log(f"check_update: allow_beta=True based on IP {ip}")
 
 	# Отримуємо актуальну версію
-	latest = frappe.db.get_value(
+	latest_releases = frappe.get_all(
 		"oiAgentRelease",
-		{"is_latest": 1},
-		[
+		filters={"is_latest": 1} if not allow_beta else {},
+		fields=[
 			"name",
 			"version",
 			"is_mandatory",
@@ -55,12 +57,15 @@ def check_update(current_version: str):
 			"release_notes",
 			"min_version_to_update",
 		],
-		as_dict=True,
+		order_by="creation desc",
+		limit=1,
 	)
 
-	if not latest:
+	if not latest_releases:
 		_log("check_update: no releases available")
 		return {"update_available": False, "message": "Немає доступних версій"}
+
+	latest = latest_releases[0]
 
 	# Порівнюємо версії
 	if not _is_newer_version(latest.version, current_version):

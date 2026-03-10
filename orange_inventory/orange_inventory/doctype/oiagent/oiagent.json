@@ -1,285 +1,299 @@
 {
- "actions": [],
- "autoname": "field:agent_id",
- "creation": "2026-01-29 14:00:00",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "main_section",
-  "agent_id",
-  "hostname",
-  "status",
-  "agent_version",
-  "column_break_main",
-  "asset",
-  "asset_user",
-  "asset_group",
-  "last_seen",
-  "first_seen",
-  "system_section",
-  "os",
-  "os_edition",
-  "cpu_model",
-  "column_break_system",
-  "cpu_cores",
-  "ram_total_gb",
-  "hardware_section",
-  "system_manufacturer",
-  "system_model",
-  "system_type",
-  "column_break_hw",
-  "bios_serial",
-  "board_serial",
-  "raw_data_section",
-  "raw_data"
- ],
- "fields": [
-  {
-   "fieldname": "main_section",
-   "fieldtype": "Section Break",
-   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
-  },
-  {
-   "fieldname": "agent_id",
-   "fieldtype": "Data",
-   "label": "Agent ID",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "hostname",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Hostname"
-  },
-  {
-   "default": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
-   "options": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u041e\u0444\u043b\u0430\u0439\u043d"
-  },
-  {
-   "fieldname": "agent_version",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "\u0412\u0435\u0440\u0441\u0456\u044f \u0430\u0433\u0435\u043d\u0442\u0430",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_main",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "asset",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "\u041f\u0440\u0438\u0432'\u044f\u0437\u0430\u043d\u0438\u0439 \u0430\u043a\u0442\u0438\u0432",
-   "options": "oiAsset"
-  },
-  {
-   "fetch_from": "asset.asset_user",
-   "fetch_if_empty": 1,
-   "fieldname": "asset_user",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
-   "options": "hromsEmployee",
-   "read_only": 1
-  },
-  {
-   "fieldname": "asset_group",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "\u0413\u0440\u0443\u043f\u0430",
-   "options": "oiAssetGroup",
-   "search_index": 1
-  },
-  {
-   "fieldname": "last_seen",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "\u041e\u0441\u0442\u0430\u043d\u043d\u0456\u0439 \u0437\u0432'\u044f\u0437\u043e\u043a",
-   "read_only": 1
-  },
-  {
-   "fieldname": "first_seen",
-   "fieldtype": "Datetime",
-   "label": "\u041f\u0435\u0440\u0448\u0438\u0439 \u0437\u0432'\u044f\u0437\u043e\u043a",
-   "read_only": 1
-  },
-  {
-   "fieldname": "system_section",
-   "fieldtype": "Section Break",
-   "label": "\u0421\u0438\u0441\u0442\u0435\u043c\u0430"
-  },
-  {
-   "fieldname": "os",
-   "fieldtype": "Data",
-   "label": "\u041e\u043f\u0435\u0440\u0430\u0446\u0456\u0439\u043d\u0430 \u0441\u0438\u0441\u0442\u0435\u043c\u0430",
-   "read_only": 1
-  },
-  {
-   "fieldname": "os_edition",
-   "fieldtype": "Data",
-   "in_standard_filter": 1,
-   "label": "\u0420\u0435\u0434\u0430\u043a\u0446\u0456\u044f \u041e\u0421",
-   "read_only": 1
-  },
-  {
-   "fieldname": "cpu_model",
-   "fieldtype": "Data",
-   "label": "\u041c\u043e\u0434\u0435\u043b\u044c CPU",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_system",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "cpu_cores",
-   "fieldtype": "Int",
-   "label": "\u042f\u0434\u0435\u0440 CPU",
-   "read_only": 1
-  },
-  {
-   "fieldname": "ram_total_gb",
-   "fieldtype": "Float",
-   "label": "RAM (GB)",
-   "precision": "2",
-   "read_only": 1
-  },
-  {
-   "fieldname": "hardware_section",
-   "fieldtype": "Section Break",
-   "label": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f"
-  },
-  {
-   "fieldname": "system_manufacturer",
-   "fieldtype": "Data",
-   "label": "\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a",
-   "read_only": 1
-  },
-  {
-   "fieldname": "system_model",
-   "fieldtype": "Data",
-   "label": "\u041c\u043e\u0434\u0435\u043b\u044c",
-   "read_only": 1
-  },
-  {
-   "fieldname": "system_type",
-   "fieldtype": "Data",
-   "label": "\u0422\u0438\u043f \u0441\u0438\u0441\u0442\u0435\u043c\u0438",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_hw",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "bios_serial",
-   "fieldtype": "Data",
-   "label": "BIOS Serial",
-   "read_only": 1
-  },
-  {
-   "fieldname": "board_serial",
-   "fieldtype": "Data",
-   "label": "Board Serial",
-   "read_only": 1
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "raw_data_section",
-   "fieldtype": "Section Break",
-   "label": "\u041f\u043e\u0432\u043d\u0456 \u0434\u0430\u043d\u0456 (JSON)"
-  },
-  {
-   "fieldname": "raw_data",
-   "fieldtype": "Code",
-   "label": "Raw Data",
-   "options": "JSON",
-   "read_only": 1
-  }
- ],
- "index_web_pages_for_search": 1,
- "links": [
-  {
-   "link_doctype": "oiAgentSnapshot",
-   "link_fieldname": "agent"
-  },
-  {
-   "link_doctype": "oiAgentAlert",
-   "link_fieldname": "agent"
-  },
-  {
-   "link_doctype": "oiAgentSoftware",
-   "link_fieldname": "agent"
-  },
-  {
-   "link_doctype": "oiAgentCertificate",
-   "link_fieldname": "agent"
-  }
- ],
- "modified": "2026-02-19 11:53:57.912247",
- "modified_by": "Administrator",
- "module": "Orange Inventory",
- "name": "oiAgent",
- "naming_rule": "By fieldname",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "export": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Maintenance Manager",
-   "write": 1
-  },
-  {
-   "create": 1,
-   "read": 1,
-   "role": "Agent Bot",
-   "write": 1
-  }
- ],
- "row_format": "Dynamic",
- "show_title_field_in_link": 1,
- "sort_field": "last_seen",
- "sort_order": "DESC",
- "states": [
-  {
-   "color": "Blue",
-   "title": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
-  },
-  {
-   "color": "Yellow",
-   "title": "\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
-  },
-  {
-   "color": "Orange",
-   "title": "\u041e\u0444\u043b\u0430\u0439\u043d"
-  }
- ],
- "title_field": "hostname",
- "track_changes": 1
+    "actions": [],
+    "autoname": "field:agent_id",
+    "creation": "2026-01-29 14:00:00",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "main_section",
+        "agent_id",
+        "hostname",
+        "status",
+        "allow_beta",
+        "agent_version",
+        "last_ip",
+        "column_break_main",
+        "asset",
+        "asset_user",
+        "asset_group",
+        "last_seen",
+        "first_seen",
+        "system_section",
+        "os",
+        "os_edition",
+        "cpu_model",
+        "column_break_system",
+        "cpu_cores",
+        "ram_total_gb",
+        "hardware_section",
+        "system_manufacturer",
+        "system_model",
+        "system_type",
+        "column_break_hw",
+        "bios_serial",
+        "board_serial",
+        "raw_data_section",
+        "raw_data"
+    ],
+    "fields": [
+        {
+            "fieldname": "main_section",
+            "fieldtype": "Section Break",
+            "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+        },
+        {
+            "fieldname": "agent_id",
+            "fieldtype": "Data",
+            "label": "Agent ID",
+            "reqd": 1,
+            "unique": 1
+        },
+        {
+            "fieldname": "hostname",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "Hostname"
+        },
+        {
+            "default": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
+            "options": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439\n\u041e\u0444\u043b\u0430\u0439\u043d"
+        },
+        {
+            "default": "0",
+            "fieldname": "allow_beta",
+            "fieldtype": "Check",
+            "label": "\u0414\u043e\u0437\u0432\u043e\u043b\u0438\u0442\u0438 \u0431\u0435\u0442\u0430-\u0432\u0435\u0440\u0441\u0456\u0457"
+        },
+        {
+            "fieldname": "agent_version",
+            "fieldtype": "Data",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "\u0412\u0435\u0440\u0441\u0456\u044f \u0430\u0433\u0435\u043d\u0442\u0430",
+            "read_only": 1
+        },
+        {
+            "fieldname": "last_ip",
+            "fieldtype": "Data",
+            "label": "Last IP",
+            "read_only": 1
+        },
+        {
+            "fieldname": "column_break_main",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "asset",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "\u041f\u0440\u0438\u0432'\u044f\u0437\u0430\u043d\u0438\u0439 \u0430\u043a\u0442\u0438\u0432",
+            "options": "oiAsset"
+        },
+        {
+            "fetch_from": "asset.asset_user",
+            "fetch_if_empty": 1,
+            "fieldname": "asset_user",
+            "fieldtype": "Link",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
+            "options": "hromsEmployee",
+            "read_only": 1
+        },
+        {
+            "fieldname": "asset_group",
+            "fieldtype": "Link",
+            "in_standard_filter": 1,
+            "label": "\u0413\u0440\u0443\u043f\u0430",
+            "options": "oiAssetGroup",
+            "search_index": 1
+        },
+        {
+            "fieldname": "last_seen",
+            "fieldtype": "Datetime",
+            "in_list_view": 1,
+            "label": "\u041e\u0441\u0442\u0430\u043d\u043d\u0456\u0439 \u0437\u0432'\u044f\u0437\u043e\u043a",
+            "read_only": 1
+        },
+        {
+            "fieldname": "first_seen",
+            "fieldtype": "Datetime",
+            "label": "\u041f\u0435\u0440\u0448\u0438\u0439 \u0437\u0432'\u044f\u0437\u043e\u043a",
+            "read_only": 1
+        },
+        {
+            "fieldname": "system_section",
+            "fieldtype": "Section Break",
+            "label": "\u0421\u0438\u0441\u0442\u0435\u043c\u0430"
+        },
+        {
+            "fieldname": "os",
+            "fieldtype": "Data",
+            "label": "\u041e\u043f\u0435\u0440\u0430\u0446\u0456\u0439\u043d\u0430 \u0441\u0438\u0441\u0442\u0435\u043c\u0430",
+            "read_only": 1
+        },
+        {
+            "fieldname": "os_edition",
+            "fieldtype": "Data",
+            "in_standard_filter": 1,
+            "label": "\u0420\u0435\u0434\u0430\u043a\u0446\u0456\u044f \u041e\u0421",
+            "read_only": 1
+        },
+        {
+            "fieldname": "cpu_model",
+            "fieldtype": "Data",
+            "label": "\u041c\u043e\u0434\u0435\u043b\u044c CPU",
+            "read_only": 1
+        },
+        {
+            "fieldname": "column_break_system",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "cpu_cores",
+            "fieldtype": "Int",
+            "label": "\u042f\u0434\u0435\u0440 CPU",
+            "read_only": 1
+        },
+        {
+            "fieldname": "ram_total_gb",
+            "fieldtype": "Float",
+            "label": "RAM (GB)",
+            "precision": "2",
+            "read_only": 1
+        },
+        {
+            "fieldname": "hardware_section",
+            "fieldtype": "Section Break",
+            "label": "\u041e\u0431\u043b\u0430\u0434\u043d\u0430\u043d\u043d\u044f"
+        },
+        {
+            "fieldname": "system_manufacturer",
+            "fieldtype": "Data",
+            "label": "\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a",
+            "read_only": 1
+        },
+        {
+            "fieldname": "system_model",
+            "fieldtype": "Data",
+            "label": "\u041c\u043e\u0434\u0435\u043b\u044c",
+            "read_only": 1
+        },
+        {
+            "fieldname": "system_type",
+            "fieldtype": "Data",
+            "label": "\u0422\u0438\u043f \u0441\u0438\u0441\u0442\u0435\u043c\u0438",
+            "read_only": 1
+        },
+        {
+            "fieldname": "column_break_hw",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "bios_serial",
+            "fieldtype": "Data",
+            "label": "BIOS Serial",
+            "read_only": 1
+        },
+        {
+            "fieldname": "board_serial",
+            "fieldtype": "Data",
+            "label": "Board Serial",
+            "read_only": 1
+        },
+        {
+            "collapsible": 1,
+            "fieldname": "raw_data_section",
+            "fieldtype": "Section Break",
+            "label": "\u041f\u043e\u0432\u043d\u0456 \u0434\u0430\u043d\u0456 (JSON)"
+        },
+        {
+            "fieldname": "raw_data",
+            "fieldtype": "Code",
+            "label": "Raw Data",
+            "options": "JSON",
+            "read_only": 1
+        }
+    ],
+    "index_web_pages_for_search": 1,
+    "links": [
+        {
+            "link_doctype": "oiAgentSnapshot",
+            "link_fieldname": "agent"
+        },
+        {
+            "link_doctype": "oiAgentAlert",
+            "link_fieldname": "agent"
+        },
+        {
+            "link_doctype": "oiAgentSoftware",
+            "link_fieldname": "agent"
+        },
+        {
+            "link_doctype": "oiAgentCertificate",
+            "link_fieldname": "agent"
+        }
+    ],
+    "modified": "2026-02-19 11:53:57.912247",
+    "modified_by": "Administrator",
+    "module": "Orange Inventory",
+    "name": "oiAgent",
+    "naming_rule": "By fieldname",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "email": 1,
+            "export": 1,
+            "print": 1,
+            "read": 1,
+            "report": 1,
+            "role": "System Manager",
+            "share": 1,
+            "write": 1
+        },
+        {
+            "create": 1,
+            "delete": 1,
+            "export": 1,
+            "read": 1,
+            "report": 1,
+            "role": "Maintenance Manager",
+            "write": 1
+        },
+        {
+            "create": 1,
+            "read": 1,
+            "role": "Agent Bot",
+            "write": 1
+        }
+    ],
+    "row_format": "Dynamic",
+    "show_title_field_in_link": 1,
+    "sort_field": "last_seen",
+    "sort_order": "DESC",
+    "states": [
+        {
+            "color": "Blue",
+            "title": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
+        },
+        {
+            "color": "Yellow",
+            "title": "\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u0438\u0439"
+        },
+        {
+            "color": "Orange",
+            "title": "\u041e\u0444\u043b\u0430\u0439\u043d"
+        }
+    ],
+    "title_field": "hostname",
+    "track_changes": 1
 }

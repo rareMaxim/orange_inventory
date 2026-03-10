@@ -27,12 +27,13 @@ type UpdateResponse struct {
 }
 
 // checkForUpdate перевіряє наявність оновлень на сервері
-func checkForUpdate(config *Config) (*UpdateResponse, error) {
+func checkForUpdate(config *Config, agentID string) (*UpdateResponse, error) {
 	apiURL := config.ServerURL + "/api/method/orange_inventory.update_api.check_update"
 
 	// Формуємо запит
 	payload := map[string]string{
 		"current_version": AppVersion,
+		"agent_id":        agentID,
 	}
 	body, err := json.Marshal(payload)
 	if err != nil {
