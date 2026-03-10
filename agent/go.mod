@@ -1,11 +1,12 @@
 module orange_agent
 
-go 1.18
+go 1.24.0
 
 require (
+	github.com/gosnmp/gosnmp v1.43.2
 	github.com/shirou/gopsutil/v3 v3.24.1
 	github.com/yusufpapurcu/wmi v1.2.4
-	golang.org/x/sys v0.16.0
+	golang.org/x/sys v0.40.0
 )
 
 require (

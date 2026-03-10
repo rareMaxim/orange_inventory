@@ -250,6 +250,11 @@ def report_machine_data(static_data: str | None = None, dynamic_data: str | None
 	if dynamic:
 		_save_snapshot(agent.name, dynamic)
 
+		# Обробляємо SNMP звіти (MikroTik тощо)
+		snmp_reports = dynamic.get("snmp_reports", [])
+		if snmp_reports:
+			_process_snmp_reports(agent.name, snmp_reports)
+
 	# Зберігаємо дані про встановлене ПЗ
 	software_list = static.get("installed_software", [])
 	if software_list:
@@ -977,3 +982,121 @@ def get_blocked_domains(agent_id=None):
 	version_hash = hashlib.md5(version_input.encode()).hexdigest()[:8]
 
 	return {"domains": domains_list, "version": version_hash, "count": len(domains_list)}
+
+
+@frappe.whitelist()
+def get_snmp_targets(agent_id: str):
+	"""
+	Повертає список цілей для SNMP-сканування, закріплених за цим агентом.
+	Агент викликає цей метод перед основним циклом збору даних.
+	"""
+	if not agent_id:
+		return []
+
+	# Оримуємо назву агента за його ID
+	agent_name = frappe.db.get_value("oiAgent", {"agent_id": agent_id}, "name")
+	if not agent_name:
+		return []
+
+	# Знаходимо активи (MikroTik тощо), прив'язані до цього агента як сканера
+	assets = frappe.get_all(
+		"oiAsset",
+		filters={"scanning_agent": agent_name, "ip_address": ["is", "set"]},
+		fields=["name", "ip_address", "snmp_community"],
+	)
+
+	targets = []
+	for asset in assets:
+		targets.append(
+			{
+				"asset_name": asset.name,
+				"ip": asset.ip_address,
+				"community": asset.snmp_community or "public",
+				"version": "2c",  # Поки підтримуємо тільки v2c
+			}
+		)
+
+	return targets
+
+
+def _process_snmp_reports(agent_name: str, reports: list):
+	"""
+	Обробляє SNMP звіти, отримані від агента.
+	Оновлює статус портів та MAC-адреси мережевих пристроїв.
+	"""
+	for report in reports:
+		asset_name = report.get("asset_name")
+		if not asset_name or not frappe.db.exists("oiAsset", asset_name):
+			_log(f"SNMP: Asset {asset_name} not found, skipping report from {agent_name}")
+			continue
+
+		interfaces = report.get("interfaces", [])
+		_log(f"SNMP: Processing {len(interfaces)} interfaces for {asset_name} from {agent_name}")
+
+		# Збираємо всі MAC-адреси для активу (для мапи)
+		all_macs = []
+
+		for iface in interfaces:
+			ifname = iface.get("name")
+			mac = iface.get("mac", "").lower().strip()
+			status = iface.get("status")  # 1: up, 2: down
+			speed = iface.get("speed")  # в байтах/сек
+			idx = iface.get("index")
+
+			if mac and mac != "00:00:00:00:00:00":
+				all_macs.append(mac)
+
+			# Шукаємо існуючий порт (за назвою або індексом)
+			port_name = frappe.db.get_value(
+				"oiNetworkPort", {"asset": asset_name, "port_name": ifname}, "name"
+			)
+
+			if not port_name and idx:
+				port_name = frappe.db.get_value(
+					"oiNetworkPort", {"asset": asset_name, "snmp_index": idx}, "name"
+				)
+
+			if not port_name:
+				# Створюємо новий порт якщо не знайдено
+				port = frappe.new_doc("oiNetworkPort")
+				port.asset = asset_name
+				port.port_name = ifname
+				port.snmp_index = idx
+				port.mac_address = mac
+				port.insert(ignore_permissions=True)
+				port_name = port.name
+
+			# Оновлюємо дані порту
+			# Стан: 1=Up, 2=Down
+			frappe.db.set_value(
+				"oiNetworkPort",
+				port_name,
+				{
+					"mac_address": mac,
+					"is_active": 1 if status == 1 else 0,
+					"last_speed": _format_speed(speed) if speed else None,
+					"snmp_index": idx,
+				},
+				update_modified=False,
+			)
+
+		# Оновлюємо загальний список MAC-адрес активу
+		if all_macs:
+			current_macs = frappe.db.get_value("oiAsset", asset_name, "mac_addresses") or ""
+			new_macs_str = ", ".join(sorted(list(set(all_macs))))
+			if current_macs != new_macs_str:
+				frappe.db.set_value("oiAsset", asset_name, "mac_addresses", new_macs_str)
+
+
+def _format_speed(speed_bps: int) -> str:
+	"""Форматує швидкість у людиночитаний вигляд."""
+	if not speed_bps:
+		return "0 bps"
+
+	if speed_bps >= 1_000_000_000:
+		return f"{speed_bps / 1_000_000_000:.1f} Gbps"
+	if speed_bps >= 1_000_000:
+		return f"{speed_bps / 1_000_000:.1f} Mbps"
+	if speed_bps >= 1_000:
+		return f"{speed_bps / 1_000:.1f} Kbps"
+	return f"{speed_bps} bps"

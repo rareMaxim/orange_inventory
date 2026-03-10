@@ -15,7 +15,7 @@ import (
 
 // --- КОНСТАНТИ ---
 const (
-	AppVersion          = "1.12.3"
+	AppVersion          = "1.12.4"
 	TaskName            = "OrangeInventoryAgent"
 	TaskNameCommands    = "OrangeInventoryAgent_Commands"
 	TaskInterval        = 15 // хвилин (повний збір)
@@ -161,6 +161,22 @@ func runAgent() {
 	log.Printf("Current User: %s", dynamic.CurrentUser)
 	log.Printf("Uptime: %d seconds", dynamic.Uptime)
 	log.Printf("Neighbors: %d", len(dynamic.Neighbors))
+
+	// Збираємо дані SNMP якщо є конфігурація
+	if config != nil {
+		log.Println("\n=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===")
+		agentID := generateAgentID(static)
+		targets, err := GetSNMPTargets(config, agentID)
+		if err != nil {
+			log.Printf("⚠ Не вдалося отримати цілі SNMP: %v", err)
+		} else if len(targets) > 0 {
+			log.Printf("🔍 Знайдено %d цілей для SNMP сканування", len(targets))
+			dynamic.SNMPReports = CollectSNMP(targets)
+			log.Printf("✓ Зібрано %d SNMP звітів", len(dynamic.SNMPReports))
+		} else {
+			log.Println("ℹ Немає цілей для SNMP сканування")
+		}
+	}
 
 	// Відправляємо на сервер якщо є конфігурація
 	if config != nil {

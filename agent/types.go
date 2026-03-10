@@ -183,4 +183,30 @@ type DynamicData struct {
 	StartupItems  []StartupInfo   `json:"startup_items"`
 	Neighbors     []NeighborInfo  `json:"neighbors"`
 	Security      SecurityStatus  `json:"security"`
+	SNMPReports   []SNMPReport    `json:"snmp_reports,omitempty"`
+}
+
+// SNMPTarget представляє пристрій для опитування (отримується від сервера)
+type SNMPTarget struct {
+	AssetName string `json:"asset_name"`
+	IP        string `json:"ip"`
+	Community string `json:"community"`
+	Version   string `json:"version"`
+}
+
+// SNMPInterface представляє дані про мережевий інтерфейс (з SNMP)
+type SNMPInterface struct {
+	Index  int    `json:"index"`
+	Name   string `json:"name"`
+	MAC    string `json:"mac"`
+	Status int    `json:"status"` // 1: up, 2: down, etc.
+	Speed  uint64 `json:"speed"`
+}
+
+// SNMPReport містить результати опитування одного пристрою
+type SNMPReport struct {
+	AssetName  string          `json:"asset_name"`
+	IP         string          `json:"ip"`
+	Interfaces []SNMPInterface `json:"interfaces"`
+	Error      string          `json:"error,omitempty"`
 }

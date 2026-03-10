@@ -10,8 +10,11 @@
         "port_type",
         "column_break_vkhi",
         "is_wan_connection",
+        "is_active",
+        "last_speed",
         "port_name",
         "mac_address",
+        "snmp_index",
         "section_break_rnqo",
         "connected_asset",
         "column_break_sqiz",
@@ -30,6 +33,12 @@
             "fieldname": "mac_address",
             "fieldtype": "Data",
             "label": "MAC-\u0430\u0434\u0440\u0435\u0441\u0430"
+        },
+        {
+            "fieldname": "snmp_index",
+            "fieldtype": "Int",
+            "label": "SNMP Index",
+            "read_only": 1
         },
         {
             "fieldname": "port_type",
@@ -84,6 +93,19 @@
             "fieldname": "is_wan_connection",
             "fieldtype": "Check",
             "label": "\u041f\u0456\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u043d\u044f \u0434\u043e \u0406\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0443 (WAN)"
+        },
+        {
+            "default": "0",
+            "fieldname": "is_active",
+            "fieldtype": "Check",
+            "label": "\u0410\u043a\u0442\u0438\u0432\u043d\u0438\u0439",
+            "read_only": 1
+        },
+        {
+            "fieldname": "last_speed",
+            "fieldtype": "Data",
+            "label": "\u041e\u0441\u0442\u0430\u043d\u043d\u044f \u0448\u0432\u0438\u0434\u043a\u0456\u0441\u0442\u044c",
+            "read_only": 1
         }
     ],
     "grid_page_length": 50,

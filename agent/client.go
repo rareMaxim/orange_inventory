@@ -175,6 +175,43 @@ func doSendRequest(config *Config, staticJSON, dynamicJSON string) error {
 	return nil
 }
 
+// GetSNMPTargets отримує список цілей для SNMP сканування
+func GetSNMPTargets(config *Config, agentID string) ([]SNMPTarget, error) {
+	apiURL := config.ServerURL + "/api/method/orange_inventory.agent_api.get_snmp_targets"
+	
+	req, err := http.NewRequest("GET", apiURL, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	q := req.URL.Query()
+	q.Add("agent_id", agentID)
+	req.URL.RawQuery = q.Encode()
+
+	req.Header.Set("Authorization", "token "+config.APIKey+":"+config.APISecret)
+	req.Header.Set("Accept", "application/json")
+
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("помилка сервера: %d", resp.StatusCode)
+	}
+
+	var result struct {
+		Message []SNMPTarget `json:"message"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, err
+	}
+
+	return result.Message, nil
+}
+
 // --- ТИПИ ПОМИЛОК ---
 
 // NetworkError - помилка мережі (можна повторювати)
