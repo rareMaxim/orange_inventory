@@ -3,6 +3,7 @@
 
 import frappe
 
+from orange_inventory.agent_api.networking import _process_neighbors
 from orange_inventory.agent_api.utils import _log
 
 
@@ -86,6 +87,12 @@ def _process_snmp_reports(agent_name: str, reports: list):
 				},
 				update_modified=False,
 			)
+
+		# 6. Обробляємо сусідів (якщо вони є)
+		neighbors = report.get("neighbors")
+		if neighbors:
+			_log(f"SNMP: Processing {len(neighbors)} neighbors for {asset_name} from {agent_name}")
+			_process_neighbors(agent_name, asset_name, neighbors)
 
 		if all_macs:
 			current_macs = frappe.db.get_value("oiAsset", asset_name, "mac_addresses") or ""

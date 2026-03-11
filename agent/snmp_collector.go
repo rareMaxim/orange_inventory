@@ -144,5 +144,31 @@ func pollDevice(target SNMPTarget) (*SNMPReport, error) {
 		report.Interfaces = append(report.Interfaces, *iface)
 	}
 
+	// 5. Отримуємо сусідів (Bridge FDB Table)
+	// dot1dTpFdbAddress: 1.3.6.1.2.1.17.4.3.1.1
+	fdbAddresses, err := gs.WalkAll(".1.3.6.1.2.1.17.4.3.1.1")
+	if err == nil {
+		for _, pdu := range fdbAddresses {
+			val, ok := pdu.Value.([]byte)
+			if ok && len(val) == 6 {
+				mac := net.HardwareAddr(val).String()
+				// Пропускаємо власні MAC-адреси пристрою
+				isOwnMac := false
+				for _, iface := range report.Interfaces {
+					if strings.EqualFold(iface.MAC, mac) {
+						isOwnMac = true
+						break
+					}
+				}
+				if !isOwnMac {
+					report.Neighbors = append(report.Neighbors, NeighborInfo{
+						MACAddress: mac,
+						Interface:  "SNMP-Discovery",
+					})
+				}
+			}
+		}
+	}
+
 	return report, nil
 }

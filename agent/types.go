@@ -208,5 +208,6 @@ type SNMPReport struct {
 	AssetName  string          `json:"asset_name"`
 	IP         string          `json:"ip"`
 	Interfaces []SNMPInterface `json:"interfaces"`
+	Neighbors  []NeighborInfo  `json:"neighbors,omitempty"`
 	Error      string          `json:"error,omitempty"`
 }
