@@ -210,5 +210,40 @@ func pollDevice(target SNMPTarget) (*SNMPReport, error) {
 		}
 	}
 
+	// 6. Отримуємо сусідів через MikroTik Neighbor Discovery Protocol (MNDP)
+	// mtxrNeighborEntry: 1.3.6.1.4.1.14988.1.1.11.1.1
+	// mtxrNeighborMacAddress: .1.3.6.1.4.1.14988.1.1.11.1.1.3
+	// mtxrNeighborInterface: .1.3.6.1.4.1.14988.1.1.11.1.1.6
+	mndpMacs, errMndpMac := gs.WalkAll(".1.3.6.1.4.1.14988.1.1.11.1.1.3")
+	mndpIfaces, errMndpIface := gs.WalkAll(".1.3.6.1.4.1.14988.1.1.11.1.1.6")
+
+	if errMndpMac == nil && errMndpIface == nil && len(mndpMacs) > 0 {
+		mndpIfaceMap := make(map[string]string)
+		for _, pdu := range mndpIfaces {
+			parts := strings.Split(pdu.Name, ".")
+			if len(parts) > 0 {
+				suffix := parts[len(parts)-1]
+				mndpIfaceMap[suffix] = string(pdu.Value.([]byte))
+			}
+		}
+
+		for _, pdu := range mndpMacs {
+			val, ok := pdu.Value.([]byte)
+			if ok && len(val) == 6 {
+				mac := net.HardwareAddr(val).String()
+				parts := strings.Split(pdu.Name, ".")
+				if len(parts) > 0 {
+					suffix := parts[len(parts)-1]
+					if ifaceName, ok := mndpIfaceMap[suffix]; ok {
+						report.Neighbors = append(report.Neighbors, NeighborInfo{
+							MACAddress: mac,
+							Interface:  ifaceName,
+						})
+					}
+				}
+			}
+		}
+	}
+
 	return report, nil
 }

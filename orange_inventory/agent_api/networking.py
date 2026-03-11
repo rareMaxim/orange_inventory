@@ -11,6 +11,16 @@ from orange_inventory.agent_api.utils import _log
 from orange_inventory.discovery_utils import get_manufacturer_from_mac
 
 
+def _normalize_port_name(name: str) -> str:
+	"""Нормалізує назву порту для кращого зіставлення (напр. Eth1 -> ether1)."""
+	if not name:
+		return ""
+	n = name.lower().strip()
+	if "ether" not in n:
+		n = n.replace("eth ", "ether").replace("eth", "ether")
+	return n
+
+
 def _sync_network_ports(asset_name: str, adapters: list):
 	"""Синхронізує мережеві адаптери від агента з портами oiNetworkPort."""
 	for adapter in adapters:
@@ -20,18 +30,36 @@ def _sync_network_ports(asset_name: str, adapters: list):
 		if not mac or mac == "00:00:00:00:00:00":
 			continue
 
-		existing_port = frappe.db.get_value(
-			"oiNetworkPort", {"asset": asset_name, "mac_address": mac}, "name"
-		)
+		normalized_name = _normalize_port_name(name)
 
-		if not existing_port:
-			full_port_id = f"Auto-{name}"
-			existing_port = frappe.db.get_value(
-				"oiNetworkPort", {"asset": asset_name, "port_name": full_port_id}, "name"
+		# Збираємо всі порти, які нормалізуються до цього імені
+		all_matching_ports = []
+		all_ports = frappe.get_all(
+			"oiNetworkPort", filters={"asset": asset_name}, fields=["name", "port_name", "mac_address"]
+		)
+		for p in all_ports:
+			if _normalize_port_name(p.port_name) == normalized_name:
+				all_matching_ports.append(p)
+
+		existing_port = None
+		if all_matching_ports:
+			# Пріоритет: порт, який починається з Eth, або порт зі збігом MAC
+			all_matching_ports.sort(
+				key=lambda x: (
+					1 if x.port_name.startswith("Eth") else 0,
+					1 if x.mac_address == mac else 0,
+					-len(x.port_name),  # Довший зазвичай краще (Eth1 vs ether1)
+				),
+				reverse=True,
 			)
-			if not existing_port:
-				existing_port = frappe.db.get_value(
-					"oiNetworkPort", {"asset": asset_name, "port_name": name}, "name"
+
+			existing_port = all_matching_ports[0].name
+
+			# Видаляємо інші дублікати
+			for p in all_matching_ports[1:]:
+				frappe.db.delete("oiNetworkPort", p.name)
+				_log(
+					f"Discovery: Merging/Deleting duplicate port {p.port_name} into {all_matching_ports[0].port_name}"
 				)
 
 		if not existing_port:
@@ -39,7 +67,7 @@ def _sync_network_ports(asset_name: str, adapters: list):
 				{
 					"doctype": "oiNetworkPort",
 					"asset": asset_name,
-					"port_name": f"Auto-{name}",
+					"port_name": name,
 					"port_type": "Ethernet",
 					"mac_address": mac,
 				}
@@ -102,17 +130,30 @@ def _process_neighbors(agent_name: str, asset_name: str, neighbors: list):
 			if neighbor_asset and neighbor_asset != asset_name:
 				iface = neighbor.get("interface") or "eth0"
 
-				# Якщо ми знаємо фізичний інтерфейс, використовуємо його назву без суфікса MAC
-				# щоб не плодити сотні віртуальних портів
-				if iface != "SNMP-Discovery":
-					my_port_name = f"Auto-{iface}"
-				else:
-					my_port_name = f"Auto-SNMP-{neighbor_mac[-8:]}"
+				# Пріоритет: якщо це бездротовий порт, а у нас є спільні MAC з інфраструктурою (CAPsMAN),
+				# то краще ігнорувати цей зв'язок, якщо він суперечить дротовому.
+				is_wireless = any(x in iface.lower() for x in ["wlan", "wifi", "cap"])
 
-				existing_port = frappe.db.get_value(
-					"oiNetworkPort", {"asset": asset_name, "port_name": my_port_name}, "name"
+				normalized_iface = _normalize_port_name(iface)
+				my_port_name = iface  # Дефолт
+
+				# Шукаємо існуючий порт за нормалізованим іменем
+				all_asset_ports = frappe.get_all(
+					"oiNetworkPort", filters={"asset": asset_name}, fields=["name", "port_name"]
 				)
-				if not existing_port:
+				my_port_id = None
+				for p in all_asset_ports:
+					if _normalize_port_name(p.port_name) == normalized_iface:
+						my_port_id = p.name
+						my_port_name = p.port_name
+						break
+
+				if not my_port_id:
+					# Якщо порт не знайдено, створюємо "Auto-" порт, але тільки якщо це не SNMP-Discovery
+					if iface == "SNMP-Discovery":
+						continue
+
+					my_port_name = f"Auto-{iface}"
 					my_port = frappe.get_doc(
 						{
 							"doctype": "oiNetworkPort",
@@ -122,8 +163,29 @@ def _process_neighbors(agent_name: str, asset_name: str, neighbors: list):
 						}
 					)
 					my_port.insert(ignore_permissions=True)
+					my_port_id = my_port.name
 				else:
-					my_port = frappe.get_doc("oiNetworkPort", existing_port)
+					my_port = frappe.get_doc("oiNetworkPort", my_port_id)
+
+				# ПЕРЕВІРКА ПРІОРИТЕТУ: Не підключаємо той самий актив до бездротового порту,
+				# якщо він вже підключений до якогось дротового порту цього ж пристрою.
+				if is_wireless:
+					already_connected_wired = frappe.db.sql(
+						"""
+						SELECT name FROM `taboiNetworkPort`
+						WHERE asset = %s
+						AND connected_asset = %s
+						AND port_name NOT LIKE '%%wlan%%'
+						AND port_name NOT LIKE '%%wifi%%'
+						AND port_name NOT LIKE '%%cap%%'
+					""",
+						(asset_name, neighbor_asset),
+					)
+					if already_connected_wired:
+						_log(
+							f"Discovery: Skipping wireless connection for {neighbor_asset} on {asset_name} because wired connection already exists."
+						)
+						continue
 
 				their_port_name = frappe.db.get_value("oiNetworkPort", {"mac_address": neighbor_mac}, "name")
 				if not their_port_name:
