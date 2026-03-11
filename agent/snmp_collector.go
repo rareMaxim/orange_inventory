@@ -144,14 +144,54 @@ func pollDevice(target SNMPTarget) (*SNMPReport, error) {
 		report.Interfaces = append(report.Interfaces, *iface)
 	}
 
-	// 5. Отримуємо сусідів (Bridge FDB Table)
+	// 5. Отримуємо сусідів (Bridge FDB Table) та їх порти
 	// dot1dTpFdbAddress: 1.3.6.1.2.1.17.4.3.1.1
-	fdbAddresses, err := gs.WalkAll(".1.3.6.1.2.1.17.4.3.1.1")
-	if err == nil {
+	// dot1dTpFdbPort: 1.3.6.1.2.1.17.4.3.1.2
+	// dot1dBasePortIfIndex: 1.3.6.1.2.1.17.1.4.1.2
+	
+	fdbAddresses, errAddr := gs.WalkAll(".1.3.6.1.2.1.17.4.3.1.1")
+	fdbPorts, errPort := gs.WalkAll(".1.3.6.1.2.1.17.4.3.1.2")
+	basePortIfIndices, errIdx := gs.WalkAll(".1.3.6.1.2.1.17.1.4.1.2")
+
+	if errAddr == nil && errPort == nil {
+		// Карта suffix -> bridgePort
+		suffixToBridgePort := make(map[string]int)
+		for _, pdu := range fdbPorts {
+			parts := strings.Split(pdu.Name, ".")
+			if len(parts) >= 6 {
+				suffix := strings.Join(parts[len(parts)-6:], ".")
+				suffixToBridgePort[suffix] = pdu.Value.(int)
+			}
+		}
+
+		// Карта bridgePort -> ifIndex
+		bridgePortToIfIndex := make(map[int]int)
+		if errIdx == nil {
+			for _, pdu := range basePortIfIndices {
+				idx := getIndex(pdu.Name)
+				bridgePortToIfIndex[idx] = pdu.Value.(int)
+			}
+		}
+
 		for _, pdu := range fdbAddresses {
 			val, ok := pdu.Value.([]byte)
 			if ok && len(val) == 6 {
 				mac := net.HardwareAddr(val).String()
+				
+				// Визначаємо ім'я інтерфейсу
+				ifaceName := "SNMP-Discovery"
+				parts := strings.Split(pdu.Name, ".")
+				if len(parts) >= 6 {
+					suffix := strings.Join(parts[len(parts)-6:], ".")
+					if bPort, ok := suffixToBridgePort[suffix]; ok {
+						if ifIdx, ok := bridgePortToIfIndex[bPort]; ok {
+							if resIface, ok := ifaces[ifIdx]; ok {
+								ifaceName = resIface.Name
+							}
+						}
+					}
+				}
+
 				// Пропускаємо власні MAC-адреси пристрою
 				isOwnMac := false
 				for _, iface := range report.Interfaces {
@@ -163,7 +203,7 @@ func pollDevice(target SNMPTarget) (*SNMPReport, error) {
 				if !isOwnMac {
 					report.Neighbors = append(report.Neighbors, NeighborInfo{
 						MACAddress: mac,
-						Interface:  "SNMP-Discovery",
+						Interface:  ifaceName,
 					})
 				}
 			}

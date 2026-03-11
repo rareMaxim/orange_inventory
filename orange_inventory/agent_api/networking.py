@@ -77,6 +77,10 @@ def _process_neighbors(agent_name: str, asset_name: str, neighbors: list):
 					neighbor_asset = neighbor_asset[0].name
 
 			if not neighbor_asset:
+				if neighbor.get("interface") == "SNMP-Discovery":
+					# Не створюємо активи для випадкових MAC-адрес із таблиці bridge FDB
+					continue
+
 				_log(f"Discovery: Found new device {neighbor_mac} ({neighbor_ip}), creating Asset...")
 				manufacturer = get_manufacturer_from_mac(neighbor_mac)
 				asset = frappe.new_doc("oiAsset")
@@ -97,8 +101,18 @@ def _process_neighbors(agent_name: str, asset_name: str, neighbors: list):
 
 			if neighbor_asset and neighbor_asset != asset_name:
 				iface = neighbor.get("interface") or "eth0"
-				my_port_name = f"Auto-{iface}-{neighbor_mac[-8:]}"
-				if not frappe.db.exists("oiNetworkPort", {"asset": asset_name, "port_name": my_port_name}):
+
+				# Якщо ми знаємо фізичний інтерфейс, використовуємо його назву без суфікса MAC
+				# щоб не плодити сотні віртуальних портів
+				if iface != "SNMP-Discovery":
+					my_port_name = f"Auto-{iface}"
+				else:
+					my_port_name = f"Auto-SNMP-{neighbor_mac[-8:]}"
+
+				existing_port = frappe.db.get_value(
+					"oiNetworkPort", {"asset": asset_name, "port_name": my_port_name}, "name"
+				)
+				if not existing_port:
 					my_port = frappe.get_doc(
 						{
 							"doctype": "oiNetworkPort",
@@ -109,9 +123,7 @@ def _process_neighbors(agent_name: str, asset_name: str, neighbors: list):
 					)
 					my_port.insert(ignore_permissions=True)
 				else:
-					my_port = frappe.get_doc(
-						"oiNetworkPort", {"asset": asset_name, "port_name": my_port_name}
-					)
+					my_port = frappe.get_doc("oiNetworkPort", existing_port)
 
 				their_port_name = frappe.db.get_value("oiNetworkPort", {"mac_address": neighbor_mac}, "name")
 				if not their_port_name:
