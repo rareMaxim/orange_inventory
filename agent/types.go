@@ -211,3 +211,19 @@ type SNMPReport struct {
 	Neighbors  []NeighborInfo  `json:"neighbors,omitempty"`
 	Error      string          `json:"error,omitempty"`
 }
+
+// DiscoverySettings містить налаштування для автоматичного виявлення
+type DiscoverySettings struct {
+	Subnets     []string `json:"subnets"`
+	Communities []string `json:"communities"`
+	Schedule    string   `json:"schedule"`
+}
+
+// DiscoveryReport містить дані про знайдений пристрій
+type DiscoveryReport struct {
+	IP        string `json:"ip"`
+	MAC       string `json:"mac,omitempty"`
+	Community string `json:"community"`
+	SysName   string `json:"sys_name"`
+	SysDescr  string `json:"sys_descr"`
+}

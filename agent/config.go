@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 // --- КОНФІГУРАЦІЯ ---
@@ -25,8 +26,8 @@ func loadConfig() (*Config, error) {
 	}
 
 	// Отримуємо директорію executable
-	exeDir := exePath[:len(exePath)-len("orange_agent.exe")]
-	configPath := exeDir + "config.json"
+	exeDir := filepath.Dir(exePath)
+	configPath := filepath.Join(exeDir, "config.json")
 
 	// Спробуємо прочитати з директорії executable
 	data, err := os.ReadFile(configPath)

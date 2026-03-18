@@ -23,6 +23,12 @@ class oiNetworkPort(Document):
 		port_type: DF.Data | None
 	# end: auto-generated types
 
+	def autoname(self):
+		if self.asset and self.port_name:
+			# Замінюємо '#' на 'No.', щоб уникнути помилок з генерацією імен типу InvalidNamingSeriesError
+			safe_port = self.port_name.replace("#", "No.")
+			self.name = f"{self.asset}-{safe_port}"[:140]
+
 	def on_update(self):
 		"""
 		Синхронізує з'єднання між портами після збереження.

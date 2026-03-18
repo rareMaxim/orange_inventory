@@ -1,0 +1,290 @@
+2026/03/11 14:55:41 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 14:55:41 orange_agent.go:122: ============================
+2026/03/11 14:55:41 orange_agent.go:133: ⚠ Конфігурацію не знайдено: не вдалося прочитати config.json: open config.json: no such file or directory
+2026/03/11 14:55:41 orange_agent.go:134: Запуск в режимі локального виводу (без відправки на сервер)
+2026/03/11 14:55:41 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 14:55:41 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 14:55:41 orange_agent.go:150: OS: linux 22.04
+2026/03/11 14:55:41 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 14:55:41 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 14:55:41 orange_agent.go:153: Serial: 
+2026/03/11 14:55:41 orange_agent.go:154: Certificates: 0
+2026/03/11 14:55:41 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 14:55:42 orange_agent.go:159: CPU Usage: 3.8%
+2026/03/11 14:55:42 orange_agent.go:160: RAM Usage: 30.9%
+2026/03/11 14:55:42 orange_agent.go:161: Current User: frappe
+2026/03/11 14:55:42 orange_agent.go:162: Uptime: 1318829 seconds
+2026/03/11 14:55:42 orange_agent.go:163: Neighbors: 11
+2026/03/11 14:55:42 orange_agent.go:355: 
+=== STATIC DATA JSON ===
+2026/03/11 14:55:42 orange_agent.go:359: 
+=== DYNAMIC DATA JSON ===
+2026/03/11 14:56:02 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 14:56:02 orange_agent.go:122: ============================
+2026/03/11 14:56:02 orange_agent.go:133: ⚠ Конфігурацію не знайдено: не вдалося прочитати config.json: open config.json: no such file or directory
+2026/03/11 14:56:02 orange_agent.go:134: Запуск в режимі локального виводу (без відправки на сервер)
+2026/03/11 14:56:02 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 14:56:02 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 14:56:02 orange_agent.go:150: OS: linux 22.04
+2026/03/11 14:56:02 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 14:56:02 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 14:56:02 orange_agent.go:153: Serial: 
+2026/03/11 14:56:02 orange_agent.go:154: Certificates: 0
+2026/03/11 14:56:02 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 14:56:03 orange_agent.go:159: CPU Usage: 49.2%
+2026/03/11 14:56:03 orange_agent.go:160: RAM Usage: 31.8%
+2026/03/11 14:56:03 orange_agent.go:161: Current User: frappe
+2026/03/11 14:56:03 orange_agent.go:162: Uptime: 1318850 seconds
+2026/03/11 14:56:03 orange_agent.go:163: Neighbors: 11
+2026/03/11 14:56:03 orange_agent.go:355: 
+=== STATIC DATA JSON ===
+2026/03/11 14:56:03 orange_agent.go:359: 
+=== DYNAMIC DATA JSON ===
+2026/03/11 15:12:04 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 15:12:04 orange_agent.go:122: ============================
+2026/03/11 15:12:04 orange_agent.go:133: ⚠ Конфігурацію не знайдено: невалідний JSON у config.json: invalid character 'T' looking for beginning of value
+2026/03/11 15:12:04 orange_agent.go:134: Запуск в режимі локального виводу (без відправки на сервер)
+2026/03/11 15:12:04 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 15:12:04 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 15:12:04 orange_agent.go:150: OS: linux 22.04
+2026/03/11 15:12:04 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 15:12:04 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 15:12:04 orange_agent.go:153: Serial: 
+2026/03/11 15:12:04 orange_agent.go:154: Certificates: 0
+2026/03/11 15:12:04 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 15:12:05 orange_agent.go:159: CPU Usage: 4.5%
+2026/03/11 15:12:05 orange_agent.go:160: RAM Usage: 31.5%
+2026/03/11 15:12:05 orange_agent.go:161: Current User: frappe
+2026/03/11 15:12:05 orange_agent.go:162: Uptime: 1319812 seconds
+2026/03/11 15:12:05 orange_agent.go:163: Neighbors: 11
+2026/03/11 15:12:05 orange_agent.go:355: 
+=== STATIC DATA JSON ===
+2026/03/11 15:12:05 orange_agent.go:359: 
+=== DYNAMIC DATA JSON ===
+2026/03/11 15:16:24 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 15:16:24 orange_agent.go:122: ============================
+2026/03/11 15:16:24 orange_agent.go:133: ⚠ Конфігурацію не знайдено: api_key та api_secret обов'язкові у config.json
+2026/03/11 15:16:24 orange_agent.go:134: Запуск в режимі локального виводу (без відправки на сервер)
+2026/03/11 15:16:24 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 15:16:24 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 15:16:24 orange_agent.go:150: OS: linux 22.04
+2026/03/11 15:16:24 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 15:16:24 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 15:16:24 orange_agent.go:153: Serial: 
+2026/03/11 15:16:24 orange_agent.go:154: Certificates: 0
+2026/03/11 15:16:24 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 15:16:25 orange_agent.go:159: CPU Usage: 3.3%
+2026/03/11 15:16:25 orange_agent.go:160: RAM Usage: 31.1%
+2026/03/11 15:16:25 orange_agent.go:161: Current User: frappe
+2026/03/11 15:16:25 orange_agent.go:162: Uptime: 1320072 seconds
+2026/03/11 15:16:25 orange_agent.go:163: Neighbors: 11
+2026/03/11 15:16:25 orange_agent.go:355: 
+=== STATIC DATA JSON ===
+2026/03/11 15:16:25 orange_agent.go:359: 
+=== DYNAMIC DATA JSON ===
+2026/03/11 15:17:12 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 15:17:12 orange_agent.go:122: ============================
+2026/03/11 15:17:12 orange_agent.go:137: ✓ Конфігурація завантажена (сервер: http://127.0.0.1:8000)
+2026/03/11 15:17:12 orange_agent.go:226: 
+=== ПЕРЕВІРКА ОНОВЛЕНЬ ===
+2026/03/11 15:17:12 orange_agent.go:239: ✓ Версія актуальна (1.12.6)
+2026/03/11 15:17:12 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 15:17:12 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 15:17:12 orange_agent.go:150: OS: linux 22.04
+2026/03/11 15:17:12 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 15:17:12 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 15:17:12 orange_agent.go:153: Serial: 
+2026/03/11 15:17:12 orange_agent.go:154: Certificates: 0
+2026/03/11 15:17:12 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 15:17:13 orange_agent.go:159: CPU Usage: 5.8%
+2026/03/11 15:17:13 orange_agent.go:160: RAM Usage: 32.2%
+2026/03/11 15:17:13 orange_agent.go:161: Current User: frappe
+2026/03/11 15:17:13 orange_agent.go:162: Uptime: 1320120 seconds
+2026/03/11 15:17:13 orange_agent.go:163: Neighbors: 11
+2026/03/11 15:17:13 network_scanner.go:94: 
+=== AUTO-DISCOVERY SCAN ===
+2026/03/11 15:17:13 network_scanner.go:101: ℹ Auto-Discovery не налаштовано для цього агента
+2026/03/11 15:17:13 orange_agent.go:172: 
+=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===
+2026/03/11 15:17:13 orange_agent.go:181: ℹ Немає цілей для SNMP сканування
+2026/03/11 15:17:13 orange_agent.go:187: 
+=== ВІДПРАВКА НА СЕРВЕР ===
+2026/03/11 15:17:15 client.go:170: ✓ Створено новий актив: 
+2026/03/11 15:17:15 orange_agent.go:192: ✓ Дані успішно відправлено!
+2026/03/11 15:17:15 orange_agent.go:199: 
+=== ПОЛІТИКИ БЛОКУВАННЯ ПЗ ===
+2026/03/11 15:17:15 policy_linux.go:14: ℹ Блокування ПЗ не підтримується на Linux
+2026/03/11 15:17:15 orange_agent.go:205: 
+=== БЛОКУВАННЯ ДОМЕНІВ ===
+2026/03/11 15:17:15 policy_linux.go:26: ℹ Блокування доменів на Linux - заплановано
+2026/03/11 15:17:15 orange_agent.go:211: 
+=== ВІДДАЛЕНІ КОМАНДИ ===
+2026/03/11 15:18:43 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 15:18:43 orange_agent.go:122: ============================
+2026/03/11 15:18:43 orange_agent.go:137: ✓ Конфігурація завантажена (сервер: http://127.0.0.1:8000)
+2026/03/11 15:18:43 orange_agent.go:226: 
+=== ПЕРЕВІРКА ОНОВЛЕНЬ ===
+2026/03/11 15:18:43 orange_agent.go:239: ✓ Версія актуальна (1.12.6)
+2026/03/11 15:18:43 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 15:18:43 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 15:18:43 orange_agent.go:150: OS: linux 22.04
+2026/03/11 15:18:43 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 15:18:43 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 15:18:43 orange_agent.go:153: Serial: 
+2026/03/11 15:18:43 orange_agent.go:154: Certificates: 0
+2026/03/11 15:18:43 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 15:18:44 orange_agent.go:159: CPU Usage: 4.1%
+2026/03/11 15:18:44 orange_agent.go:160: RAM Usage: 30.6%
+2026/03/11 15:18:44 orange_agent.go:161: Current User: frappe
+2026/03/11 15:18:44 orange_agent.go:162: Uptime: 1320210 seconds
+2026/03/11 15:18:44 orange_agent.go:163: Neighbors: 11
+2026/03/11 15:18:44 network_scanner.go:94: 
+=== AUTO-DISCOVERY SCAN ===
+2026/03/11 15:18:44 network_scanner.go:97: ⚠ Не вдалося отримати налаштування Discovery: помилка сервера: 500
+2026/03/11 15:18:44 orange_agent.go:172: 
+=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===
+2026/03/11 15:18:44 orange_agent.go:181: ℹ Немає цілей для SNMP сканування
+2026/03/11 15:18:44 orange_agent.go:187: 
+=== ВІДПРАВКА НА СЕРВЕР ===
+2026/03/11 15:18:45 client.go:172: ✓ Оновлено актив: 
+2026/03/11 15:18:45 orange_agent.go:192: ✓ Дані успішно відправлено!
+2026/03/11 15:18:45 orange_agent.go:199: 
+=== ПОЛІТИКИ БЛОКУВАННЯ ПЗ ===
+2026/03/11 15:18:45 policy_linux.go:14: ℹ Блокування ПЗ не підтримується на Linux
+2026/03/11 15:18:45 orange_agent.go:205: 
+=== БЛОКУВАННЯ ДОМЕНІВ ===
+2026/03/11 15:18:45 policy_linux.go:26: ℹ Блокування доменів на Linux - заплановано
+2026/03/11 15:18:45 orange_agent.go:211: 
+=== ВІДДАЛЕНІ КОМАНДИ ===
+2026/03/11 15:37:57 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 15:37:57 orange_agent.go:122: ============================
+2026/03/11 15:37:57 orange_agent.go:137: ✓ Конфігурація завантажена (сервер: http://127.0.0.1:8000)
+2026/03/11 15:37:57 orange_agent.go:226: 
+=== ПЕРЕВІРКА ОНОВЛЕНЬ ===
+2026/03/11 15:37:57 orange_agent.go:239: ✓ Версія актуальна (1.12.6)
+2026/03/11 15:37:57 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 15:37:57 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 15:37:57 orange_agent.go:150: OS: linux 22.04
+2026/03/11 15:37:57 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 15:37:57 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 15:37:57 orange_agent.go:153: Serial: 
+2026/03/11 15:37:57 orange_agent.go:154: Certificates: 0
+2026/03/11 15:37:57 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 15:37:58 orange_agent.go:159: CPU Usage: 3.3%
+2026/03/11 15:37:58 orange_agent.go:160: RAM Usage: 31.5%
+2026/03/11 15:37:58 orange_agent.go:161: Current User: frappe
+2026/03/11 15:37:58 orange_agent.go:162: Uptime: 1321365 seconds
+2026/03/11 15:37:58 orange_agent.go:163: Neighbors: 11
+2026/03/11 15:37:58 network_scanner.go:94: 
+=== AUTO-DISCOVERY SCAN ===
+2026/03/11 15:37:58 network_scanner.go:105: 🔍 Початок Auto-Discovery. Підмережі: 2, Ком'юніті: 1
+2026/03/11 15:37:58 network_scanner.go:118: ℹ Немає IP для сканування
+2026/03/11 15:37:58 orange_agent.go:172: 
+=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===
+2026/03/11 15:37:58 orange_agent.go:181: ℹ Немає цілей для SNMP сканування
+2026/03/11 15:37:58 orange_agent.go:187: 
+=== ВІДПРАВКА НА СЕРВЕР ===
+2026/03/11 15:37:59 client.go:172: ✓ Оновлено актив: 
+2026/03/11 15:37:59 orange_agent.go:192: ✓ Дані успішно відправлено!
+2026/03/11 15:37:59 orange_agent.go:199: 
+=== ПОЛІТИКИ БЛОКУВАННЯ ПЗ ===
+2026/03/11 15:37:59 policy_linux.go:14: ℹ Блокування ПЗ не підтримується на Linux
+2026/03/11 15:37:59 orange_agent.go:205: 
+=== БЛОКУВАННЯ ДОМЕНІВ ===
+2026/03/11 15:37:59 policy_linux.go:26: ℹ Блокування доменів на Linux - заплановано
+2026/03/11 15:37:59 orange_agent.go:211: 
+=== ВІДДАЛЕНІ КОМАНДИ ===
+2026/03/11 15:44:25 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 15:44:25 orange_agent.go:122: ============================
+2026/03/11 15:44:25 orange_agent.go:137: ✓ Конфігурація завантажена (сервер: http://127.0.0.1:8000)
+2026/03/11 15:44:25 orange_agent.go:226: 
+=== ПЕРЕВІРКА ОНОВЛЕНЬ ===
+2026/03/11 15:44:25 orange_agent.go:239: ✓ Версія актуальна (1.12.6)
+2026/03/11 15:44:25 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 15:44:25 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 15:44:25 orange_agent.go:150: OS: linux 22.04
+2026/03/11 15:44:25 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 15:44:25 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 15:44:25 orange_agent.go:153: Serial: 
+2026/03/11 15:44:25 orange_agent.go:154: Certificates: 0
+2026/03/11 15:44:25 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 15:44:26 orange_agent.go:159: CPU Usage: 7.1%
+2026/03/11 15:44:26 orange_agent.go:160: RAM Usage: 31.6%
+2026/03/11 15:44:26 orange_agent.go:161: Current User: frappe
+2026/03/11 15:44:26 orange_agent.go:162: Uptime: 1321752 seconds
+2026/03/11 15:44:26 orange_agent.go:163: Neighbors: 11
+2026/03/11 15:44:26 network_scanner.go:94: 
+=== AUTO-DISCOVERY SCAN ===
+2026/03/11 15:44:26 network_scanner.go:105: 🔍 Початок Auto-Discovery. Підмережі: 2, Ком'юніті: 1
+2026/03/11 15:44:26 network_scanner.go:118: ℹ Немає IP для сканування
+2026/03/11 15:44:26 orange_agent.go:172: 
+=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===
+2026/03/11 15:44:26 orange_agent.go:181: ℹ Немає цілей для SNMP сканування
+2026/03/11 15:44:26 orange_agent.go:187: 
+=== ВІДПРАВКА НА СЕРВЕР ===
+2026/03/11 15:44:27 client.go:172: ✓ Оновлено актив: 
+2026/03/11 15:44:27 orange_agent.go:192: ✓ Дані успішно відправлено!
+2026/03/11 15:44:27 orange_agent.go:199: 
+=== ПОЛІТИКИ БЛОКУВАННЯ ПЗ ===
+2026/03/11 15:44:27 policy_linux.go:14: ℹ Блокування ПЗ не підтримується на Linux
+2026/03/11 15:44:27 orange_agent.go:205: 
+=== БЛОКУВАННЯ ДОМЕНІВ ===
+2026/03/11 15:44:27 policy_linux.go:26: ℹ Блокування доменів на Linux - заплановано
+2026/03/11 15:44:27 orange_agent.go:211: 
+=== ВІДДАЛЕНІ КОМАНДИ ===
+2026/03/11 15:45:26 orange_agent.go:121: Orange Inventory Agent v1.12.6
+2026/03/11 15:45:26 orange_agent.go:122: ============================
+2026/03/11 15:45:26 orange_agent.go:137: ✓ Конфігурація завантажена (сервер: http://127.0.0.1:8000)
+2026/03/11 15:45:26 orange_agent.go:226: 
+=== ПЕРЕВІРКА ОНОВЛЕНЬ ===
+2026/03/11 15:45:26 orange_agent.go:239: ✓ Версія актуальна (1.12.6)
+2026/03/11 15:45:26 orange_agent.go:147: 
+=== ЗБІР СТАТИЧНИХ ДАНИХ ===
+2026/03/11 15:45:26 orange_agent.go:149: Hostname: frappe-develop
+2026/03/11 15:45:26 orange_agent.go:150: OS: linux 22.04
+2026/03/11 15:45:26 orange_agent.go:151: CPU: Intel(R) Xeon(R) Gold 6226R CPU @ 2.90GHz (4 cores)
+2026/03/11 15:45:26 orange_agent.go:152: RAM: 16.00 GB
+2026/03/11 15:45:26 orange_agent.go:153: Serial: 
+2026/03/11 15:45:26 orange_agent.go:154: Certificates: 0
+2026/03/11 15:45:26 orange_agent.go:157: 
+=== ЗБІР ДИНАМІЧНИХ ДАНИХ ===
+2026/03/11 15:45:27 orange_agent.go:159: CPU Usage: 5.3%
+2026/03/11 15:45:27 orange_agent.go:160: RAM Usage: 32.0%
+2026/03/11 15:45:27 orange_agent.go:161: Current User: frappe
+2026/03/11 15:45:27 orange_agent.go:162: Uptime: 1321814 seconds
+2026/03/11 15:45:27 orange_agent.go:163: Neighbors: 11
+2026/03/11 15:45:27 network_scanner.go:94: 
+=== AUTO-DISCOVERY SCAN ===
+2026/03/11 15:45:27 network_scanner.go:105: 🔍 Початок Auto-Discovery. Підмережі: 2, Ком'юніті: 1
+2026/03/11 15:45:27 network_scanner.go:118: ℹ Немає IP для сканування
+2026/03/11 15:45:27 orange_agent.go:172: 
+=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===
+2026/03/11 15:45:27 orange_agent.go:181: ℹ Немає цілей для SNMP сканування
+2026/03/11 15:45:27 orange_agent.go:187: 
+=== ВІДПРАВКА НА СЕРВЕР ===
+2026/03/11 15:45:28 client.go:172: ✓ Оновлено актив: 
+2026/03/11 15:45:28 orange_agent.go:192: ✓ Дані успішно відправлено!
+2026/03/11 15:45:28 orange_agent.go:199: 
+=== ПОЛІТИКИ БЛОКУВАННЯ ПЗ ===
+2026/03/11 15:45:28 policy_linux.go:14: ℹ Блокування ПЗ не підтримується на Linux
+2026/03/11 15:45:28 orange_agent.go:205: 
+=== БЛОКУВАННЯ ДОМЕНІВ ===
+2026/03/11 15:45:28 policy_linux.go:26: ℹ Блокування доменів на Linux - заплановано
+2026/03/11 15:45:28 orange_agent.go:211: 
+=== ВІДДАЛЕНІ КОМАНДИ ===

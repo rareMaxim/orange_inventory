@@ -164,8 +164,12 @@ func runAgent() {
 
 	// Збираємо дані SNMP якщо є конфігурація
 	if config != nil {
-		log.Println("\n=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===")
 		agentID := generateAgentID(static)
+		
+		// Запускаємо Network Auto-Discovery
+		RunNetworkDiscovery(config, agentID)
+		
+		log.Println("\n=== ЗБІР ДАНИХ SNMP (MikroTik тощо) ===")
 		targets, err := GetSNMPTargets(config, agentID)
 		if err != nil {
 			log.Printf("⚠ Не вдалося отримати цілі SNMP: %v", err)
