@@ -696,15 +696,15 @@ def _get_org_meta(org: str) -> dict:
 	row = frappe.db.get_value(
 		"hromsOrgStructure",
 		org,
-		["department_name", "abbreviation", "tax_code", "name"],
+		["department_name", "tax_code", "name"],
 		as_dict=True,
 	)
 	if not row:
 		return {"title": str(org), "abbreviation": "", "tax_code": "", "name": str(org)}
-	title = row.department_name or row.abbreviation or row.name
+	title = row.department_name or row.name
 	return {
 		"title": title,
-		"abbreviation": row.abbreviation or "",
+		"abbreviation": "",
 		"tax_code": row.tax_code or "",
 		"name": row.name or org,
 	}
@@ -813,7 +813,7 @@ def export_all_org_templates(period: str | None = None):
 
 	orgs = frappe.get_all(
 		"hromsOrgStructure",
-		filters={"enabled": 1},
+		filters={"status": "Активний"},
 		pluck="name",
 	)
 	if not orgs:
@@ -1242,8 +1242,8 @@ def generate_completion_report(period: str | None = None):
 	# Отримати всі активні організації
 	orgs = frappe.get_all(
 		"hromsOrgStructure",
-		filters={"enabled": 1},
-		fields=["name", "department_name", "abbreviation"],
+		filters={"status": "Активний"},
+		fields=["name", "department_name"],
 		order_by="department_name",
 	)
 
@@ -1256,7 +1256,7 @@ def generate_completion_report(period: str | None = None):
 
 	for org in orgs:
 		org_name = org.name
-		org_title = org.department_name or org.abbreviation or org_name
+		org_title = org.department_name or org_name
 
 		# Отримати всі показники для організації (листи, не групи)
 		indicators = frappe.get_all(

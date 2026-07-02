@@ -28,6 +28,16 @@ class oiAsset(Document):
 		)
 
 		acquisition_date: DF.Date | None
+		agent: DF.Link | None
+		agent_cpu_cores: DF.Int
+		agent_cpu_model: DF.Data | None
+		agent_hostname: DF.Data | None
+		agent_id: DF.Data | None
+		agent_last_seen: DF.Datetime | None
+		agent_os: DF.Data | None
+		agent_ram_total_gb: DF.Float
+		agent_raw_data: DF.Code | None
+		asset_group: DF.Link | None
 		asset_name: DF.SmallText
 		asset_type: DF.Link | None
 		asset_user: DF.Link | None
@@ -41,8 +51,10 @@ class oiAsset(Document):
 		inventory_date: DF.Date | None
 		inventory_no: DF.Data | None
 		inventory_status: DF.Data | None
+		ip_address: DF.Data | None
 		is_network_device: DF.Check
 		location: DF.Link | None
+		mac_addresses: DF.SmallText | None
 		manufacturer: DF.Link | None
 		movement_history: DF.Table[oiAssetMovementHistory]
 		naming_series: DF.Literal["ASSET-.#####"]
@@ -50,7 +62,9 @@ class oiAsset(Document):
 		parent_asset: DF.Link | None
 		quantity: DF.Float
 		responsible_employee: DF.Link | None
+		scanning_agent: DF.Link | None
 		serial_no: DF.Data | None
+		snmp_community: DF.Data | None
 		source_project: DF.Link | None
 		status: DF.Literal[
 			"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f",

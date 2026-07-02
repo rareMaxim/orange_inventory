@@ -1,555 +1,554 @@
 {
-    "actions": [],
-    "allow_rename": 1,
-    "autoname": "naming_series:",
-    "creation": "2025-08-04 10:40:21.713300",
-    "doctype": "DocType",
-    "engine": "InnoDB",
-    "field_order": [
-        "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
-        "asset_name",
-        "inventory_no",
-        "serial_no",
-        "inventory_date",
-        "inventory_status",
-        "enabled",
-        "column_break_nciz",
-        "status",
-        "asset_group",
-        "scanning_agent",
-        "snmp_community",
-        "manufacturer",
-        "hardware_model",
-        "type",
-        "naming_series",
-        "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
-        "responsible_employee",
-        "current_owner",
-        "column_break_ivjv",
-        "location",
-        "asset_user",
-        "acquisition_details_sb",
-        "asset_type",
-        "original_donor",
-        "source_project",
-        "contract",
-        "column_break_cgpf",
-        "acquisition_date",
-        "cost",
-        "quantity",
-        "total",
-        "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
-        "column_break_bpvr",
-        "movement_history",
-        "components_tab",
-        "components_section",
-        "components",
-        "network_tab",
-        "ip_address",
-        "mac_addresses",
-        "network_ports_dashboard",
-        "agent_tab",
-        "agent_info_section",
-        "agent",
-        "agent_id",
-        "agent_hostname",
-        "agent_os",
-        "agent_last_seen",
-        "column_break_agent",
-        "agent_cpu_model",
-        "agent_cpu_cores",
-        "agent_ram_total_gb",
-        "agent_raw_data_section",
-        "agent_raw_data",
-        "dev_tab",
-        "image",
-        "is_network_device",
-        "parent_asset"
-    ],
-    "fields": [
-        {
-            "fieldname": "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
-            "fieldtype": "Section Break",
-            "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
-        },
-        {
-            "allow_in_quick_entry": 1,
-            "fieldname": "asset_name",
-            "fieldtype": "Small Text",
-            "in_list_view": 1,
-            "in_preview": 1,
-            "label": "\u041d\u0430\u0439\u043c\u0435\u043d\u0443\u0432\u0430\u043d\u043d\u044f",
-            "reqd": 1
-        },
-        {
-            "default": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f",
-            "fieldname": "status",
-            "fieldtype": "Select",
-            "in_preview": 1,
-            "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
-            "options": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\n\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e\n\u0421\u043f\u0438\u0441\u0443\u0454\u0442\u044c\u0441\u044f\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
-        },
-        {
-            "fieldname": "asset_group",
-            "fieldtype": "Link",
-            "in_standard_filter": 1,
-            "label": "\u0413\u0440\u0443\u043f\u0430",
-            "options": "oiAssetGroup"
-        },
-        {
-            "fieldname": "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
-            "fieldtype": "Section Break",
-            "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f \u0442\u0430 \u0412\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c"
-        },
-        {
-            "fieldname": "responsible_employee",
-            "fieldtype": "Link",
-            "in_preview": 1,
-            "label": "\u041c\u0430\u0442\u0435\u0440\u0456\u0430\u043b\u044c\u043d\u043e-\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0430 \u043e\u0441\u043e\u0431\u0430",
-            "mandatory_depends_on": "eval:doc.status!=\"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\"",
-            "options": "hromsEmployee",
-            "search_index": 1
-        },
-        {
-            "fieldname": "column_break_nciz",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "inventory_no",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "in_preview": 1,
-            "in_standard_filter": 1,
-            "label": "\u0406\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
-            "mandatory_depends_on": "eval:doc.status!=\"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\""
-        },
-        {
-            "fieldname": "column_break_ivjv",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "serial_no",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "in_preview": 1,
-            "in_standard_filter": 1,
-            "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
-            "unique": 1
-        },
-        {
-            "fieldname": "asset_type",
-            "fieldtype": "Link",
-            "label": "\u0422\u0438\u043f \u0410\u043a\u0442\u0438\u0432\u0443",
-            "options": "oiAssetType"
-        },
-        {
-            "fetch_from": "hardware_model.model_image",
-            "fetch_if_empty": 1,
-            "fieldname": "image",
-            "fieldtype": "Attach Image",
-            "label": "\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0456\u044f",
-            "print_hide": 1
-        },
-        {
-            "default": "1",
-            "fieldname": "quantity",
-            "fieldtype": "Float",
-            "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
-            "non_negative": 1,
-            "precision": "2"
-        },
-        {
-            "fieldname": "current_owner",
-            "fieldtype": "Link",
-            "in_list_view": 1,
-            "in_preview": 1,
-            "in_standard_filter": 1,
-            "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
-            "options": "hromsOrgStructure",
-            "search_index": 1
-        },
-        {
-            "fieldname": "location",
-            "fieldtype": "Link",
-            "in_standard_filter": 1,
-            "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f (\u041a\u0430\u0431\u0456\u043d\u0435\u0442)",
-            "options": "oiLocation",
-            "search_index": 1
-        },
-        {
-            "fieldname": "acquisition_details_sb",
-            "fieldtype": "Section Break",
-            "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u043f\u0440\u043e \u043d\u0430\u0434\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
-        },
-        {
-            "fieldname": "acquisition_date",
-            "fieldtype": "Date",
-            "label": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0434\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
-        },
-        {
-            "fieldname": "original_donor",
-            "fieldtype": "Link",
-            "label": "\u041f\u0435\u0440\u0432\u0438\u043d\u043d\u0438\u0439 \u0414\u043e\u043d\u043e\u0440",
-            "options": "oiDonor",
-            "search_index": 1
-        },
-        {
-            "fieldname": "source_project",
-            "fieldtype": "Link",
-            "label": "\u041f\u0440\u043e\u0454\u043a\u0442-\u0434\u0436\u0435\u0440\u0435\u043b\u043e",
-            "options": "oiDonorProject",
-            "search_index": 1
-        },
-        {
-            "fieldname": "contract",
-            "fieldtype": "Link",
-            "label": "\u0414\u043e\u0433\u043e\u0432\u0456\u0440",
-            "options": "oiContract",
-            "search_index": 1
-        },
-        {
-            "fieldname": "column_break_cgpf",
-            "fieldtype": "Column Break"
-        },
-        {
-            "default": "0",
-            "fieldname": "cost",
-            "fieldtype": "Currency",
-            "label": "\u0412\u0430\u0440\u0442\u0456\u0441\u0442\u044c",
-            "options": "UAH"
-        },
-        {
-            "fieldname": "total",
-            "fieldtype": "Currency",
-            "in_list_view": 1,
-            "label": "\u0421\u0443\u043c\u0430",
-            "options": "UAH",
-            "read_only": 1
-        },
-        {
-            "fieldname": "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
-            "fieldtype": "Section Break",
-            "label": " \u0406\u0441\u0442\u043e\u0440\u0456\u044f \u041f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c"
-        },
-        {
-            "fieldname": "column_break_bpvr",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fieldname": "movement_history",
-            "fieldtype": "Table",
-            "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f",
-            "options": "oiAssetMovementHistory",
-            "read_only": 1
-        },
-        {
-            "fetch_from": "hardware_model.manufacturer",
-            "fetch_if_empty": 1,
-            "fieldname": "manufacturer",
-            "fieldtype": "Link",
-            "label": "\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a",
-            "options": "oiManufacturer"
-        },
-        {
-            "fieldname": "hardware_model",
-            "fieldtype": "Link",
-            "in_preview": 1,
-            "label": "\u041c\u043e\u0434\u0435\u043b\u044c",
-            "options": "oiHardwareModel"
-        },
-        {
-            "fieldname": "asset_user",
-            "fieldtype": "Link",
-            "in_list_view": 1,
-            "in_preview": 1,
-            "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
-            "mandatory_depends_on": "eval:doc.status==\"\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\"",
-            "options": "hromsEmployee",
-            "search_index": 1
-        },
-        {
-            "fieldname": "network_tab",
-            "fieldtype": "Tab Break",
-            "label": "\u041c\u0435\u0440\u0435\u0436\u0430"
-        },
-        {
-            "description": "\u0412\u0432\u0435\u0434\u0456\u0442\u044c MAC-\u0430\u0434\u0440\u0435\u0441\u0438 \u043f\u0440\u0438\u0441\u0442\u0440\u043e\u044e (\u043f\u043e \u043e\u0434\u043d\u0456\u0439 \u043d\u0430 \u0440\u044d\u0434\u043e\u043a) \u0434\u043b\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e\u0433\u043e \u0432\u0438\u044f\u0432\u043b\u0435\u043d\u043d\u044f \u043d\u0430 \u043a\u0430\u0440\u0442\u0456.",
-            "fieldname": "mac_addresses",
-            "fieldtype": "Small Text",
-            "label": "MAC-\u0430\u0434\u0440\u0435\u0441\u0438"
-        },
-        {
-            "fieldname": "ip_address",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "in_standard_filter": 1,
-            "label": "IP-\u0430\u0434\u0440\u0435\u0441\u0430"
-        },
-        {
-            "fieldname": "snmp_community",
-            "fieldtype": "Data",
-            "label": "SNMP Community",
-            "description": "\u0414\u043b\u044f SNMP v2c (\u0437\u0430 \u0437\u0430\u043c\u043e\u0432\u0447\u0443\u0432\u0430\u043d\u043d\u044f\u043c 'public')"
-        },
-        {
-            "fieldname": "scanning_agent",
-            "fieldtype": "Link",
-            "label": "\u0410\u0433\u0435\u043d\u0442-\u0441\u043a\u0430\u043d\u0435\u0440",
-            "options": "oiAgent",
-            "description": "\u042f\u043a\u0438\u0439 \u0430\u0433\u0435\u043d\u0442 \u0431\u0443\u0434\u0435 \u043e\u043f\u0438\u0442\u0443\u0432\u0430\u0442\u0438 \u0446\u0435\u0439 \u043f\u0440\u0438\u0441\u0442\u0440\u0456\u0439"
-        },
-        {
-            "fieldname": "network_ports_dashboard",
-            "fieldtype": "HTML"
-        },
-        {
-            "fieldname": "agent_tab",
-            "fieldtype": "Tab Break",
-            "label": "Дані від агента"
-        },
-        {
-            "fieldname": "agent_info_section",
-            "fieldtype": "Section Break",
-            "label": "Інформація про систему"
-        },
-        {
-            "fieldname": "agent",
-            "fieldtype": "Link",
-            "label": "Агент",
-            "options": "oiAgent",
-            "description": "Виберіть агента, який прив'язаний до цього активу"
-        },
-        {
-            "fetch_from": "agent.agent_id",
-            "fieldname": "agent_id",
-            "fieldtype": "Data",
-            "label": "Agent ID",
-            "read_only": 1
-        },
-        {
-            "fetch_from": "agent.hostname",
-            "fieldname": "agent_hostname",
-            "fieldtype": "Data",
-            "label": "Hostname",
-            "read_only": 1
-        },
-        {
-            "fetch_from": "agent.os",
-            "fieldname": "agent_os",
-            "fieldtype": "Data",
-            "label": "Операційна система",
-            "read_only": 1
-        },
-        {
-            "fetch_from": "agent.last_seen",
-            "fieldname": "agent_last_seen",
-            "fieldtype": "Datetime",
-            "label": "Останній зв'язок з агентом",
-            "read_only": 1
-        },
-        {
-            "fieldname": "column_break_agent",
-            "fieldtype": "Column Break"
-        },
-        {
-            "fetch_from": "agent.cpu_model",
-            "fieldname": "agent_cpu_model",
-            "fieldtype": "Data",
-            "label": "Модель CPU",
-            "read_only": 1
-        },
-        {
-            "fetch_from": "agent.cpu_cores",
-            "fieldname": "agent_cpu_cores",
-            "fieldtype": "Int",
-            "label": "Кількість ядер CPU",
-            "read_only": 1
-        },
-        {
-            "fetch_from": "agent.ram_total_gb",
-            "fieldname": "agent_ram_total_gb",
-            "fieldtype": "Float",
-            "label": "Загальна RAM (GB)",
-            "precision": "2",
-            "read_only": 1
-        },
-        {
-            "fieldname": "agent_raw_data_section",
-            "fieldtype": "Section Break",
-            "label": "Повні дані агента",
-            "collapsible": 1
-        },
-        {
-            "fetch_from": "agent.raw_data",
-            "fieldname": "agent_raw_data",
-            "fieldtype": "Code",
-            "label": "JSON дані",
-            "options": "JSON",
-            "read_only": 1
-        },
-        {
-            "fieldname": "dev_tab",
-            "fieldtype": "Tab Break",
-            "label": "Dev"
-        },
-        {
-            "default": "0",
-            "fetch_from": "hardware_model.is_network_device",
-            "fieldname": "is_network_device",
-            "fieldtype": "Check",
-            "label": "\u0404 \u043c\u0435\u0440\u0435\u0436\u0435\u0432\u0438\u043c \u043f\u0440\u0438\u0441\u0442\u0440\u043e\u0454\u043c"
-        },
-        {
-            "default": "ASSET-.#####",
-            "fieldname": "naming_series",
-            "fieldtype": "Select",
-            "label": "Naming Series",
-            "options": "ASSET-.#####"
-        },
-        {
-            "fetch_from": "hardware_model.hardware_type",
-            "fieldname": "type",
-            "fieldtype": "Link",
-            "in_standard_filter": 1,
-            "label": "\u0422\u0438\u043f",
-            "options": "oiHardwareType",
-            "search_index": 1
-        },
-        {
-            "default": "1",
-            "fieldname": "enabled",
-            "fieldtype": "Check",
-            "in_standard_filter": 1,
-            "label": "Enabled"
-        },
-        {
-            "bold": 1,
-            "fieldname": "inventory_date",
-            "fieldtype": "Date",
-            "label": "\u0414\u0430\u0442\u0430 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
-        },
-        {
-            "fieldname": "inventory_status",
-            "fieldtype": "Data",
-            "in_list_view": 1,
-            "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
-        },
-        {
-            "fieldname": "parent_asset",
-            "fieldtype": "Link",
-            "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0432",
-            "options": "oiAsset",
-            "read_only": 1
-        },
-        {
-            "fieldname": "components_tab",
-            "fieldtype": "Tab Break",
-            "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
-        },
-        {
-            "fieldname": "components_section",
-            "fieldtype": "Section Break",
-            "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0456 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
-        },
-        {
-            "fieldname": "components",
-            "fieldtype": "Table",
-            "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438",
-            "options": "oiAssetComponent"
-        }
-    ],
-    "grid_page_length": 50,
-    "image_field": "image",
-    "index_web_pages_for_search": 1,
-    "links": [
-        {
-            "link_doctype": "oiIssueOrder",
-            "link_fieldname": "asset",
-            "table_fieldname": "items"
-        },
-        {
-            "link_doctype": "oiCredential",
-            "link_fieldname": "linked_asset"
-        }
-    ],
-    "modified": "2026-01-28 14:16:13.732838",
-    "modified_by": "Administrator",
-    "module": "Orange Inventory",
-    "name": "oiAsset",
-    "naming_rule": "By \"Naming Series\" field",
-    "owner": "Administrator",
-    "permissions": [
-        {
-            "create": 1,
-            "delete": 1,
-            "email": 1,
-            "export": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "System Manager",
-            "share": 1,
-            "write": 1
-        },
-        {
-            "create": 1,
-            "delete": 1,
-            "email": 1,
-            "export": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "Maintenance Manager",
-            "share": 1,
-            "write": 1
-        },
-        {
-            "create": 1,
-            "delete": 1,
-            "email": 1,
-            "export": 1,
-            "print": 1,
-            "read": 1,
-            "report": 1,
-            "role": "Clerk",
-            "share": 1,
-            "write": 1
-        },
-        {
-            "create": 1,
-            "read": 1,
-            "write": 1,
-            "role": "Agent Bot"
-        }
-    ],
-    "row_format": "Dynamic",
-    "search_fields": "serial_no,inventory_no",
-    "show_preview_popup": 1,
-    "show_title_field_in_link": 1,
-    "sort_field": "creation",
-    "sort_order": "DESC",
-    "states": [
-        {
-            "color": "Orange",
-            "title": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f"
-        },
-        {
-            "color": "Green",
-            "title": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456"
-        },
-        {
-            "color": "Blue",
-            "title": "\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457"
-        },
-        {
-            "color": "Yellow",
-            "title": "\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e"
-        },
-        {
-            "color": "Pink",
-            "title": "\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
-        }
-    ],
-    "title_field": "asset_name",
-    "track_changes": 1
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-08-04 10:40:21.713300",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+  "asset_name",
+  "inventory_no",
+  "serial_no",
+  "inventory_date",
+  "inventory_status",
+  "enabled",
+  "column_break_nciz",
+  "status",
+  "asset_group",
+  "scanning_agent",
+  "snmp_community",
+  "manufacturer",
+  "hardware_model",
+  "type",
+  "naming_series",
+  "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
+  "responsible_employee",
+  "current_owner",
+  "column_break_ivjv",
+  "location",
+  "asset_user",
+  "acquisition_details_sb",
+  "asset_type",
+  "original_donor",
+  "source_project",
+  "contract",
+  "column_break_cgpf",
+  "acquisition_date",
+  "cost",
+  "quantity",
+  "total",
+  "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
+  "column_break_bpvr",
+  "movement_history",
+  "components_tab",
+  "components_section",
+  "components",
+  "network_tab",
+  "ip_address",
+  "mac_addresses",
+  "network_ports_dashboard",
+  "agent_tab",
+  "agent_info_section",
+  "agent",
+  "agent_id",
+  "agent_hostname",
+  "agent_os",
+  "agent_last_seen",
+  "column_break_agent",
+  "agent_cpu_model",
+  "agent_cpu_cores",
+  "agent_ram_total_gb",
+  "agent_raw_data_section",
+  "agent_raw_data",
+  "dev_tab",
+  "image",
+  "is_network_device",
+  "parent_asset"
+ ],
+ "fields": [
+  {
+   "fieldname": "\u043e\u0441\u043d\u043e\u0432\u043d\u0430_\u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f_section",
+   "fieldtype": "Section Break",
+   "label": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "asset_name",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "\u041d\u0430\u0439\u043c\u0435\u043d\u0443\u0432\u0430\u043d\u043d\u044f",
+   "reqd": 1
+  },
+  {
+   "default": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_preview": 1,
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441",
+   "options": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\n\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456\n\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\n\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e\n\u0421\u043f\u0438\u0441\u0443\u0454\u0442\u044c\u0441\u044f\n\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
+  },
+  {
+   "fieldname": "asset_group",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "\u0413\u0440\u0443\u043f\u0430",
+   "options": "oiAssetGroup"
+  },
+  {
+   "fieldname": "\u043c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f_\u0442\u0430_\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c_section",
+   "fieldtype": "Section Break",
+   "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f \u0442\u0430 \u0412\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0456\u0441\u0442\u044c"
+  },
+  {
+   "fieldname": "responsible_employee",
+   "fieldtype": "Link",
+   "in_preview": 1,
+   "label": "\u041c\u0430\u0442\u0435\u0440\u0456\u0430\u043b\u044c\u043d\u043e-\u0432\u0456\u0434\u043f\u043e\u0432\u0456\u0434\u0430\u043b\u044c\u043d\u0430 \u043e\u0441\u043e\u0431\u0430",
+   "mandatory_depends_on": "eval:doc.status!=\"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\"",
+   "options": "hromsEmployee",
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_nciz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "inventory_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "\u0406\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
+   "mandatory_depends_on": "eval:doc.status!=\"\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f\""
+  },
+  {
+   "fieldname": "column_break_ivjv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "\u0421\u0435\u0440\u0456\u0439\u043d\u0438\u0439 \u043d\u043e\u043c\u0435\u0440",
+   "unique": 1
+  },
+  {
+   "fieldname": "asset_type",
+   "fieldtype": "Link",
+   "label": "\u0422\u0438\u043f \u0410\u043a\u0442\u0438\u0432\u0443",
+   "options": "oiAssetType"
+  },
+  {
+   "fetch_from": "hardware_model.model_image",
+   "fetch_if_empty": 1,
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0456\u044f",
+   "print_hide": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "fieldname": "current_owner",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "\u041f\u043e\u0442\u043e\u0447\u043d\u0438\u0439 \u0432\u043b\u0430\u0441\u043d\u0438\u043a",
+   "options": "hromsOrgStructure",
+   "search_index": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "\u041c\u0456\u0441\u0446\u0435\u0437\u043d\u0430\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f (\u041a\u0430\u0431\u0456\u043d\u0435\u0442)",
+   "options": "oiLocation",
+   "search_index": 1
+  },
+  {
+   "fieldname": "acquisition_details_sb",
+   "fieldtype": "Section Break",
+   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u043f\u0440\u043e \u043d\u0430\u0434\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "acquisition_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0434\u0445\u043e\u0434\u0436\u0435\u043d\u043d\u044f"
+  },
+  {
+   "fieldname": "original_donor",
+   "fieldtype": "Link",
+   "label": "\u041f\u0435\u0440\u0432\u0438\u043d\u043d\u0438\u0439 \u0414\u043e\u043d\u043e\u0440",
+   "options": "oiDonor",
+   "search_index": 1
+  },
+  {
+   "fieldname": "source_project",
+   "fieldtype": "Link",
+   "label": "\u041f\u0440\u043e\u0454\u043a\u0442-\u0434\u0436\u0435\u0440\u0435\u043b\u043e",
+   "options": "oiDonorProject",
+   "search_index": 1
+  },
+  {
+   "fieldname": "contract",
+   "fieldtype": "Link",
+   "label": "\u0414\u043e\u0433\u043e\u0432\u0456\u0440",
+   "options": "oiContract",
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_cgpf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "cost",
+   "fieldtype": "Currency",
+   "label": "\u0412\u0430\u0440\u0442\u0456\u0441\u0442\u044c",
+   "options": "UAH"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "\u0421\u0443\u043c\u0430",
+   "options": "UAH",
+   "read_only": 1
+  },
+  {
+   "fieldname": "\u0456\u0441\u0442\u043e\u0440\u0456\u044f_\u043f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c_section",
+   "fieldtype": "Section Break",
+   "label": " \u0406\u0441\u0442\u043e\u0440\u0456\u044f \u041f\u0435\u0440\u0435\u043c\u0456\u0449\u0435\u043d\u044c"
+  },
+  {
+   "fieldname": "column_break_bpvr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "movement_history",
+   "fieldtype": "Table",
+   "label": "\u0406\u0441\u0442\u043e\u0440\u0456\u044f",
+   "options": "oiAssetMovementHistory"
+  },
+  {
+   "fetch_from": "hardware_model.manufacturer",
+   "fetch_if_empty": 1,
+   "fieldname": "manufacturer",
+   "fieldtype": "Link",
+   "label": "\u0412\u0438\u0440\u043e\u0431\u043d\u0438\u043a",
+   "options": "oiManufacturer"
+  },
+  {
+   "fieldname": "hardware_model",
+   "fieldtype": "Link",
+   "in_preview": 1,
+   "label": "\u041c\u043e\u0434\u0435\u043b\u044c",
+   "options": "oiHardwareModel"
+  },
+  {
+   "fieldname": "asset_user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "\u041a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447",
+   "mandatory_depends_on": "eval:doc.status==\"\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457\"",
+   "options": "hromsEmployee",
+   "search_index": 1
+  },
+  {
+   "fieldname": "network_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u041c\u0435\u0440\u0435\u0436\u0430"
+  },
+  {
+   "description": "\u0412\u0432\u0435\u0434\u0456\u0442\u044c MAC-\u0430\u0434\u0440\u0435\u0441\u0438 \u043f\u0440\u0438\u0441\u0442\u0440\u043e\u044e (\u043f\u043e \u043e\u0434\u043d\u0456\u0439 \u043d\u0430 \u0440\u044d\u0434\u043e\u043a) \u0434\u043b\u044f \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e\u0433\u043e \u0432\u0438\u044f\u0432\u043b\u0435\u043d\u043d\u044f \u043d\u0430 \u043a\u0430\u0440\u0442\u0456.",
+   "fieldname": "mac_addresses",
+   "fieldtype": "Small Text",
+   "label": "MAC-\u0430\u0434\u0440\u0435\u0441\u0438"
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "IP-\u0430\u0434\u0440\u0435\u0441\u0430"
+  },
+  {
+   "description": "\u0414\u043b\u044f SNMP v2c (\u0437\u0430 \u0437\u0430\u043c\u043e\u0432\u0447\u0443\u0432\u0430\u043d\u043d\u044f\u043c 'public')",
+   "fieldname": "snmp_community",
+   "fieldtype": "Data",
+   "label": "SNMP Community"
+  },
+  {
+   "description": "\u042f\u043a\u0438\u0439 \u0430\u0433\u0435\u043d\u0442 \u0431\u0443\u0434\u0435 \u043e\u043f\u0438\u0442\u0443\u0432\u0430\u0442\u0438 \u0446\u0435\u0439 \u043f\u0440\u0438\u0441\u0442\u0440\u0456\u0439",
+   "fieldname": "scanning_agent",
+   "fieldtype": "Link",
+   "label": "\u0410\u0433\u0435\u043d\u0442-\u0441\u043a\u0430\u043d\u0435\u0440",
+   "options": "oiAgent"
+  },
+  {
+   "fieldname": "network_ports_dashboard",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "agent_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u0414\u0430\u043d\u0456 \u0432\u0456\u0434 \u0430\u0433\u0435\u043d\u0442\u0430"
+  },
+  {
+   "fieldname": "agent_info_section",
+   "fieldtype": "Section Break",
+   "label": "\u0406\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u044f \u043f\u0440\u043e \u0441\u0438\u0441\u0442\u0435\u043c\u0443"
+  },
+  {
+   "description": "\u0412\u0438\u0431\u0435\u0440\u0456\u0442\u044c \u0430\u0433\u0435\u043d\u0442\u0430, \u044f\u043a\u0438\u0439 \u043f\u0440\u0438\u0432'\u044f\u0437\u0430\u043d\u0438\u0439 \u0434\u043e \u0446\u044c\u043e\u0433\u043e \u0430\u043a\u0442\u0438\u0432\u0443",
+   "fieldname": "agent",
+   "fieldtype": "Link",
+   "label": "\u0410\u0433\u0435\u043d\u0442",
+   "options": "oiAgent"
+  },
+  {
+   "fetch_from": "agent.agent_id",
+   "fieldname": "agent_id",
+   "fieldtype": "Data",
+   "label": "Agent ID",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.hostname",
+   "fieldname": "agent_hostname",
+   "fieldtype": "Data",
+   "label": "Hostname",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.os",
+   "fieldname": "agent_os",
+   "fieldtype": "Data",
+   "label": "\u041e\u043f\u0435\u0440\u0430\u0446\u0456\u0439\u043d\u0430 \u0441\u0438\u0441\u0442\u0435\u043c\u0430",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.last_seen",
+   "fieldname": "agent_last_seen",
+   "fieldtype": "Datetime",
+   "label": "\u041e\u0441\u0442\u0430\u043d\u043d\u0456\u0439 \u0437\u0432'\u044f\u0437\u043e\u043a \u0437 \u0430\u0433\u0435\u043d\u0442\u043e\u043c",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_agent",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "agent.cpu_model",
+   "fieldname": "agent_cpu_model",
+   "fieldtype": "Data",
+   "label": "\u041c\u043e\u0434\u0435\u043b\u044c CPU",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.cpu_cores",
+   "fieldname": "agent_cpu_cores",
+   "fieldtype": "Int",
+   "label": "\u041a\u0456\u043b\u044c\u043a\u0456\u0441\u0442\u044c \u044f\u0434\u0435\u0440 CPU",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "agent.ram_total_gb",
+   "fieldname": "agent_ram_total_gb",
+   "fieldtype": "Float",
+   "label": "\u0417\u0430\u0433\u0430\u043b\u044c\u043d\u0430 RAM (GB)",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "agent_raw_data_section",
+   "fieldtype": "Section Break",
+   "label": "\u041f\u043e\u0432\u043d\u0456 \u0434\u0430\u043d\u0456 \u0430\u0433\u0435\u043d\u0442\u0430"
+  },
+  {
+   "fetch_from": "agent.raw_data",
+   "fieldname": "agent_raw_data",
+   "fieldtype": "Code",
+   "label": "JSON \u0434\u0430\u043d\u0456",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dev_tab",
+   "fieldtype": "Tab Break",
+   "label": "Dev"
+  },
+  {
+   "default": "0",
+   "fetch_from": "hardware_model.is_network_device",
+   "fieldname": "is_network_device",
+   "fieldtype": "Check",
+   "label": "\u0404 \u043c\u0435\u0440\u0435\u0436\u0435\u0432\u0438\u043c \u043f\u0440\u0438\u0441\u0442\u0440\u043e\u0454\u043c"
+  },
+  {
+   "default": "ASSET-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "ASSET-.#####"
+  },
+  {
+   "fetch_from": "hardware_model.hardware_type",
+   "fieldname": "type",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "\u0422\u0438\u043f",
+   "options": "oiHardwareType",
+   "search_index": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Enabled"
+  },
+  {
+   "bold": 1,
+   "fieldname": "inventory_date",
+   "fieldtype": "Date",
+   "label": "\u0414\u0430\u0442\u0430 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
+  },
+  {
+   "fieldname": "inventory_status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0456\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u0438\u0437\u0430\u0446\u0456\u0457"
+  },
+  {
+   "fieldname": "parent_asset",
+   "fieldtype": "Link",
+   "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043e \u0432",
+   "options": "oiAsset",
+   "read_only": 1
+  },
+  {
+   "fieldname": "components_tab",
+   "fieldtype": "Tab Break",
+   "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
+  },
+  {
+   "fieldname": "components_section",
+   "fieldtype": "Section Break",
+   "label": "\u0412\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u0456 \u043a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438"
+  },
+  {
+   "fieldname": "components",
+   "fieldtype": "Table",
+   "label": "\u041a\u043e\u043c\u043f\u043e\u043d\u0435\u043d\u0442\u0438",
+   "options": "oiAssetComponent"
+  }
+ ],
+ "grid_page_length": 50,
+ "image_field": "image",
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "oiIssueOrder",
+   "link_fieldname": "asset",
+   "table_fieldname": "items"
+  },
+  {
+   "link_doctype": "oiCredential",
+   "link_fieldname": "linked_asset"
+  }
+ ],
+ "modified": "2026-04-23 14:24:21.331730",
+ "modified_by": "Administrator",
+ "module": "Orange Inventory",
+ "name": "oiAsset",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Maintenance Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Clerk",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Agent Bot",
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "serial_no,inventory_no",
+ "show_preview_popup": 1,
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "\u041e\u0447\u0456\u043a\u0443\u0454 \u043f\u0440\u0438\u0439\u043d\u044f\u0442\u0442\u044f"
+  },
+  {
+   "color": "Green",
+   "title": "\u041d\u0430 \u0441\u043a\u043b\u0430\u0434\u0456"
+  },
+  {
+   "color": "Blue",
+   "title": "\u0412 \u0435\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0456\u0457"
+  },
+  {
+   "color": "Yellow",
+   "title": "\u041f\u0435\u0440\u0435\u0434\u0430\u043d\u043e"
+  },
+  {
+   "color": "Pink",
+   "title": "\u0421\u043f\u0438\u0441\u0430\u043d\u043e"
+  }
+ ],
+ "title_field": "asset_name",
+ "track_changes": 1
 }

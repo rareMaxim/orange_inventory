@@ -31,9 +31,12 @@ def _get_api_headers():
 		frappe.throw("API Token не налаштовано. Перейдіть до oiHromadaSettings.")
 	return {
 		"accept": "application/json, text/plain, */*",
+		"accept-language": "uk,en;q=0.9,en-GB;q=0.8,en-US;q=0.7",
 		"authorization": f"Bearer {token}",
+		"cache-control": "no-cache",
 		"content-type": "application/json",
 		"origin": "https://hromada.gov.ua",
+		"pragma": "no-cache",
 		"referer": "https://hromada.gov.ua/",
 	}
 
@@ -76,6 +79,54 @@ def _log_sync(message: str, level: str = "info"):
 		"sync_log",
 		json.dumps(current_log, ensure_ascii=False, indent=2),
 	)
+
+
+def _parse_parameter_ids(parameter_ids: str | list | None):
+	"""Нормалізує parameter_ids до списку int.
+
+	Підтримує:
+	- JSON-рядок: "[1,2,3]"
+	- CSV-рядок: "1,2,3"
+	- один ID рядком/числом: "123" / 123
+	- list/tuple зі змішаними типами
+
+	Повертає:
+	- None: якщо значення не передано (синхронізація всіх community-параметрів)
+	- list[int]: валідні ID
+	"""
+	if parameter_ids is None:
+		return None
+
+	raw = parameter_ids
+
+	if isinstance(raw, str):
+		raw = raw.strip()
+		if not raw:
+			return None
+		try:
+			raw = json.loads(raw)
+		except json.JSONDecodeError:
+			# Fallback для CSV або одиночного значення
+			raw = [part.strip() for part in raw.split(",")] if "," in raw else [raw]
+
+	if isinstance(raw, tuple):
+		raw = list(raw)
+
+	if not isinstance(raw, list):
+		raw = [raw]
+
+	normalized = []
+	seen = set()
+
+	for item in raw:
+		if item in (None, ""):
+			continue
+		pid = cint(item)
+		if pid > 0 and pid not in seen:
+			normalized.append(pid)
+			seen.add(pid)
+
+	return normalized
 
 
 @frappe.whitelist()
@@ -743,12 +794,16 @@ def sync_selected_to_portal(parameter_ids: str | list | None = None):
 	if not frappe.has_permission("oiHromadaSettings", "write"):
 		frappe.throw("Недостатньо прав для синхронізації", frappe.PermissionError)
 
-	# Парсимо список ID
-	if isinstance(parameter_ids, str):
-		try:
-			parameter_ids = json.loads(parameter_ids)
-		except json.JSONDecodeError:
-			parameter_ids = None
+	parsed_parameter_ids = _parse_parameter_ids(parameter_ids)
+
+	# Якщо користувач передав parameter_ids, але не вдалося отримати жодного валідного ID,
+	# повертаємо помилку замість небезпечної синхронізації "всього".
+	if parameter_ids is not None and parsed_parameter_ids == []:
+		return {
+			"status": "error",
+			"updated": 0,
+			"error": "Некоректний формат parameter_ids. Очікується список додатних чисел.",
+		}
 
 	settings = _get_settings()
 	headers = _get_api_headers()
@@ -762,8 +817,8 @@ def sync_selected_to_portal(parameter_ids: str | list | None = None):
 	}
 
 	# Якщо вказано конкретні ID - фільтруємо по них
-	if parameter_ids:
-		filters["hromada_parameter_id"] = ["in", parameter_ids]
+	if parsed_parameter_ids:
+		filters["hromada_parameter_id"] = ["in", parsed_parameter_ids]
 
 	surveys = frappe.get_all(
 		"oiHromadaSurvey",
@@ -862,6 +917,74 @@ def sync_selected_to_portal(parameter_ids: str | list | None = None):
 		error_msg = f"Помилка запиту: {e!s}"
 		_log_sync(error_msg, "error")
 		return {"status": "error", "error": error_msg, "updated": 0}
+
+
+@frappe.whitelist()
+def test_portal_patch(parameters: str | None = None):
+	"""
+	Діагностичний метод: надіслати довільний payload на /front/index-community
+	і повернути повну відповідь порталу.
+
+	Args:
+	        parameters: JSON-рядок виду [{"id": 41, "value": 250}, ...]
+	                    Якщо не вказано — відправляє тестовий payload з першим
+	                    community-параметром, що є у базі.
+
+	Приклад curl:
+	  --data-raw 'parameters=[{"id":41,"value":250}]'
+	"""
+	if not frappe.has_permission("oiHromadaSettings", "write"):
+		frappe.throw("Недостатньо прав", frappe.PermissionError)
+
+	settings = _get_settings()
+	headers = _get_api_headers()
+	base_url = settings.api_base_url or "https://backend.hromada.gov.ua/api"
+
+	if parameters:
+		try:
+			params_list = json.loads(parameters)
+		except json.JSONDecodeError:
+			return {"status": "error", "error": "Некоректний JSON у parameters"}
+	else:
+		# Беремо перший community-параметр з бази як тест
+		sample = frappe.get_all(
+			"oiHromadaSurvey",
+			filters={
+				"hromada_data_source": "community",
+				"hromada_parameter_id": ["is", "set"],
+				"type": ["!=", "Група"],
+			},
+			fields=["hromada_parameter_id", "int_data", "bool_data", "type"],
+			limit=1,
+		)
+		if not sample:
+			return {"status": "error", "error": "Не знайдено жодного community-параметру в базі"}
+		s = sample[0]
+		val = cint(s.int_data or 0) if s.type == "Кількісні дані" else (1 if cint(s.bool_data) else 0)
+		params_list = [{"id": cint(s.hromada_parameter_id), "value": val}]
+
+	payload = {"parameters": params_list}
+	_log_sync(f"[test_portal_patch] payload: {json.dumps(payload, ensure_ascii=False)}")
+
+	try:
+		response = requests.patch(
+			f"{base_url}/front/index-community",
+			headers=headers,
+			json=payload,
+			timeout=30,
+		)
+		_log_sync(
+			f"[test_portal_patch] відповідь: {response.status_code} — {response.text[:500]}",
+			level="info" if response.ok else "error",
+		)
+		return {
+			"status": "ok" if response.ok else "error",
+			"http_status": response.status_code,
+			"payload_sent": payload,
+			"response_body": response.text[:2000],
+		}
+	except requests.exceptions.RequestException as e:
+		return {"status": "error", "error": str(e)}
 
 
 @frappe.whitelist()
